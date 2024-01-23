@@ -10,7 +10,7 @@ public interface IntakeIO {
     public double currentAmps = 0.0;
     public double appliedVolts = 0.0;
     public double tempCelcius = 0.0;
-    
+
     public boolean topBeamBreakTriggered = false;
     public boolean bottomBeamBreakTriggered = false;
   }
@@ -31,6 +31,6 @@ public interface IntakeIO {
   /** Enables or disables brake mode for the motor. */
   public default void enableBrakeMode(boolean enable) {}
 
-  /* Updates the tunable numbers */
+  /* Updates the tunable numbers. */
   public default void updateTunableNumbers() {}
 }

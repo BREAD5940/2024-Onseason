@@ -20,16 +20,16 @@ public interface SerializerIO {
   /** Run open loop at the specified percentage. */
   public default void setPercent(double percent) {}
 
-  /** Run closed loop at the specified velocity */
+  /** Run closed loop at the specified velocity. */
   public default void setVelocity(double velocityRpm) {}
 
-  /** Sets current limit for the motor serializer */
+  /** Sets current limit for the motor serializer. */
   public default void setCurrentLimit(
       double statorCurrentLimit,
       double currentLimitTriggerThreshold,
       double currentLimitThresholdTime) {}
 
-  /** Enables or disables brake mode for the motor */
+  /** Enables or disables brake mode for the motor. */
   public default void enableBrakeMode(boolean enable) {}
 
   /** Updates the tunable numbers */
