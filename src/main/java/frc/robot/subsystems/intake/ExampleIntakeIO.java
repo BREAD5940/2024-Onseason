@@ -14,6 +14,6 @@ public interface ExampleIntakeIO {
   /** Updates the set of loggable inputs. */
   public default void updateInputs(ExampleIntakeIOInputs inputs) {}
 
-  /** Run open loop at the specified percentage */ 
+  /** Run open loop at the specified percentage */
   public default void setPercent(double percent) {}
 }
