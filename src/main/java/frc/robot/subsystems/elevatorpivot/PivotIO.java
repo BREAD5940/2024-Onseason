@@ -18,20 +18,20 @@ public interface PivotIO {
     public double velocityReference = 0.0;
   }
 
-  /** Updates the set of loggable inputs. */
+  /* Updates the set of loggable inputs. */
   public default void updateInputs(PivotIOInputs inputs) {}
 
   /** Run closed loop to the specified position. */
   public default void setPivotPosition(Rotation2d position) {}
 
-  /** Run open loop at the specified percentage. */
+  /* Run open loop at the specified percentage. */
   public default void setPivotPercent(double percent) {}
 
   /* Sets current limit for the pivot motor. */
   public default void setPivotCurrentLimit(
       double currentLimit, double supplyCurrentThreshold, double supplyTimeThreshold) {}
 
-  /** Enables or disables brake mode for the pivot motor. */
+  /* Enables or disables brake mode for the pivot motor. */
   public default void enablePivotBrakeMode(boolean enable) {}
 
   /* Updates the tunable numbers. */
