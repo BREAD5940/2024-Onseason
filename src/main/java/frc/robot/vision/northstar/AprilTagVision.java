@@ -11,12 +11,12 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commons.GeomUtil;
 import frc.robot.commons.LoggedTunableNumber;
 import frc.robot.commons.PolynomialRegression;
 import frc.robot.commons.TimestampedVisionUpdate;
 import frc.robot.constants.FieldConstants;
+import frc.robot.util.VirtualSubsystem;
 import frc.robot.vision.northstar.AprilTagVisionIO.AprilTagVisionIOInputs;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,7 +26,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
-public class AprilTagVision extends SubsystemBase {
+public class AprilTagVision extends VirtualSubsystem {
   public static LoggedTunableNumber mStdDevScalar =
       new LoggedTunableNumber("AprilTagVision/StdDevScalar", 2.0);
   private static final double ambiguityThreshold = 0.15;
@@ -84,10 +84,6 @@ public class AprilTagVision extends SubsystemBase {
               0.752358, 1.016358, 1.296358, 1.574358, 1.913358, 2.184358, 2.493358, 2.758358,
               3.223358, 4.093358, 4.726358
             },
-            // new double[] {
-            // 0.005, 0.0135, 0.016, 0.038, 0.0515, 0.0925, 0.0695, 0.046, 0.1245,
-            // 0.0815, 0.193
-            // },
             new double[] {
               0.005, 0.0135, 0.016, 0.038, 0.0515, 0.0925, 0.12, 0.14, 0.17, 0.27, 0.38
             },
