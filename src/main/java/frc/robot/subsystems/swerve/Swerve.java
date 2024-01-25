@@ -7,8 +7,10 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.FieldCentric;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.RobotCentric;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.littletonrobotics.junction.Logger;
 
 public class Swerve extends SubsystemBase {
 
@@ -42,7 +44,10 @@ public class Swerve extends SubsystemBase {
   }
 
   /* Telemetry function */
-  private void handleTelemetry() {}
+  private void handleTelemetry() {
+    Pose2d pose = drivetrain.getState().Pose;
+    Logger.recordOutput("Odometry/PoseEstimatorEstimate", pose);
+  }
 
   /* Handles statemachine logic */
   private void handleStatemachineLogic() {
@@ -115,6 +120,11 @@ public class Swerve extends SubsystemBase {
 
     this.desired = speeds;
     this.fieldRelative = fieldRelative;
+  }
+
+  /* Resets the pose estimate of the robot */
+  public void resetPose(Pose2d newPose) {
+    drivetrain.seedFieldRelative(newPose);
   }
 
   /* Swerve State */
