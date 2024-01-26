@@ -50,8 +50,7 @@ public class ElevatorPivotLowLevel {
     pivotIO.updateInputs(pivotInputs);
 
     /* Constrain the pivot and elevator setpoints based on the positions of each system */
-    Rotation2d adjustedDesiredPivotAngle =
-        getPivotMinAngleFromElevatorHeight(desiredElevatorHeight);
+    Rotation2d adjustedDesiredPivotAngle = getPivotMinAngleFromElevatorHeight(desiredElevatorHeight);
     double adjustedDesiredElevatorHeight = getElevatorMinHeightFromPivotAngle(desiredPivotAngle);
 
     /* Handle statemachine logic */
@@ -105,15 +104,20 @@ public class ElevatorPivotLowLevel {
       systemState = nextSystemState;
     }
   }
+  
+  /* Returns the current system state of the elevator/pivot */
+  public ElevatorPivotState getSystemState() {
+    return systemState;
+  }
 
   /* Returns whether or not the pivot is at its setpoint */
-  private boolean atPivotSetpoint(Rotation2d setpoint) {
+  public boolean atPivotSetpoint(Rotation2d setpoint) {
     return BreadUtil.atReference(
         pivotInputs.angleRads, setpoint.getRadians(), PIVOT_SETPOINT_TOLERANCE_RADS, true);
   }
 
   /* Returns whether or not the elevator is at its setpoint */
-  private boolean atElevatorSetpoint(double setpoint) {
+  public boolean atElevatorSetpoint(double setpoint) {
     return BreadUtil.atReference(
         elevatorInputs.posMeters, setpoint, ELEVATOR_SETPOINT_TOLERANCE_METERS, true);
   }
