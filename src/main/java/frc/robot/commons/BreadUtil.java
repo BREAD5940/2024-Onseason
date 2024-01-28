@@ -68,4 +68,10 @@ public class BreadUtil {
 
     return Math.copySign(value, (value - tolerance) / (1.0 - tolerance));
   }
+
+  // Maps one numerical range to another
+  public static double numericalMap(
+      double input, double inputStart, double inputEnd, double outputStart, double outputEnd) {
+    return outputStart + (outputEnd - outputStart) / (inputEnd - inputStart) * (input - inputStart);
+  }
 }

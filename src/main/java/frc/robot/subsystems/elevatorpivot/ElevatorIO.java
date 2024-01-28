@@ -2,38 +2,34 @@ package frc.robot.subsystems.elevatorpivot;
 
 import org.littletonrobotics.junction.AutoLog;
 
+/* Interface encapsulating elevator hardware */
 public interface ElevatorIO {
   @AutoLog
   public static class ElevatorIOInputs {
-    public double positionMeters = 0.0;
-    public double velocityMetersPerSecond = 0.0;
-    public double velocityTarget = 0.0;
-    public double positionTarget = 0.0;
-    public double appliedVolts = 0.0;
-
-    public double[] currentAmps = new double[] {};
-    public double[] tempCelcius = new double[] {};
+    public double posMeters = 0.0;
+    public double velMetersPerSecond = 0.0;
+    public double velTarget = 0.0;
+    public double posTarget = 0.0;
+    public double appliedVoltage = 0.0;
+    public double[] currentAmps = new double[] {}; // {leader, follower}
+    public double[] tempCelcius = new double[] {}; // {leader, follower}
   }
 
-  /* Updates the set of loggable inputs. */
+  /* Updates the set of loggable inputs */
   public default void updateInputs(ElevatorIOInputs inputs) {}
 
-  /* Run closed loop to the specified position in meters. */
+  /* Sets the climber to a height setpoint via motion magic */
   public default void setHeight(double heightMeters) {}
 
-  /* Run open loop at the specified percentage. */
+  /** Sets the climber to a specified percent output */
   public default void setPercent(double percent) {}
 
-  /* Resets elevator to a specified position in meters. */
-  public default void resetHeight(double heightMeters) {}
+  /** Resets the encoder reading of the climber to a specified position */
+  public default void resetHeight(double newHeightMeters) {}
 
-  /* Sets current limit for the elevator motors. */
-  public default void setCurrentLimit(
-      double currentLimit, double supplyCurrentThreshold, double supplyTimeThreshold) {}
-
-  /* Enables or disables brake mode for the elevator motors. */
+  /* Sets the climber's neutral mode */
   public default void enableBrakeMode(boolean enable) {}
 
-  /* Updates the tunable numbers. */
+  /* Updates tunable numbers if neccesary */
   public default void updateTunableNumbers() {}
 }

@@ -3,37 +3,33 @@ package frc.robot.subsystems.elevatorpivot;
 import edu.wpi.first.math.geometry.Rotation2d;
 import org.littletonrobotics.junction.AutoLog;
 
+/* Interface encapsulating pivot hardware */
 public interface PivotIO {
   @AutoLog
   public static class PivotIOInputs {
-    public double velocityRpm = 0.0;
-    public double appliedVolts = 0.0;
+    public double angleDegrees = 0.0;
+    public double angleRads = 0.0;
+    public double velDegreesPerSecond = 0.0;
     public double currentAmps = 0.0;
+    public double appliedVoltage = 0.0;
+    public double appliedPercent = 0.0;
     public double tempCelcius = 0.0;
-
-    public double absolutePosition = 0.0;
-    public double position = 0.0;
-    public double positionRads = 0.0;
-    public double positionReference = 0.0;
-    public double velocityReference = 0.0;
+    public double armTargetPosition = 0.0;
+    public double armTargetVelocity = 0.0;
   }
 
-  /* Updates the set of loggable inputs. */
+  /** Updates the set of loggable inputs */
   public default void updateInputs(PivotIOInputs inputs) {}
 
-  /** Run closed loop to the specified position. */
-  public default void setPivotPosition(Rotation2d position) {}
+  /** Sets the desired angle of the pivot */
+  public default void setAngle(Rotation2d angle) {}
 
-  /* Run open loop at the specified percentage. */
-  public default void setPivotPercent(double percent) {}
+  /** Sets the speed of the pivot to the desired percent output */
+  public default void setPercent(double percent) {}
 
-  /* Sets current limit for the pivot motor. */
-  public default void setPivotCurrentLimit(
-      double currentLimit, double supplyCurrentThreshold, double supplyTimeThreshold) {}
+  /** Enables or disables the pivot in brake mode */
+  public default void enableBrakeMode(boolean enable) {}
 
-  /* Enables or disables brake mode for the pivot motor. */
-  public default void enablePivotBrakeMode(boolean enable) {}
-
-  /* Updates the tunable numbers. */
+  /** Updates tunable numbers */
   public default void updateTunableNumbers() {}
 }

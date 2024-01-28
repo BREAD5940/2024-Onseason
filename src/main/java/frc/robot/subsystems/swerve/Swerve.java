@@ -1,14 +1,19 @@
 package frc.robot.subsystems.swerve;
 
+import static frc.robot.constants.Constants.Swerve.*;
+
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.FieldCentric;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.RobotCentric;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commons.TimestampedVisionUpdate;
 import java.util.List;
@@ -25,6 +30,8 @@ public class Swerve extends SubsystemBase {
 
   private boolean requestVelocity = false;
   private boolean requestPercent = false;
+  private boolean isBrakeMode = true;
+  private Timer lastMovementTimer = new Timer();
 
   private SwerveState systemState = SwerveState.PERCENT;
 
@@ -37,6 +44,10 @@ public class Swerve extends SubsystemBase {
             VecBuilder.fill(0.003, 0.003, 0.0002),
             VecBuilder.fill(0.003, 0.003, 0.0002),
             moduleConstants);
+
+    drivetrain.configNeutralMode(NeutralModeValue.Brake);
+
+    lastMovementTimer.start();
   }
 
   @Override
@@ -100,6 +111,26 @@ public class Swerve extends SubsystemBase {
       }
     }
     systemState = nextSystemState;
+
+    /* If the driver station is enabled, set the modules to break. Otherwise set them to coast */
+    boolean stillMoving = false;
+    for (int i = 0; i < 4; i++) {
+      if (drivetrain.getModule(i).getCurrentState().speedMetersPerSecond > COAST_TRESHOLD_MPS) {
+        stillMoving = true;
+      }
+    }
+    if (stillMoving) lastMovementTimer.reset();
+    if (DriverStation.isEnabled()) {
+      if (!isBrakeMode) {
+        isBrakeMode = true;
+        drivetrain.configNeutralMode(NeutralModeValue.Brake);
+      }
+    } else {
+      if (isBrakeMode && lastMovementTimer.hasElapsed(COAST_TRESHOLD_SEC)) {
+        isBrakeMode = false;
+        drivetrain.configNeutralMode(NeutralModeValue.Coast);
+      }
+    }
   }
 
   /* Request the drivetrain to drive at the specified velocity
