@@ -15,14 +15,14 @@ public interface ShooterIO {
     public double flywheelRightAppliedVolts = 0.0;
     public double flywheelRightTempCelcius = 0.0;
 
-    public double[] currentAmps = new double[] {};
+    public double[] currentAmps = new double[] {}; // {left, right}
   }
 
   /** Updates the set of loggable inputs. */
   public default void updateInputs(ShooterIOInputs inputs) {}
 
   /* Run open loop at the specified percent. */
-  public default void setFlywheelPercent(double percentTop, double percentBottom) {}
+  public default void setFlywheelPercent(double percentLeft, double percentRight) {}
 
   /** Run closed loop at the specified velocity. */
   public default void setFlywheelVelocity(double velocityRpmLeft, double velocityRpmRight) {}

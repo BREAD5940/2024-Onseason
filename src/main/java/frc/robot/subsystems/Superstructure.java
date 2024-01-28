@@ -1,13 +1,16 @@
 package frc.robot.subsystems;
 
-import java.util.function.Supplier;
+import static frc.robot.constants.Constants.Elevator.*;
+import static frc.robot.constants.Constants.Pivot.*;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commons.BreadUtil;
 import frc.robot.subsystems.elevatorpivot.ElevatorIO;
 import frc.robot.subsystems.elevatorpivot.ElevatorPivotLowLevel;
-import frc.robot.subsystems.elevatorpivot.PivotIO;
 import frc.robot.subsystems.elevatorpivot.ElevatorPivotLowLevel.ElevatorPivotState;
+import frc.robot.subsystems.elevatorpivot.PivotIO;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.serializer.Serializer;
@@ -15,6 +18,7 @@ import frc.robot.subsystems.serializer.SerializerIO;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShotParameter;
+import java.util.function.Function;
 
 /* Superstructure class for handling the interaction between all the subsystems minus swerve */
 public class Superstructure extends SubsystemBase {
@@ -30,29 +34,37 @@ public class Superstructure extends SubsystemBase {
   private double stateStartTime = 0.0;
 
   private boolean requestHome = true;
-  private boolean requestIdle = false;
   private boolean requestIntake = false;
   private boolean requestSpit = false;
   private boolean requestGoToSpeakerPose = false;
   private boolean requestGoToAmpPose = false;
   private boolean requestGoToClimb = false;
   private boolean requestClimb = false;
-  private boolean requestGoToGoTrapPose = false;
+  private boolean requestGoToTrapPose = false;
 
   private boolean wantsShoot = false;
+  private boolean shouldShoot = false;
   private boolean wantsShootOverDefense = false;
   private boolean hasGamePiece = false;
 
-  private Supplier<ShotParameter> speakerShotSupplier;
+  private Timer shootingTimer = new Timer();
+
+  private Function<Boolean, ShotParameter> speakerShotFunction;
 
   /* Take in io objects and construct subsystems */
-  public Superstructure(ElevatorIO elevatorIO, PivotIO pivotIO, SerializerIO serializerIO, ShooterIO shooterIO,
-      IntakeIO intakeIO, Supplier<ShotParameter> speakerShotSupplier) {
+  public Superstructure(
+      ElevatorIO elevatorIO,
+      PivotIO pivotIO,
+      SerializerIO serializerIO,
+      ShooterIO shooterIO,
+      IntakeIO intakeIO,
+      Function<Boolean, ShotParameter> speakerShotFunction) {
     elevatorPivotLowLevel = new ElevatorPivotLowLevel(elevatorIO, pivotIO);
     serializer = new Serializer(serializerIO);
     shooter = new Shooter(shooterIO);
     intake = new Intake(intakeIO);
-    this.speakerShotSupplier = speakerShotSupplier'
+    this.speakerShotFunction = speakerShotFunction;
+    shootingTimer.start();
   }
 
   /* System States */
@@ -61,7 +73,7 @@ public class Superstructure extends SubsystemBase {
     HOMING,
     IDLE,
     INTAKE,
-    SPIT, 
+    SPIT,
     SPEAKER_SCORING_POSE,
     AMP_SCORING_POSE,
     GO_TO_CLIMB,
@@ -100,7 +112,7 @@ public class Superstructure extends SubsystemBase {
       serializer.stop();
       shooter.idleSpeed();
       intake.stop();
-      elevatorPivotLowLevel.requestPursueSetpoint(Rotation2d.fromDegrees(0.0), 0.0);
+      elevatorPivotLowLevel.requestPursueSetpoint(PIVOT_IDLE_ANGLE, ELEVATOR_IDLE_HEIGHT);
 
       if (requestHome) {
         nextSystemState = SuperstructureState.HOMING;
@@ -116,51 +128,184 @@ public class Superstructure extends SubsystemBase {
         nextSystemState = SuperstructureState.GO_TO_CLIMB;
       }
     } else if (systemState == SuperstructureState.INTAKE) {
-      /* The behavior of this state will change depending on whether or not hasPiece is true */
-      if (hasGamePiece) {
-        serializer.hold();
-        shooter.idleSpeed();
-        intake.intake();
-        elevatorPivotLowLevel.requestPursueSetpoint(Rotation2d.fromDegrees(0.0), 0.0);
+      serializer.hold();
+      shooter.idleSpeed();
+      intake.intake();
+      elevatorPivotLowLevel.requestPursueSetpoint(PIVOT_INTAKE_ANGLE, ELEVATOR_INTAKE_HEIGHT);
 
-        if (!requestIntake) {
-          nextSystemState = SuperstructureState.IDLE;
-        } else if (serializer.getBeamBreakTriggered()) {
-          hasGamePiece = true;
-          nextSystemState = SuperstructureState.IDLE;
-          requestIntake = false;
-        }
-      } else {
-        serializer.hold();
-        shooter.idleSpeed();
-        intake.intake();
-        elevatorPivotLowLevel.requestPursueSetpoint(Rotation2d.fromDegrees(0.0), 0.0);
-
-        if (!requestIntake) {
-          nextSystemState = SuperstructureState.IDLE;
-        } else if (intake.getTopBeamBreakTriggered()) {
-          nextSystemState = SuperstructureState.IDLE;
-          requestIntake = false;
-        }
+      if (!requestIntake) {
+        nextSystemState = SuperstructureState.IDLE;
+      } else if (intake.getTopBeamBreakTriggered()) {
+        nextSystemState = SuperstructureState.IDLE;
+        requestIntake = false;
       }
     } else if (systemState == SuperstructureState.SPIT) {
-      if (elevatorPivotLowLevel.atElevatorSetpoint(0.0)
-          && elevatorPivotLowLevel.atPivotSetpoint(Rotation2d.fromDegrees(0.0))) {
-          serializer.spit();
-        } else {
-          serializer.hold();
+      if (elevatorPivotLowLevel.atSetpoint()) {
+        serializer.spit();
+      } else {
+        serializer.hold();
       }
       shooter.stop();
       intake.spit();
-      elevatorPivotLowLevel.requestPursueSetpoint(Rotation2d.fromDegrees(0.0), 0.0);
+      elevatorPivotLowLevel.requestPursueSetpoint(PIVOT_SPIT_ANGLE, ELEVATOR_SPIT_HEIGHT);
 
       if (!requestSpit) {
         nextSystemState = SuperstructureState.IDLE;
+        hasGamePiece = false;
       }
     } else if (systemState == SuperstructureState.SPEAKER_SCORING_POSE) {
-      
+      ShotParameter shot = speakerShotFunction.apply(wantsShootOverDefense);
+      if (shouldShoot) {
+        serializer.index();
+      } else {
+        serializer.hold();
+      }
+      shooter.set(shot.leftRPM, shot.rightRPM);
+      intake.stop();
+      if (wantsShootOverDefense) {
+        elevatorPivotLowLevel.requestPursueSetpoint(
+            new Rotation2d(shot.pivotAngleDeg), ELEVATOR_SPEAKER_DEFENSE_HEIGHT);
+      } else {
+        elevatorPivotLowLevel.requestPursueSetpoint(
+            new Rotation2d(shot.pivotAngleDeg), ELEVATOR_SPEAKER_SHORT_HEIGHT);
+      }
+
+      if (wantsShoot && elevatorPivotLowLevel.atSetpoint()) {
+        shouldShoot = true;
+        shootingTimer.reset();
+      }
+
+      if (!requestGoToSpeakerPose) {
+        shouldShoot = false;
+        nextSystemState = SuperstructureState.IDLE;
+      } else if (shouldShoot && shootingTimer.get() > 0.25) {
+        shouldShoot = false;
+        hasGamePiece = false;
+        nextSystemState = SuperstructureState.IDLE;
+      }
+    } else if (systemState == SuperstructureState.AMP_SCORING_POSE) {
+      if (shouldShoot) {
+        serializer.index();
+      } else {
+        serializer.hold();
+      }
+      shooter.set(0.0, 0.0);
+      intake.stop();
+      elevatorPivotLowLevel.requestPursueSetpoint(PIVOT_AMP_ANGLE, ELEVATOR_AMP_HEIGHT);
+
+      if (wantsShoot && elevatorPivotLowLevel.atSetpoint()) {
+        shouldShoot = true;
+        shootingTimer.reset();
+      }
+
+      if (!requestGoToAmpPose) {
+        shouldShoot = false;
+        nextSystemState = SuperstructureState.IDLE;
+      } else if (shouldShoot && shootingTimer.get() > 0.25) {
+        shouldShoot = false;
+        hasGamePiece = false;
+        nextSystemState = SuperstructureState.IDLE;
+      }
+    } else if (systemState == SuperstructureState.GO_TO_CLIMB) {
+      serializer.hold();
+      shooter.idleSpeed();
+      intake.stop();
+      elevatorPivotLowLevel.requestPursueSetpoint(
+          PIVOT_GO_TO_CLIMB_ANGLE, ELEVATOR_GO_TO_CLIMB_HEIGHT);
+
+      if (requestClimb && elevatorPivotLowLevel.atSetpoint()) {
+        nextSystemState = SuperstructureState.CLIMB;
+      } else if (!requestGoToClimb) {
+        nextSystemState = SuperstructureState.IDLE;
+      }
+    } else if (systemState == SuperstructureState.CLIMB) {
+      serializer.hold();
+      shooter.idleSpeed();
+      intake.stop();
+      elevatorPivotLowLevel.requestPursueSetpoint(PIVOT_CLIMBED_ANGLE, ELEVATOR_CLIMBED_HEIGHT);
+
+      if (requestGoToTrapPose && elevatorPivotLowLevel.atSetpoint()) {
+        nextSystemState = SuperstructureState.AIM_IN_TRAP;
+      } else {
+        nextSystemState = SuperstructureState.IDLE;
+      }
+    } else if (systemState == SuperstructureState.AIM_IN_TRAP) {
+      if (shouldShoot) {
+        serializer.index();
+      } else {
+        serializer.hold();
+      }
+      shooter.set(0.0, 0.0);
+      intake.stop();
+      elevatorPivotLowLevel.requestPursueSetpoint(PIVOT_TRAP_ANGLE, ELEVATOR_TRAP_HEIGHT);
+
+      if (wantsShoot && elevatorPivotLowLevel.atSetpoint()) {
+        shouldShoot = true;
+      }
+
+      if (!requestGoToTrapPose) {
+        nextSystemState = SuperstructureState.IDLE;
+      }
+    }
+
+    if (systemState != nextSystemState) {
+      stateStartTime = BreadUtil.getFPGATimeSeconds();
+      systemState = nextSystemState;
     }
   }
 
-  
+  /** User-facing requests */
+  public void requestIdle() {
+    unsetAllRequests();
+  }
+
+  public void requestHome() {
+    unsetAllRequests();
+    requestHome = true;
+  }
+
+  public void requestSpit() {
+    unsetAllRequests();
+    requestSpit = true;
+  }
+
+  public void requestGoToSpeakerPose(boolean wantsShoot, boolean wantsShootOverDefense) {
+    unsetAllRequests();
+    requestGoToSpeakerPose = true;
+    this.wantsShoot = wantsShoot;
+    this.wantsShootOverDefense = wantsShootOverDefense;
+  }
+
+  public void requestGoToAmpPose(boolean wantsShoot) {
+    unsetAllRequests();
+    requestGoToAmpPose = true;
+    this.wantsShoot = wantsShoot;
+  }
+
+  public void requestGoToClimb() {
+    unsetAllRequests();
+    requestGoToClimb = true;
+  }
+
+  public void requestClimb() {
+    unsetAllRequests();
+    requestClimb = true;
+  }
+
+  public void requestGoToGoTrapPose(boolean wantsShoot) {
+    unsetAllRequests();
+    requestGoToTrapPose = true;
+    this.wantsShoot = wantsShoot;
+  }
+
+  private void unsetAllRequests() {
+    requestHome = false;
+    requestIntake = false;
+    requestSpit = false;
+    requestGoToSpeakerPose = false;
+    requestGoToAmpPose = false;
+    requestGoToClimb = false;
+    requestClimb = false;
+    requestGoToTrapPose = false;
+  }
 }

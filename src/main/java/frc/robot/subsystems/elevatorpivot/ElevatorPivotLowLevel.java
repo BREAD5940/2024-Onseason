@@ -50,7 +50,8 @@ public class ElevatorPivotLowLevel {
     pivotIO.updateInputs(pivotInputs);
 
     /* Constrain the pivot and elevator setpoints based on the positions of each system */
-    Rotation2d adjustedDesiredPivotAngle = getPivotMinAngleFromElevatorHeight(desiredElevatorHeight);
+    Rotation2d adjustedDesiredPivotAngle =
+        getPivotMinAngleFromElevatorHeight(desiredElevatorHeight);
     double adjustedDesiredElevatorHeight = getElevatorMinHeightFromPivotAngle(desiredPivotAngle);
 
     /* Handle statemachine logic */
@@ -104,10 +105,15 @@ public class ElevatorPivotLowLevel {
       systemState = nextSystemState;
     }
   }
-  
+
   /* Returns the current system state of the elevator/pivot */
   public ElevatorPivotState getSystemState() {
     return systemState;
+  }
+
+  /* Returns whether or not the elevator/pivot is at its setpoint */
+  public boolean atSetpoint() {
+    return atPivotSetpoint(desiredPivotAngle) && atElevatorSetpoint(desiredElevatorHeight);
   }
 
   /* Returns whether or not the pivot is at its setpoint */
@@ -122,12 +128,24 @@ public class ElevatorPivotLowLevel {
         elevatorInputs.posMeters, setpoint, ELEVATOR_SETPOINT_TOLERANCE_METERS, true);
   }
 
-  /* Requests the elevator/pivot to pursue a setpoint */
+  /* Requests the elevator/pivot to pursue a setpoint and constrains the minimum elevator and pivot positions based on the current position of each mech.  */
   public void requestPursueSetpoint(Rotation2d pivotAngle, double elevatorHeight) {
+    // Set requests
     requestPursueSetpoint = true;
     requestIdle = false;
-    desiredPivotAngle = pivotAngle;
-    desiredElevatorHeight = elevatorHeight;
+
+    // Limit pivot angle and elevator height
+    double minPivotAngleRad =
+        getPivotMinAngleFromElevatorHeight(elevatorInputs.posMeters).getRadians();
+    double minElevatorHeight =
+        getElevatorMinHeightFromPivotAngle(new Rotation2d(pivotInputs.angleRads));
+
+    // Set setpoints
+    desiredPivotAngle =
+        new Rotation2d(
+            MathUtil.clamp(
+                pivotAngle.getRadians(), minPivotAngleRad, PIVOT_MAX_ANGLE.getRadians()));
+    desiredElevatorHeight = MathUtil.clamp(elevatorHeight, minElevatorHeight, ELEVATOR_MAX_HEIGHT);
   }
 
   /* Requests the elevator/pivot to go into idle mode */

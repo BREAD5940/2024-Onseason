@@ -26,7 +26,7 @@ public class Intake {
     io.setPercent(0.0);
     io.enableBrakeMode(false);
   }
-  
+
   /* Spin the intake at intaking speed */
   public void intake() {
     io.setCurrentLimit(0, 0, 0);
@@ -62,5 +62,4 @@ public class Intake {
   public boolean getBottomBeamBreakTriggered() {
     return inputs.bottomBeamBreakTriggered;
   }
-
 }

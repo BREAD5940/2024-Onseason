@@ -23,6 +23,24 @@ public class Constants {
     /* Elevator setpoints speeds and positions */
     public static double ELEVATOR_HOMING_PERCENT = -0.3;
 
+    public static double ELEVATOR_IDLE_HEIGHT = 0.0;
+
+    public static double ELEVATOR_INTAKE_HEIGHT = 0.0;
+
+    public static double ELEVATOR_SPIT_HEIGHT = 0.0;
+
+    public static double ELEVATOR_SPEAKER_DEFENSE_HEIGHT = 0.0;
+
+    public static double ELEVATOR_SPEAKER_SHORT_HEIGHT = 0.0;
+
+    public static double ELEVATOR_AMP_HEIGHT = 0.0;
+
+    public static double ELEVATOR_GO_TO_CLIMB_HEIGHT = 0.0;
+
+    public static double ELEVATOR_CLIMBED_HEIGHT = 0.0;
+
+    public static double ELEVATOR_TRAP_HEIGHT = 0.0;
+
     /* Misc. constants */
     public static double ELEVATOR_SETPOINT_TOLERANCE_METERS = 0.01;
     public static double ELEVATOR_HOMING_TRESHOLD_SEC = 0.25;
@@ -43,7 +61,27 @@ public class Constants {
     /* Pivot setpoint angles */
     public static Rotation2d PIVOT_NEUTRAL_ANGLE = Rotation2d.fromDegrees(45.0);
 
+    public static Rotation2d PIVOT_IDLE_ANGLE = Rotation2d.fromDegrees(0.0);
+
+    public static Rotation2d PIVOT_INTAKE_ANGLE = Rotation2d.fromDegrees(0.0);
+
+    public static Rotation2d PIVOT_SPIT_ANGLE = Rotation2d.fromDegrees(0.0);
+
+    public static Rotation2d PIVOT_AMP_ANGLE = Rotation2d.fromDegrees(0.0);
+
+    public static Rotation2d PIVOT_GO_TO_CLIMB_ANGLE = Rotation2d.fromDegrees(0.0);
+
+    public static Rotation2d PIVOT_CLIMBED_ANGLE = Rotation2d.fromDegrees(0.0);
+
+    public static Rotation2d PIVOT_TRAP_ANGLE = Rotation2d.fromDegrees(0.0);
+
     /* Misc. constants */
     public static double PIVOT_SETPOINT_TOLERANCE_RADS = 0.01;
+  }
+
+  /* Constants pertaining to the shooter */
+  public static class Shooter {
+
+    public static double SHOOTER_SETPOINT_TOLERANCE_RPM = 10.0;
   }
 }

@@ -52,5 +52,4 @@ public class Serializer {
   public boolean getBeamBreakTriggered() {
     return inputs.beamBreakTriggered;
   }
-  
 }
