@@ -57,8 +57,8 @@ public class FieldConstants {
   /** Each corner of the speaker * */
   public static final class Speaker {
 
-   /** Center of the speaker opening (blue alliance) */
-  public static Pose2d centerSpeakerOpening =
+    /** Center of the speaker opening (blue alliance) */
+    public static Pose2d centerSpeakerOpening =
         new Pose2d(0.0, fieldWidth - Units.inchesToMeters(104.0), new Rotation2d());
   }
 
