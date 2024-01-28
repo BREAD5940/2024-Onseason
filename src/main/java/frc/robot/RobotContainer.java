@@ -13,11 +13,14 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.commons.BreadUtil;
 import frc.robot.constants.TunerConstants;
 import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.vision.northstar.AprilTagVision;
+import frc.robot.vision.northstar.AprilTagVisionIO;
+import frc.robot.vision.northstar.AprilTagVisionIONorthstar;
 
 public class RobotContainer {
 
-  XboxController driver = new XboxController(0);
-  Swerve swerve =
+  public static XboxController driver = new XboxController(0);
+  public static Swerve swerve =
       new Swerve(
           TunerConstants.DrivetrainConstants,
           TunerConstants.FrontLeft,
@@ -25,8 +28,20 @@ public class RobotContainer {
           TunerConstants.BackLeft,
           TunerConstants.BackRight);
 
+  public static AprilTagVisionIO frontLeftCamera = new AprilTagVisionIONorthstar("northstar-left");
+  public static AprilTagVisionIO frontRightCamera =
+      new AprilTagVisionIONorthstar("northstar-right");
+
+  public static AprilTagVision apriltagVision =
+      new AprilTagVision(frontLeftCamera, frontRightCamera);
+
   public RobotContainer() {
     configureBindings();
+    configureNorthstarVision();
+  }
+
+  private void configureNorthstarVision() {
+    apriltagVision.setDataInterfaces(swerve::getLatestPose, swerve::addVisionMeasurement);
   }
 
   private void configureBindings() {

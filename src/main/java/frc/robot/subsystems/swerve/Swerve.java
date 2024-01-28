@@ -15,6 +15,8 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commons.TimestampedVisionUpdate;
+import java.util.List;
 import org.littletonrobotics.junction.Logger;
 
 public class Swerve extends SubsystemBase {
@@ -156,6 +158,21 @@ public class Swerve extends SubsystemBase {
   /* Resets the pose estimate of the robot */
   public void resetPose(Pose2d newPose) {
     drivetrain.seedFieldRelative(newPose);
+  }
+
+  /* Gets the latest robot pose */
+  public Pose2d getLatestPose() {
+    return drivetrain.getState().Pose;
+  }
+
+  /* Adds a vision measurement to the Kalman Filter, correcting the odometry pose estimate while accounting for measurement noise. */
+  public void addVisionMeasurement(List<TimestampedVisionUpdate> visionData) {
+    for (var timestampedVisionUpdate : visionData) {
+      drivetrain.addVisionMeasurement(
+          timestampedVisionUpdate.pose(),
+          timestampedVisionUpdate.timestamp(),
+          timestampedVisionUpdate.stdDevs());
+    }
   }
 
   /* Swerve State */
