@@ -82,6 +82,8 @@ public class Constants {
 
     /* Misc. constants */
     public static double PIVOT_SETPOINT_TOLERANCE_RADS = 0.01;
+    public static int PIVOT_ID = 58;
+    public static int PIVOT_GEAR_RATIO = 1;
   }
 
   /* Constants pertaining to the shooter */
