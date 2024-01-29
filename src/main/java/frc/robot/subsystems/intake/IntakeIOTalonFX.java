@@ -1,23 +1,21 @@
 package frc.robot.subsystems.intake;
 
-import static frc.robot.constants.Constants.Intake.*;
-
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.DutyCycleOut;
-import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.util.Units;
 import frc.robot.commons.LoggedTunableNumber;
+import frc.robot.constants.Constants.Intake.*;
 
 public class IntakeIOTalonFX implements IntakeIO {
   // create motor
-   /* Hardware */
+  /* Hardware */
   private final TalonFX motor = new TalonFX(INTAKE_ID, "dabus");
 
   /* Status Signals */
@@ -51,12 +49,11 @@ public class IntakeIOTalonFX implements IntakeIO {
     currentLimitConfigs.SupplyCurrentLimitEnable = true;
 
     // motor direction
-  motorOutputConfigs = new MotorOutputConfigs();
+    motorOutputConfigs = new MotorOutputConfigs();
 
     motorOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
     motorOutputConfigs.PeakForwardDutyCycle = 1.0;
     motorOutputConfigs.PeakReverseDutyCycle = -1.0;
-
 
     // set motor to brake mode
     motorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
@@ -87,10 +84,10 @@ public class IntakeIOTalonFX implements IntakeIO {
     inputs.velocityRPM = velocity.getValueAsDouble() * 60;
     inputs.appliedVolts = motor.getMotorVoltage().getValue();
     inputs.currentAmps = motor.getSupplyCurrent().getValue();
-  } 
-  
+  }
+
   @Override
   public void setPercent(double percent) {
-  motor.setControl(new DutyCycleOut(percent));
+    motor.setControl(new DutyCycleOut(percent));
   }
 }

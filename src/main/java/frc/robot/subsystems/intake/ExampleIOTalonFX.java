@@ -18,10 +18,8 @@ public class ExampleIOTalonFX implements ExampleIntakeIO {
   @Override
   public void updateInputs(ExampleIntakeIOInputs inputs) {
     // update positionRad, velocityRpm, appliedVolts, and currentAmps
-  } 
-  
-  @Override
-  public void setPercent(double percent) {
-
   }
+
+  @Override
+  public void setPercent(double percent) {}
 }
