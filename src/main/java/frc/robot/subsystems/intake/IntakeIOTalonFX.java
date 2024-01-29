@@ -6,21 +6,18 @@ import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.util.Units;
 import frc.robot.commons.LoggedTunableNumber;
-import frc.robot.constants.Constants.Intake.*;
+import static frc.robot.constants.Constants.Intake.*;
 
 public class IntakeIOTalonFX implements IntakeIO {
   // create motor
   /* Hardware */
   private final TalonFX motor = new TalonFX(INTAKE_ID, "dabus");
-
-  /* Status Signals */
-  private final StatusSignal<Double> position;
-  private final StatusSignal<Double> velocity;
 
   /* Configurator */
   private final TalonFXConfigurator configurator;
@@ -71,17 +68,14 @@ public class IntakeIOTalonFX implements IntakeIO {
     configurator.apply(motorOutputConfigs);
     configurator.apply(slot0Configs);
 
-    position = motor.getPosition();
-    velocity = motor.getVelocity();
-
     motor.optimizeBusUtilization();
   }
 
   @Override
   public void updateInputs(IntakeIOInputs inputs) {
     // update positionRad, velocityRpm, appliedVolts, and currentAmps
-    inputs.positionRads = Units.rotationsToRadians(position.getValueAsDouble());
-    inputs.velocityRPM = velocity.getValueAsDouble() * 60;
+    inputs.positionRads = Units.rotationsToRadians(motor.getPosition().getValueAsDouble());
+    inputs.velocityRPM = motor.getVelocity().getValueAsDouble() * 60;
     inputs.appliedVolts = motor.getMotorVoltage().getValue();
     inputs.currentAmps = motor.getSupplyCurrent().getValue();
   }
@@ -90,4 +84,45 @@ public class IntakeIOTalonFX implements IntakeIO {
   public void setPercent(double percent) {
     motor.setControl(new DutyCycleOut(percent));
   }
+    @Override
+  public void setVelocity(double velocityRPM) {
+    motor.setControl(new VelocityVoltage(velocityRPM / 60.0));
+  }
+  @Override
+  public void updateTunableNumbers() {
+    if (kS.hasChanged(0)
+        || kV.hasChanged(0)
+        || kP.hasChanged(0)
+        || kI.hasChanged(0)
+        || kD.hasChanged(0)) {
+
+      slot0Configs.kS = kS.get();
+      slot0Configs.kV = kV.get();
+
+      slot0Configs.kP = kP.get();
+      slot0Configs.kI = kI.get();
+      slot0Configs.kD = kD.get();
+
+      configurator.apply(slot0Configs);
+    }
+  }
+  @Override
+  public void enableBrakeMode(boolean enable) {
+    if (enable) {
+      motorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
+    } else {
+      motorOutputConfigs.NeutralMode = NeutralModeValue.Coast;
+    }
+  }
+  @Override
+    public void setCurrentLimit(
+        double statorCurrentLimit, double supplyCurrentThreshold, double supplyTimeThreshold) {
+      currentLimitConfigs.StatorCurrentLimitEnable = true;
+      currentLimitConfigs.SupplyCurrentThreshold = supplyCurrentThreshold;
+      currentLimitConfigs.SupplyTimeThreshold = supplyTimeThreshold;
+      currentLimitConfigs.StatorCurrentLimit = statorCurrentLimit;
+
+      configurator.apply(currentLimitConfigs);
+    }
+  
 }
