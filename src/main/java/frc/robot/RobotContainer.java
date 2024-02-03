@@ -16,8 +16,8 @@ import frc.robot.subsystems.swerve.Swerve;
 
 public class RobotContainer {
 
-  XboxController driver = new XboxController(0);
-  Swerve swerve =
+  public static XboxController driver = new XboxController(0);
+  public static Swerve swerve =
       new Swerve(
           TunerConstants.DrivetrainConstants,
           TunerConstants.FrontLeft,
@@ -41,14 +41,14 @@ public class RobotContainer {
               double dy;
 
               if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-                dx = Math.pow(-x, 1);
-                dy = Math.pow(-y, 1);
+                dx = Math.pow(-x, 1) * 4.0;
+                dy = Math.pow(-y, 1) * 4.0;
 
               } else {
-                dx = Math.pow(-x, 1) * -1;
-                dy = Math.pow(-y, 1) * -1;
+                dx = Math.pow(-x, 1) * -1 * 4.0;
+                dy = Math.pow(-y, 1) * -1 * 4.0;
               }
-              double rot = Math.pow(-omega, 3) * 1.5;
+              double rot = Math.pow(-omega, 3) * 3.0;
               swerve.requestPercent(new ChassisSpeeds(dx, dy, rot), true);
 
               if (driver.getRawButtonPressed(XboxController.Button.kStart.value)) {

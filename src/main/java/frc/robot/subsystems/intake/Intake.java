@@ -30,14 +30,14 @@ public class Intake {
   /* Spin the intake at intaking speed */
   public void intake() {
     io.setCurrentLimit(0, 0, 0);
-    io.setPercent(0);
+    io.setPercent(1.0);
     io.enableBrakeMode(false);
   }
 
   /* Spin the intake at spit speed */
   public void spit() {
     io.setCurrentLimit(0, 0, 0);
-    io.setPercent(0);
+    io.setPercent(-0.25);
     io.enableBrakeMode(false);
   }
 

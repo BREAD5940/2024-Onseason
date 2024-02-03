@@ -6,7 +6,13 @@ public class Constants {
 
   public static final boolean tuningMode = true;
 
-  /* Coast pertaining to the swerve drive */
+  /* Constants pertaining to the intake */
+  public static class Intake {
+
+    public static int INTAKE_ID = 16;
+  }
+
+  /* Constants pertaining to the swerve drive */
   public static class Swerve {
 
     public static double COAST_TRESHOLD_MPS = 0.05;
