@@ -41,9 +41,9 @@ public class Shooter {
   /* Returns whether or not the shooter is at its setpoint */
   public boolean atSetpoint() {
     return BreadUtil.atReference(
-            inputs.flywheelLeftVelocityRPM, desiredLeftRPM, SHOOTER_SETPOINT_TOLERANCE_RPM, false)
+            inputs.flywheelLeftVelocityRpm, desiredLeftRPM, SHOOTER_SETPOINT_TOLERANCE_RPM, false)
         && BreadUtil.atReference(
-            inputs.flywheelRightVelocityRPM,
+            inputs.flywheelRightVelocityRpm,
             desiredRightRPM,
             SHOOTER_SETPOINT_TOLERANCE_RPM,
             false);

@@ -55,6 +55,10 @@ public class Constants {
 
   /* Constants pertaining to the pivot */
   public static class Pivot {
+    public static final int PIVOT_ID = 15;
+    public static final int PIVOT_AZIMUTH_ID = 15;
+    public static final double PIVOT_GEAR_RATIO = 1.0;
+    public static final double PIVOT_MAGNET_OFFSET = 1.0;
 
     public static Rotation2d PIVOT_MAX_ANGLE = Rotation2d.fromDegrees(0.0);
     public static Rotation2d PIVOT_MIN_SAFE_ANGLE =
@@ -89,5 +93,16 @@ public class Constants {
   public static class Shooter {
 
     public static double SHOOTER_SETPOINT_TOLERANCE_RPM = 10.0;
+    public static final int FLYWHEEL_LEFT_ID = 0;
+    public static final int FLYWHEEL_RIGHT_ID = 0;
+
+    public static final double FLYWHEEL_LEFT_GEAR_RATIO = 1.0;
+    public static final double FLYWHEEL_RIGHT_GEAR_RATIO = 1.0;
+  }
+
+/* Constants pertaining to the serializer */
+  public class Serializer {
+    // Motor/Encoder IDs
+    public static final int SERIALIZER_ID = 15;
   }
 }

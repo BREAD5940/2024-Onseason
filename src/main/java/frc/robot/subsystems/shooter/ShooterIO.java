@@ -6,12 +6,12 @@ public interface ShooterIO {
   @AutoLog
   public static class ShooterIOInputs {
     public double flywheelLeftPosRad = 0.0;
-    public double flywheelLeftVelocityRPM = 0.0;
+    public double flywheelLeftVelocityRpm = 0.0;
     public double flywheelLeftAppliedVolts = 0.0;
     public double flywheelLeftTempCelcius = 0.0;
 
-    public double flywheelRightPosRadians = 0.0;
-    public double flywheelRightVelocityRPM = 0.0;
+    public double flywheelRightPosRad = 0.0;
+    public double flywheelRightVelocityRpm = 0.0;
     public double flywheelRightAppliedVolts = 0.0;
     public double flywheelRightTempCelcius = 0.0;
 
