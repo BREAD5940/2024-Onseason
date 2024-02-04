@@ -12,7 +12,6 @@ public interface PivotIO {
     public double velDegreesPerSecond = 0.0;
     public double currentAmps = 0.0;
     public double appliedVoltage = 0.0;
-    public double appliedPercent = 0.0;
     public double tempCelcius = 0.0;
     public double armTargetPosition = 0.0;
     public double armTargetVelocity = 0.0;
@@ -26,6 +25,10 @@ public interface PivotIO {
 
   /** Sets the speed of the pivot to the desired percent output */
   public default void setPercent(double percent) {}
+
+  /** Sets current limit for the pivot motor. */
+  public default void setCurrentLimit(
+      double currentLimit, double supplyCurrentThreshold, double supplyTimeThreshold) {}
 
   /** Enables or disables the pivot in brake mode */
   public default void enableBrakeMode(boolean enable) {}

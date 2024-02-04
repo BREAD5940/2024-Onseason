@@ -3,7 +3,6 @@ package frc.robot.subsystems.serializer;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface SerializerIO {
-
   @AutoLog
   public class SerializerIOInputs {
     public double positionRads = 0.0;
