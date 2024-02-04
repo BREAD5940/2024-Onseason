@@ -56,7 +56,7 @@ public class Swerve extends SubsystemBase {
 
   /* Telemetry function */
   private void handleTelemetry() {
-    Pose2d pose = drivetrain.getState().Pose;
+    Pose2d pose = getPose();
     Logger.recordOutput("Odometry/PoseEstimatorEstimate", pose);
   }
 
@@ -156,6 +156,11 @@ public class Swerve extends SubsystemBase {
   /* Resets the pose estimate of the robot */
   public void resetPose(Pose2d newPose) {
     drivetrain.seedFieldRelative(newPose);
+  }
+
+  /* Returns the current pose estimate of the robot */
+  public Pose2d getPose() {
+    return drivetrain.getState().Pose;
   }
 
   /* Swerve State */

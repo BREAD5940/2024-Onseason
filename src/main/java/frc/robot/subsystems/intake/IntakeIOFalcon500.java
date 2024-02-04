@@ -65,7 +65,6 @@ public class IntakeIOFalcon500 implements IntakeIO {
   @Override
   public void setPercent(double motorSpeed) {
     motor.setControl(new DutyCycleOut(motorSpeed));
-    System.out.println(true);
   }
 
   @Override

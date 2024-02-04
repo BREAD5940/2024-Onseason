@@ -1,5 +1,6 @@
 package frc.robot;
 
+import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -19,6 +20,10 @@ public class Robot extends LoggedRobot {
   private RobotContainer m_robotContainer;
 
   Intake intake = new Intake(new IntakeIOFalcon500());
+
+  public static PathPlannerPath sixNoteA;
+  public static PathPlannerPath sixNoteB;
+  public static PathPlannerPath sixNoteC;
 
   @Override
   public void robotInit() {
@@ -41,6 +46,10 @@ public class Robot extends LoggedRobot {
     }
 
     Logger.start();
+
+    sixNoteA = PathPlannerPath.fromPathFile("Six Note A");
+    sixNoteB = PathPlannerPath.fromPathFile("Six Note B");
+    sixNoteC = PathPlannerPath.fromPathFile("Six Note C");
   }
 
   @Override

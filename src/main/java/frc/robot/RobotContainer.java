@@ -8,11 +8,11 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.commons.BreadUtil;
 import frc.robot.constants.TunerConstants;
 import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.swerve.TrajectoryFollowerCommand;
 
 public class RobotContainer {
 
@@ -63,6 +63,8 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
+    return new TrajectoryFollowerCommand(Robot.sixNoteA, swerve, true)
+        .andThen(new TrajectoryFollowerCommand(Robot.sixNoteB, swerve))
+        .andThen(new TrajectoryFollowerCommand(Robot.sixNoteC, swerve));
   }
 }
