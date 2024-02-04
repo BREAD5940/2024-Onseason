@@ -163,6 +163,11 @@ public class Swerve extends SubsystemBase {
     return drivetrain.getState().Pose;
   }
 
+  /* Returns the robot relative speeds of the robot */
+  public ChassisSpeeds getRobotRelativeSpeeds() {
+    return drivetrain.getState().speeds;
+  }
+
   /* Swerve State */
   public enum SwerveState {
     VELOCITY,

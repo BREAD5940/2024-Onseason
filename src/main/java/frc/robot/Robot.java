@@ -55,6 +55,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+    Logger.recordOutput("NotePose", RobotContainer.notePoseSupplier.getLatestNotePose());
   }
 
   @Override
