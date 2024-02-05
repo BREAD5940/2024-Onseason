@@ -5,15 +5,15 @@ import org.littletonrobotics.junction.AutoLog;
 public interface ShooterIO {
   @AutoLog
   public static class ShooterIOInputs {
-    public double flywheelLeftPosRad = 0.0;
-    public double flywheelLeftVelocityRpm = 0.0;
-    public double flywheelLeftAppliedVolts = 0.0;
-    public double flywheelLeftTempCelcius = 0.0;
+    public double shooterLeftPosRad = 0.0;
+    public double shooterLeftVelocityRpm = 0.0;
+    public double shooterLeftAppliedVolts = 0.0;
+    public double shooterLeftTempCelcius = 0.0;
 
-    public double flywheelRightPosRad = 0.0;
-    public double flywheelRightVelocityRpm = 0.0;
-    public double flywheelRightAppliedVolts = 0.0;
-    public double flywheelRightTempCelcius = 0.0;
+    public double shooterRightPosRad = 0.0;
+    public double shooterRightVelocityRpm = 0.0;
+    public double shooterRightAppliedVolts = 0.0;
+    public double shooterRightTempCelcius = 0.0;
 
     public double[] currentAmps = new double[] {}; // {left, right}
   }

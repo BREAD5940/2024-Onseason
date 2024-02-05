@@ -1,15 +1,9 @@
 package frc.robot;
 
-import com.pathplanner.lib.commands.PathfindHolonomic;
-import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
-import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.XboxController;
@@ -17,14 +11,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.commons.BreadUtil;
 import frc.robot.constants.TunerConstants;
-import frc.robot.subsystems.swerve.NotePoseSupplier;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.TrajectoryFollowerCommand;
+import frc.robot.vision.northstar.AprilTagVision;
+import frc.robot.vision.northstar.AprilTagVisionIO;
+import frc.robot.vision.northstar.AprilTagVisionIONorthstar;
 
 public class RobotContainer {
 
   public static XboxController driver = new XboxController(0);
-  public static NotePoseSupplier notePoseSupplier = new NotePoseSupplier();
   public static Swerve swerve =
       new Swerve(
           TunerConstants.DrivetrainConstants,
@@ -32,41 +27,16 @@ public class RobotContainer {
           TunerConstants.FrontRight,
           TunerConstants.BackLeft,
           TunerConstants.BackRight);
+  public static final AprilTagVisionIO frontLeft = new AprilTagVisionIONorthstar("front-left-camera");
+  public static final AprilTagVisionIO frontRight = new AprilTagVisionIONorthstar("front-right-camera");
+  public static final AprilTagVisionIO backLeft = new AprilTagVisionIONorthstar("back-left-camera");
+  public static final AprilTagVisionIO backRight = new AprilTagVisionIONorthstar("back-right-camera");
+  public static final AprilTagVision northstarVision = new AprilTagVision(frontLeft, frontRight, backLeft, backRight);
 
   public RobotContainer() {
     configureBindings();
+    configureNorthstar();
   }
-
-  // Since we are using a holonomic drivetrain, the rotation component of this pose
-  // represents the goal holonomic rotation
-  static Pose2d targetPose = new Pose2d(11.7, 4.1, Rotation2d.fromDegrees(180));
-
-  // Create the constraints to use while pathfinding
-  static PathConstraints constraints =
-      new PathConstraints(3.0, 4.0, Units.degreesToRadians(540), Units.degreesToRadians(720));
-
-  // See the "Follow a single path" example for more info on what gets passed here
-  Command pathfindingCommand =
-      new PathfindHolonomic(
-          targetPose,
-          constraints,
-          0.0, // Goal end velocity in m/s. Optional
-          swerve::getPose,
-          swerve::getRobotRelativeSpeeds,
-          (speeds) -> swerve.requestVelocity(speeds, false),
-          new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live
-              // in your Constants class
-              new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-              new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
-              4.5, // Max module speed, in m/s
-              0.4, // Drive base radius in meters. Distance from robot center to furthest module.
-              new ReplanningConfig() // Default path replanning config. See the API for the options
-              // here
-              ),
-          0.0, // Rotation delay distance in meters. This is how far the robot should travel before
-          // attempting to rotate. Optional
-          swerve // Reference to drive subsystem to set requirements
-          );
 
   private void configureBindings() {
     swerve.setDefaultCommand(
@@ -101,9 +71,15 @@ public class RobotContainer {
             swerve));
   }
 
+  private void configureNorthstar() {
+    northstarVision.setDataInterfaces(swerve::getPose, swerve::addVisionData);
+    }
+  
+
   public Command getAutonomousCommand() {
     return new TrajectoryFollowerCommand(Robot.sixNoteA, swerve, true)
         .andThen(new TrajectoryFollowerCommand(Robot.sixNoteB, swerve))
         .andThen(new TrajectoryFollowerCommand(Robot.sixNoteC, swerve));
   }
+
 }

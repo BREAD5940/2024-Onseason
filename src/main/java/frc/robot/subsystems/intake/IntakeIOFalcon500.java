@@ -2,8 +2,6 @@ package frc.robot.subsystems.intake;
 
 import static frc.robot.constants.Constants.Intake.*;
 
-import com.ctre.phoenix6.BaseStatusSignal;
-import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -11,13 +9,11 @@ import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.util.Units;
 import frc.robot.commons.LoggedTunableNumber;
 
 public class IntakeIOFalcon500 implements IntakeIO {
-  static final double UPDATE_FREQUENCY_HZ = 50.0;
 
   /* Hardware */
   private final TalonFX motor = new TalonFX(INTAKE_ID, "dabus");
@@ -26,13 +22,9 @@ public class IntakeIOFalcon500 implements IntakeIO {
   private final TalonFXConfigurator configurator;
 
   /* Configs */
-  private CurrentLimitsConfigs currentLimitConfigs;
-  private Slot0Configs slot0Configs;
-  private MotorOutputConfigs motorOutputConfigs;
-
-    /* Status Signals */
-  private final StatusSignal<Double> position;
-  private final StatusSignal<Double> velocity;
+  private final CurrentLimitsConfigs currentLimitConfigs;
+  private final Slot0Configs slot0Configs;
+  private final MotorOutputConfigs motorOutputConfigs;
 
   /* Gains */
   LoggedTunableNumber kS = new LoggedTunableNumber("Intake/kS", 0.0);
@@ -42,40 +34,33 @@ public class IntakeIOFalcon500 implements IntakeIO {
   LoggedTunableNumber kD = new LoggedTunableNumber("Intake/kD", 0.0);
 
   public IntakeIOFalcon500() {
+    /* Instantiate configuator */
     configurator = motor.getConfigurator();
 
+    /* Create configs */
     currentLimitConfigs = new CurrentLimitsConfigs();
-
     currentLimitConfigs.SupplyCurrentLimit = 40.0;
     currentLimitConfigs.SupplyCurrentThreshold = 60.0;
     currentLimitConfigs.SupplyTimeThreshold = 1;
     currentLimitConfigs.SupplyCurrentLimitEnable = true;
 
     motorOutputConfigs = new MotorOutputConfigs();
-
-    motorOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
+    motorOutputConfigs.Inverted = INTAKE_INVERSION;
     motorOutputConfigs.PeakForwardDutyCycle = 1.0;
     motorOutputConfigs.PeakReverseDutyCycle = -1.0;
     motorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
 
     slot0Configs = new Slot0Configs();
-
     slot0Configs.kS = kS.get();
     slot0Configs.kV = kV.get();
-
     slot0Configs.kP = kP.get();
     slot0Configs.kI = kI.get();
     slot0Configs.kD = kD.get();
 
+    /* Apply configs */
     configurator.apply(currentLimitConfigs);
     configurator.apply(motorOutputConfigs);
     configurator.apply(slot0Configs);
-
-
-    position = motor.getPosition();
-    velocity = motor.getVelocity();
-
-    BaseStatusSignal.setUpdateFrequencyForAll(UPDATE_FREQUENCY_HZ, position, velocity);
 
     motor.optimizeBusUtilization();
   }
@@ -87,13 +72,11 @@ public class IntakeIOFalcon500 implements IntakeIO {
     inputs.currentAmps = motor.getSupplyCurrent().getValue();
     inputs.appliedVolts = motor.getMotorVoltage().getValue();
     inputs.tempCelcius = motor.getDeviceTemp().getValue();
-
-
   }
 
   @Override
-  public void setPercent(double motorSpeed) {
-    motor.setControl(new DutyCycleOut(motorSpeed));
+  public void setPercent(double percent) {
+    motor.setControl(new DutyCycleOut(percent));
   }
 
   @Override
@@ -114,11 +97,9 @@ public class IntakeIOFalcon500 implements IntakeIO {
 
   @Override
   public void enableBrakeMode(boolean enable) {
-    if (enable) {
-      motorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
-    } else {
-      motorOutputConfigs.NeutralMode = NeutralModeValue.Coast;
-    }
+    motorOutputConfigs.NeutralMode = enable ? NeutralModeValue.Brake : NeutralModeValue.Coast;
+
+    configurator.apply(motorOutputConfigs);
   }
 
   @Override
@@ -131,7 +112,6 @@ public class IntakeIOFalcon500 implements IntakeIO {
 
       slot0Configs.kS = kS.get();
       slot0Configs.kV = kV.get();
-
       slot0Configs.kP = kP.get();
       slot0Configs.kI = kI.get();
       slot0Configs.kD = kD.get();

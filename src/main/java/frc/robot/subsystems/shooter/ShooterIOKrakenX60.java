@@ -1,7 +1,7 @@
 package frc.robot.subsystems.shooter;
 
-import com.ctre.phoenix6.BaseStatusSignal;
-import com.ctre.phoenix6.StatusSignal;
+import static frc.robot.constants.Constants.Shooter.*;
+
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -9,145 +9,135 @@ import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import static frc.robot.constants.Constants.Shooter.*;
-
 import edu.wpi.first.math.util.Units;
 import frc.robot.commons.LoggedTunableNumber;
 
 public class ShooterIOKrakenX60 implements ShooterIO {
+
   /* Hardware */
-  private final TalonFX flywheelLeft = new TalonFX(FLYWHEEL_LEFT_ID, "dabus");
-  private final TalonFX flywheelRight = new TalonFX(FLYWHEEL_RIGHT_ID, "dabus");
-
-  /* Status signals */
-  private final StatusSignal<Double> flywheelLeftPosition = flywheelLeft.getPosition();
-  private final StatusSignal<Double> flywheelLeftVelocity = flywheelLeft.getVelocity();
-
-  private final StatusSignal<Double> flywheelRightPosition = flywheelRight.getPosition();
-  private final StatusSignal<Double> flywheelRightVelocity = flywheelRight.getVelocity();
+  private final TalonFX left = new TalonFX(SHOOTER_LEFT_ID, "dabus");
+  private final TalonFX right = new TalonFX(SHOOTER_RIGHT_ID, "dabus");
 
   /* Configurators */
-  private TalonFXConfigurator flywheelLeftConfigurator;
-  private TalonFXConfigurator flywheelRightConfigurator;
+  private TalonFXConfigurator leftConfigurator;
+  private TalonFXConfigurator rightConfigurator;
 
-  private CurrentLimitsConfigs flywheelCurrentLimitConfigs;
-  private MotorOutputConfigs flywheelLeftMotorOutputConfigs;
-  private MotorOutputConfigs flywheelRightMotorOutputConfigs;
-  private Slot0Configs flywheelSlot0Configs;
+  private CurrentLimitsConfigs currentLimitConfigs;
+  private MotorOutputConfigs leftMotorOutputConfigs;
+  private MotorOutputConfigs rightMotorOutputConfigs;
+  private Slot0Configs slot0Configs;
 
   /* Gains */
   LoggedTunableNumber flywheelkS = new LoggedTunableNumber("Shooter/kS", 0.0);
   LoggedTunableNumber flywheelkV =
-      new LoggedTunableNumber("Shooter/kV", (12.0 / (6380.0 / 60.0)) * (4000.0 / 3870.0));
+      new LoggedTunableNumber("Shooter/kV", (12.0 / SHOOTER_MAX_SPEED));
   LoggedTunableNumber flywheelkP = new LoggedTunableNumber("Shooter/kP", 0.5);
   LoggedTunableNumber flywheelkI = new LoggedTunableNumber("Shooter/kI", 0.0);
   LoggedTunableNumber flywheelkD = new LoggedTunableNumber("Shooter/kD", 0.0);
 
-
   public void ShooterIOFalcon500() {
-    /* Configurators */
-    flywheelLeftConfigurator = flywheelLeft.getConfigurator();
-    flywheelRightConfigurator = flywheelRight.getConfigurator();
+    /* Instantiate configuators */
+    leftConfigurator = left.getConfigurator();
+    rightConfigurator = right.getConfigurator();
 
-    /* Configure flywheel hardware */
-    flywheelCurrentLimitConfigs = new CurrentLimitsConfigs();
-    flywheelCurrentLimitConfigs.StatorCurrentLimitEnable = true;
-    flywheelCurrentLimitConfigs.StatorCurrentLimit = 250.0;
+    /* Create configs */
+    currentLimitConfigs = new CurrentLimitsConfigs();
+    currentLimitConfigs.StatorCurrentLimitEnable = true;
+    currentLimitConfigs.StatorCurrentLimit = 250.0;
 
-    flywheelLeftMotorOutputConfigs = new MotorOutputConfigs();
-    flywheelLeftMotorOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
-    flywheelLeftMotorOutputConfigs.PeakForwardDutyCycle = 1.0;
-    flywheelLeftMotorOutputConfigs.PeakReverseDutyCycle = -1.0;
-    flywheelLeftMotorOutputConfigs.NeutralMode = NeutralModeValue.Coast;
+    leftMotorOutputConfigs = new MotorOutputConfigs();
+    leftMotorOutputConfigs.Inverted = SHOOTER_LEFT_INVERTED_VALUE;
+    leftMotorOutputConfigs.PeakForwardDutyCycle = 1.0;
+    leftMotorOutputConfigs.PeakReverseDutyCycle = -1.0;
+    leftMotorOutputConfigs.NeutralMode = NeutralModeValue.Coast;
 
-    flywheelRightMotorOutputConfigs = new MotorOutputConfigs();
-    flywheelRightMotorOutputConfigs.Inverted = InvertedValue.CounterClockwise_Positive;
-    flywheelRightMotorOutputConfigs.PeakForwardDutyCycle = 1.0;
-    flywheelRightMotorOutputConfigs.PeakReverseDutyCycle = -1.0;
-    flywheelRightMotorOutputConfigs.NeutralMode = NeutralModeValue.Coast;
+    rightMotorOutputConfigs = new MotorOutputConfigs();
+    rightMotorOutputConfigs.Inverted = SHOOTER_RIGHT_INVERTED_VALUE;
+    rightMotorOutputConfigs.PeakForwardDutyCycle = 1.0;
+    rightMotorOutputConfigs.PeakReverseDutyCycle = -1.0;
+    rightMotorOutputConfigs.NeutralMode = NeutralModeValue.Coast;
 
-    flywheelSlot0Configs = new Slot0Configs();
-    flywheelSlot0Configs.kS = flywheelkS.get();
-    flywheelSlot0Configs.kV = flywheelkV.get();
-
-    flywheelSlot0Configs.kP = flywheelkP.get();
-    flywheelSlot0Configs.kI = flywheelkI.get();
-    flywheelSlot0Configs.kD = flywheelkD.get();
+    slot0Configs = new Slot0Configs();
+    slot0Configs.kS = flywheelkS.get();
+    slot0Configs.kV = flywheelkV.get();
+    slot0Configs.kP = flywheelkP.get();
+    slot0Configs.kI = flywheelkI.get();
+    slot0Configs.kD = flywheelkD.get();
 
     /* Apply Configurations */
-    flywheelLeftConfigurator.apply(flywheelCurrentLimitConfigs);
-    flywheelLeftConfigurator.apply(flywheelLeftMotorOutputConfigs);
-    flywheelLeftConfigurator.apply(flywheelSlot0Configs);
+    leftConfigurator.apply(currentLimitConfigs);
+    leftConfigurator.apply(leftMotorOutputConfigs);
+    leftConfigurator.apply(slot0Configs);
 
-    flywheelRightConfigurator.apply(flywheelCurrentLimitConfigs);
-    flywheelRightConfigurator.apply(flywheelRightMotorOutputConfigs);
-    flywheelRightConfigurator.apply(flywheelSlot0Configs);
+    rightConfigurator.apply(currentLimitConfigs);
+    rightConfigurator.apply(rightMotorOutputConfigs);
+    rightConfigurator.apply(slot0Configs);
 
-    BaseStatusSignal.setUpdateFrequencyForAll(
-        50.0,
-        flywheelLeftPosition,
-        flywheelLeftVelocity,
-        flywheelRightPosition,
-        flywheelRightVelocity);
-    flywheelLeft.optimizeBusUtilization();
-    flywheelRight.optimizeBusUtilization();
+    left.optimizeBusUtilization();
+    right.optimizeBusUtilization();
   }
 
   @Override
   public void updateInputs(ShooterIOInputs inputs) {
-    inputs.flywheelLeftPosRad =
-        Units.rotationsToRadians(flywheelLeftPosition.getValue()) / FLYWHEEL_LEFT_GEAR_RATIO;
-    inputs.flywheelLeftVelocityRpm = flywheelLeft.getVelocity().getValue() * 60.0;
-    inputs.flywheelLeftAppliedVolts = flywheelLeft.getMotorVoltage().getValue();
+    inputs.shooterLeftPosRad =
+        Units.rotationsToRadians(left.getPosition().getValue()) / SHOOTER_LEFT_GEAR_RATIO;
+    inputs.shooterLeftVelocityRpm = left.getVelocity().getValue() * 60.0;
+    inputs.shooterLeftAppliedVolts = left.getMotorVoltage().getValue();
 
-    inputs.flywheelRightPosRad = Units.rotationsToRadians(flywheelRightPosition.getValue()) / FLYWHEEL_RIGHT_GEAR_RATIO;
-    inputs.flywheelRightVelocityRpm = flywheelRight.getVelocity().getValue() * 60.0;
-    inputs.flywheelRightAppliedVolts = flywheelRight.getMotorVoltage().getValue();
+    inputs.shooterRightPosRad =
+        Units.rotationsToRadians(right.getPosition().getValue()) / SHOOTER_RIGHT_GEAR_RATIO;
+    inputs.shooterRightVelocityRpm = right.getVelocity().getValue() * 60.0;
+    inputs.shooterRightAppliedVolts = right.getMotorVoltage().getValue();
 
-    inputs.currentAmps =  new double[] {flywheelLeft.getSupplyCurrent().getValue(), 
-        flywheelRight.getSupplyCurrent().getValue() };
+    inputs.currentAmps =
+        new double[] {
+          left.getSupplyCurrent().getValue(), right.getSupplyCurrent().getValue()
+        };
   }
 
   @Override
   public void setFlywheelPercent(double percentLeft, double percentRight) {
-    flywheelLeft.setControl(new DutyCycleOut(percentLeft));
-    flywheelRight.setControl(new DutyCycleOut(percentRight));
+    left.setControl(new DutyCycleOut(percentLeft));
+    right.setControl(new DutyCycleOut(percentRight));
   }
 
   @Override
   public void setFlywheelVelocity(double velocityLeft, double velocityRight) {
-    if (velocityLeft > 0.0 || velocityRight > 0.0) {
-      flywheelLeft.setControl(new VelocityVoltage(velocityLeft / 60.0));
-      flywheelRight.setControl(new VelocityVoltage(velocityRight / 60.0));
+    if (velocityLeft > 0.0) {
+      left.setControl(new VelocityVoltage(velocityLeft));
     } else {
-      flywheelLeft.setControl(new DutyCycleOut(0.0));
-      flywheelRight.setControl(new DutyCycleOut(0.0));
+      left.setControl(new DutyCycleOut(0.0));
+    }
+
+    if (velocityRight > 0.0) {
+      right.setControl(new VelocityVoltage(velocityRight));
+    } else {
+      right.setControl(new DutyCycleOut(0.0));
     }
   }
 
   @Override
   public void setFlywheelCurrentLimit(
       double currentLimit, double supplyCurrentThreshold, double supplyTimeThreshold) {
-    flywheelCurrentLimitConfigs.StatorCurrentLimitEnable = true;
-    flywheelCurrentLimitConfigs.StatorCurrentLimit = currentLimit;
-    flywheelCurrentLimitConfigs.SupplyCurrentThreshold = supplyCurrentThreshold;
-    flywheelCurrentLimitConfigs.SupplyTimeThreshold = supplyTimeThreshold;
+    currentLimitConfigs.StatorCurrentLimitEnable = true;
+    currentLimitConfigs.StatorCurrentLimit = currentLimit;
+    currentLimitConfigs.SupplyCurrentThreshold = supplyCurrentThreshold;
+    currentLimitConfigs.SupplyTimeThreshold = supplyTimeThreshold;
 
-    flywheelLeftConfigurator.apply(flywheelCurrentLimitConfigs);
-    flywheelRightConfigurator.apply(flywheelCurrentLimitConfigs);
+    leftConfigurator.apply(currentLimitConfigs);
+    rightConfigurator.apply(currentLimitConfigs);
   }
 
   @Override
   public void enableFlywheelBrakeMode(boolean enable) {
-    flywheelLeftMotorOutputConfigs.NeutralMode =
+    leftMotorOutputConfigs.NeutralMode =
         enable ? NeutralModeValue.Brake : NeutralModeValue.Coast;
-    flywheelRightMotorOutputConfigs.NeutralMode =
+    rightMotorOutputConfigs.NeutralMode =
         enable ? NeutralModeValue.Brake : NeutralModeValue.Coast;
 
-    flywheelLeftConfigurator.apply(flywheelLeftMotorOutputConfigs);
-    flywheelRightConfigurator.apply(flywheelRightMotorOutputConfigs);
+    leftConfigurator.apply(leftMotorOutputConfigs);
+    rightConfigurator.apply(rightMotorOutputConfigs);
   }
 
   @Override
@@ -157,16 +147,14 @@ public class ShooterIOKrakenX60 implements ShooterIO {
         || flywheelkP.hasChanged(0)
         || flywheelkI.hasChanged(0)
         || flywheelkD.hasChanged(0)) {
-      flywheelSlot0Configs.kS = flywheelkS.get();
-      flywheelSlot0Configs.kV = flywheelkV.get();
-      flywheelSlot0Configs.kP = flywheelkP.get();
-      flywheelSlot0Configs.kI = flywheelkI.get();
-      flywheelSlot0Configs.kD = flywheelkD.get();
+      slot0Configs.kS = flywheelkS.get();
+      slot0Configs.kV = flywheelkV.get();
+      slot0Configs.kP = flywheelkP.get();
+      slot0Configs.kI = flywheelkI.get();
+      slot0Configs.kD = flywheelkD.get();
 
-      flywheelLeftConfigurator.apply(flywheelSlot0Configs);
-      flywheelRightConfigurator.apply(flywheelSlot0Configs);
+      leftConfigurator.apply(slot0Configs);
+      rightConfigurator.apply(slot0Configs);
     }
-
-    System.out.println("Configurations Applied!");
   }
 }

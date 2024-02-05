@@ -2,6 +2,8 @@ package frc.robot.subsystems.swerve;
 
 import static frc.robot.constants.Constants.Swerve.*;
 
+import java.util.List;
+
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
@@ -15,6 +17,8 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commons.TimestampedVisionUpdate;
+
 import org.littletonrobotics.junction.Logger;
 
 public class Swerve extends SubsystemBase {
@@ -151,6 +155,13 @@ public class Swerve extends SubsystemBase {
 
     this.desired = speeds;
     this.fieldRelative = fieldRelative;
+  }
+
+  /* Adds vision data to the pose estimator built into the drivetrain class */
+  public void addVisionData(List<TimestampedVisionUpdate> visionUpdates) {
+    for (TimestampedVisionUpdate update : visionUpdates) {
+      drivetrain.addVisionMeasurement(update.pose(), update.timestamp(), update.stdDevs());
+    }
   }
 
   /* Resets the pose estimate of the robot */

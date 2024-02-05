@@ -5,8 +5,6 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.intake.IntakeIOFalcon500;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -18,8 +16,6 @@ public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
-
-  Intake intake = new Intake(new IntakeIOFalcon500());
 
   public static PathPlannerPath sixNoteA;
   public static PathPlannerPath sixNoteB;
@@ -55,7 +51,6 @@ public class Robot extends LoggedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-    Logger.recordOutput("NotePose", RobotContainer.notePoseSupplier.getLatestNotePose());
   }
 
   @Override
@@ -90,15 +85,7 @@ public class Robot extends LoggedRobot {
   }
 
   @Override
-  public void teleopPeriodic() {
-    if (RobotContainer.driver.getRightTriggerAxis() > 0.05) {
-      intake.intake();
-    } else if (RobotContainer.driver.getLeftTriggerAxis() > 0.05) {
-      intake.spit();
-    } else {
-      intake.stop();
-    }
-  }
+  public void teleopPeriodic() {}
 
   @Override
   public void teleopExit() {}
