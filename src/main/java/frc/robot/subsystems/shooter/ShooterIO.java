@@ -15,25 +15,33 @@ public interface ShooterIO {
     public double shooterRightAppliedVolts = 0.0;
     public double shooterRightTempCelcius = 0.0;
 
-    public double[] currentAmps = new double[] {}; // {left, right}
+    public double feederPosMeters = 0.0;
+    public double feederVelocityMps = 0.0;
+    public double feederAppliedVolts = 0.0;
+    public double feederTempCelcius = 0.0;
+    public double feederCurrentAmps = 0.0;
+    public boolean feederBeamBreakTriggered = false;
+
+    public double[] shooterCurrentAmps = new double[] {}; // {left, right}
   }
 
   /** Updates the set of loggable inputs. */
   public default void updateInputs(ShooterIOInputs inputs) {}
 
-  /* Run open loop at the specified percent. */
-  public default void setFlywheelPercent(double percentLeft, double percentRight) {}
+  /* Run the shooter open loop at the specified percent. */
+  public default void setPercent(double percentLeft, double percentRight) {}
 
-  /** Run closed loop at the specified velocity. */
-  public default void setFlywheelVelocity(double velocityRpmLeft, double velocityRpmRight) {}
+  /** Run the shooter closed loop at the specified velocity. */
+  public default void setVelocity(double velocityRpmLeft, double velocityRpmRight) {
+  }
 
   /* Sets current limit for the flywheel motors. */
-  public default void setFlywheelCurrentLimit(
+  public default void setCurrentLimit(
       double currentLimit, double supplyCurrentThreshold, double supplyTimeThreshold) {}
 
   /* Enables or disables flywheel brake mode. */
-  public default void enableFlywheelBrakeMode(boolean enable) {}
-
+  public default void enableBrakeMOd(boolean enable) {}
+  
   /* Updates the tunable numbers. */
   public default void updateTunableNumbers() {}
 }

@@ -1,6 +1,7 @@
 package frc.robot.subsystems.shooter;
 
 import static frc.robot.constants.Constants.Shooter.*;
+import static frc.robot.constants.Constants.Feeder.*;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
@@ -16,25 +17,25 @@ import frc.robot.commons.LoggedTunableNumber;
 public class ShooterIOKrakenX60 implements ShooterIO {
 
   /* Hardware */
-  private final TalonFX left = new TalonFX(SHOOTER_LEFT_ID, "dabus");
-  private final TalonFX right = new TalonFX(SHOOTER_RIGHT_ID, "dabus");
+  private final TalonFX left = new TalonFX(SHOOTER_LEFT_ID);
+  private final TalonFX right = new TalonFX(SHOOTER_RIGHT_ID);
 
   /* Configurators */
   private TalonFXConfigurator leftConfigurator;
   private TalonFXConfigurator rightConfigurator;
 
-  private CurrentLimitsConfigs currentLimitConfigs;
+  private CurrentLimitsConfigs shooterCurrentLimitConfigs;
   private MotorOutputConfigs leftMotorOutputConfigs;
   private MotorOutputConfigs rightMotorOutputConfigs;
-  private Slot0Configs slot0Configs;
+  private Slot0Configs shooterSlot0Configs;
 
   /* Gains */
-  LoggedTunableNumber flywheelkS = new LoggedTunableNumber("Shooter/kS", 0.0);
-  LoggedTunableNumber flywheelkV =
-      new LoggedTunableNumber("Shooter/kV", (12.0 / SHOOTER_MAX_SPEED));
-  LoggedTunableNumber flywheelkP = new LoggedTunableNumber("Shooter/kP", 0.5);
-  LoggedTunableNumber flywheelkI = new LoggedTunableNumber("Shooter/kI", 0.0);
-  LoggedTunableNumber flywheelkD = new LoggedTunableNumber("Shooter/kD", 0.0);
+  LoggedTunableNumber shooterkS = new LoggedTunableNumber("Shooter/kS", 0.0);
+  LoggedTunableNumber  shooterkV =
+      new LoggedTunableNumber("Shooter/kV", (12.0 / SHOOTER_MAX_VELOCITY));
+  LoggedTunableNumber  shooterkP = new LoggedTunableNumber("Shooter/kP", 0.5);
+  LoggedTunableNumber  shooterkI = new LoggedTunableNumber("Shooter/kI", 0.0);
+  LoggedTunableNumber shooterkD = new LoggedTunableNumber("Shooter/kD", 0.0);
 
   public void ShooterIOFalcon500() {
     /* Instantiate configuators */
@@ -42,37 +43,46 @@ public class ShooterIOKrakenX60 implements ShooterIO {
     rightConfigurator = right.getConfigurator();
 
     /* Create configs */
-    currentLimitConfigs = new CurrentLimitsConfigs();
-    currentLimitConfigs.StatorCurrentLimitEnable = true;
-    currentLimitConfigs.StatorCurrentLimit = 250.0;
 
+    // Current Limit configs
+    shooterCurrentLimitConfigs = new CurrentLimitsConfigs();
+    shooterCurrentLimitConfigs.StatorCurrentLimitEnable = true;
+    shooterCurrentLimitConfigs.StatorCurrentLimit = 250.0;
+
+    feederCurrentLimitConfigs = new CurrentLimitsConfigs();
+    feederCurrentLimitConfigs.StatorCurrentLimitEnable = true;
+    feederCurrentLimitConfigs.StatorCurrentLimit = 250.0;
+
+    // Motor output configs
     leftMotorOutputConfigs = new MotorOutputConfigs();
-    leftMotorOutputConfigs.Inverted = SHOOTER_LEFT_INVERTED_VALUE;
+    leftMotorOutputConfigs.Inverted = SHOOTER_LEFT_INVERSION;
     leftMotorOutputConfigs.PeakForwardDutyCycle = 1.0;
     leftMotorOutputConfigs.PeakReverseDutyCycle = -1.0;
     leftMotorOutputConfigs.NeutralMode = NeutralModeValue.Coast;
 
     rightMotorOutputConfigs = new MotorOutputConfigs();
-    rightMotorOutputConfigs.Inverted = SHOOTER_RIGHT_INVERTED_VALUE;
+    rightMotorOutputConfigs.Inverted = SHOOTER_RIGHT_INVERSION;
     rightMotorOutputConfigs.PeakForwardDutyCycle = 1.0;
     rightMotorOutputConfigs.PeakReverseDutyCycle = -1.0;
     rightMotorOutputConfigs.NeutralMode = NeutralModeValue.Coast;
 
-    slot0Configs = new Slot0Configs();
-    slot0Configs.kS = flywheelkS.get();
-    slot0Configs.kV = flywheelkV.get();
-    slot0Configs.kP = flywheelkP.get();
-    slot0Configs.kI = flywheelkI.get();
-    slot0Configs.kD = flywheelkD.get();
+    // Slot 0 Configs
+    shooterSlot0Configs = new Slot0Configs();
+    shooterSlot0Configs.kS = shooterkS.get();
+    shooterSlot0Configs.kV = shooterkV.get();
+    shooterSlot0Configs.kP = shooterkP.get();
+    shooterSlot0Configs.kI = shooterkI.get();
+    shooterSlot0Configs.kD = shooterkD.get();
+
 
     /* Apply Configurations */
-    leftConfigurator.apply(currentLimitConfigs);
+    leftConfigurator.apply(shooterCurrentLimitConfigs);
     leftConfigurator.apply(leftMotorOutputConfigs);
-    leftConfigurator.apply(slot0Configs);
+    leftConfigurator.apply(shooterSlot0Configs);
 
-    rightConfigurator.apply(currentLimitConfigs);
+    rightConfigurator.apply(shooterCurrentLimitConfigs);
     rightConfigurator.apply(rightMotorOutputConfigs);
-    rightConfigurator.apply(slot0Configs);
+    rightConfigurator.apply(shooterSlot0Configs);
 
     left.optimizeBusUtilization();
     right.optimizeBusUtilization();
@@ -80,30 +90,35 @@ public class ShooterIOKrakenX60 implements ShooterIO {
 
   @Override
   public void updateInputs(ShooterIOInputs inputs) {
+    // Shooter left
     inputs.shooterLeftPosRad =
         Units.rotationsToRadians(left.getPosition().getValue()) / SHOOTER_LEFT_GEAR_RATIO;
     inputs.shooterLeftVelocityRpm = left.getVelocity().getValue() * 60.0;
     inputs.shooterLeftAppliedVolts = left.getMotorVoltage().getValue();
+    inputs.shooterLeftTempCelcius = left.getDeviceTemp().getValue();
 
+    // Shooter right
     inputs.shooterRightPosRad =
         Units.rotationsToRadians(right.getPosition().getValue()) / SHOOTER_RIGHT_GEAR_RATIO;
     inputs.shooterRightVelocityRpm = right.getVelocity().getValue() * 60.0;
     inputs.shooterRightAppliedVolts = right.getMotorVoltage().getValue();
+    inputs.shooterRightTempCelcius = right.getDeviceTemp().getValue();
 
-    inputs.currentAmps =
+    inputs.shooterCurrentAmps =
         new double[] {
           left.getSupplyCurrent().getValue(), right.getSupplyCurrent().getValue()
         };
+
   }
 
   @Override
-  public void setFlywheelPercent(double percentLeft, double percentRight) {
+  public void setPercent(double percentLeft, double percentRight) {
     left.setControl(new DutyCycleOut(percentLeft));
     right.setControl(new DutyCycleOut(percentRight));
   }
 
   @Override
-  public void setFlywheelVelocity(double velocityLeft, double velocityRight) {
+  public void setVelocity(double velocityLeft, double velocityRight) {
     if (velocityLeft > 0.0) {
       left.setControl(new VelocityVoltage(velocityLeft));
     } else {
@@ -118,23 +133,21 @@ public class ShooterIOKrakenX60 implements ShooterIO {
   }
 
   @Override
-  public void setFlywheelCurrentLimit(
+  public void setCurrentLimit(
       double currentLimit, double supplyCurrentThreshold, double supplyTimeThreshold) {
-    currentLimitConfigs.StatorCurrentLimitEnable = true;
-    currentLimitConfigs.StatorCurrentLimit = currentLimit;
-    currentLimitConfigs.SupplyCurrentThreshold = supplyCurrentThreshold;
-    currentLimitConfigs.SupplyTimeThreshold = supplyTimeThreshold;
+    shooterCurrentLimitConfigs.StatorCurrentLimitEnable = true;
+    shooterCurrentLimitConfigs.StatorCurrentLimit = currentLimit;
+    shooterCurrentLimitConfigs.SupplyCurrentThreshold = supplyCurrentThreshold;
+    shooterCurrentLimitConfigs.SupplyTimeThreshold = supplyTimeThreshold;
 
-    leftConfigurator.apply(currentLimitConfigs);
-    rightConfigurator.apply(currentLimitConfigs);
+    leftConfigurator.apply(shooterCurrentLimitConfigs);
+    rightConfigurator.apply(shooterCurrentLimitConfigs);
   }
 
   @Override
-  public void enableFlywheelBrakeMode(boolean enable) {
-    leftMotorOutputConfigs.NeutralMode =
-        enable ? NeutralModeValue.Brake : NeutralModeValue.Coast;
-    rightMotorOutputConfigs.NeutralMode =
-        enable ? NeutralModeValue.Brake : NeutralModeValue.Coast;
+  public void enableBrakeMode(boolean enable) {
+    leftMotorOutputConfigs.NeutralMode = enable ? NeutralModeValue.Brake : NeutralModeValue.Coast;
+    rightMotorOutputConfigs.NeutralMode = enable ? NeutralModeValue.Brake : NeutralModeValue.Coast;
 
     leftConfigurator.apply(leftMotorOutputConfigs);
     rightConfigurator.apply(rightMotorOutputConfigs);
@@ -142,19 +155,19 @@ public class ShooterIOKrakenX60 implements ShooterIO {
 
   @Override
   public void updateTunableNumbers() {
-    if (flywheelkS.hasChanged(0)
-        || flywheelkV.hasChanged(0)
-        || flywheelkP.hasChanged(0)
-        || flywheelkI.hasChanged(0)
-        || flywheelkD.hasChanged(0)) {
-      slot0Configs.kS = flywheelkS.get();
-      slot0Configs.kV = flywheelkV.get();
-      slot0Configs.kP = flywheelkP.get();
-      slot0Configs.kI = flywheelkI.get();
-      slot0Configs.kD = flywheelkD.get();
+    if (shooterkS.hasChanged(0)
+        || shooterkV.hasChanged(0)
+        || shooterkP.hasChanged(0)
+        || shooterkI.hasChanged(0)
+        || shooterkD.hasChanged(0)) {
+      shooterSlot0Configs.kS = shooterkS.get();
+      shooterSlot0Configs.kV = shooterkV.get();
+      shooterSlot0Configs.kP = shooterkP.get();
+      shooterSlot0Configs.kI = shooterkI.get();
+      shooterSlot0Configs.kD = shooterkD.get();
 
-      leftConfigurator.apply(slot0Configs);
-      rightConfigurator.apply(slot0Configs);
+      leftConfigurator.apply(shooterSlot0Configs);
+      rightConfigurator.apply(shooterSlot0Configs);
     }
   }
 }

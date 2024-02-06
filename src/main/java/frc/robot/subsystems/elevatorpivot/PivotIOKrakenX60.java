@@ -65,7 +65,7 @@ public class PivotIOKrakenX60 implements PivotIO {
     currentLimitConfigs.SupplyCurrentLimit = 250.0;
 
     motorOutputConfigs = new MotorOutputConfigs();
-    motorOutputConfigs.Inverted = PIVOT_MOTOR_INVERSION;
+    motorOutputConfigs.Inverted = PIVOT_INVERSION;
     motorOutputConfigs.PeakForwardDutyCycle = 1.0;
     motorOutputConfigs.PeakReverseDutyCycle = -1.0;
     motorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
@@ -85,7 +85,7 @@ public class PivotIOKrakenX60 implements PivotIO {
     pivotMagnetSensorConfigs.MagnetOffset = PIVOT_MAGNET_OFFSET;
 
     FeedbackConfigs pivotFeedbackConfigs = new FeedbackConfigs();
-    pivotFeedbackConfigs.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
+    pivotFeedbackConfigs.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
     pivotFeedbackConfigs.FeedbackRemoteSensorID = azimuth.getDeviceID();
     pivotFeedbackConfigs.RotorToSensorRatio = PIVOT_GEAR_RATIO;
     pivotFeedbackConfigs.SensorToMechanismRatio = 1.0;

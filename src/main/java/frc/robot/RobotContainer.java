@@ -11,6 +11,19 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.commons.BreadUtil;
 import frc.robot.constants.TunerConstants;
+import frc.robot.subsystems.Superstructure;
+import frc.robot.subsystems.elevatorpivot.ElevatorIO;
+import frc.robot.subsystems.elevatorpivot.ElevatorIOKrakenX60;
+import frc.robot.subsystems.elevatorpivot.PivotIO;
+import frc.robot.subsystems.elevatorpivot.PivotIOKrakenX60;
+import frc.robot.subsystems.feeder.FeederIO;
+import frc.robot.subsystems.feeder.FeederIOFalcon500;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeIO;
+import frc.robot.subsystems.intake.IntakeIOFalcon500;
+import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.ShooterIO;
+import frc.robot.subsystems.shooter.ShooterIOKrakenX60;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.TrajectoryFollowerCommand;
 import frc.robot.vision.northstar.AprilTagVision;
@@ -21,6 +34,15 @@ public class RobotContainer {
 
   public static XboxController driver = new XboxController(0);
   public static Swerve swerve =
+
+  public static ShooterIO shooterIO = new ShooterIOKrakenX60();
+  public static Shooter shooter = new Shooter(shooterIO);
+  public static IntakeIO intakeIO = new IntakeIOFalcon500();
+  public static Intake intake = new Intake(intakeIO);
+  public static ElevatorIO elevatorIO = new ElevatorIOKrakenX60();
+  public static PivotIO pivotIO = new PivotIOKrakenX60();
+  public static FeederIO feederIO = new FeederIOFalcon500();
+  public static Superstructure superstructure = new Superstructure(elevatorIO, pivotIO, feederIO);
       new Swerve(
           TunerConstants.DrivetrainConstants,
           TunerConstants.FrontLeft,

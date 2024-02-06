@@ -1,21 +1,20 @@
-package frc.robot.subsystems.serializer;
+package frc.robot.subsystems.feeder;
 
 import org.littletonrobotics.junction.AutoLog;
 
-public interface SerializerIO {
+public interface FeederIO {
   @AutoLog
-  public class SerializerIOInputs {
-    public double positionRads = 0.0;
-    public double velocityRpm = 0.0;
-    public double currentAmps = 0.0;
+  public class FeederIOInputs {
+    public double posMeters = 0.0;
+    public double velocityMps = 0.0;
     public double appliedVolts = 0.0;
-    public double tempCelcius = 0.0;
-
+    public double tempCelcius  = 0.0;
+    public double currentAmps = 0.0;
     public boolean beamBreakTriggered = false;
   }
 
   /** Updates the set of loggable inputs. */
-  public default void updateInputs(SerializerIOInputs inputs) {}
+  public default void updateInputs(FeederIOInputs inputs) {}
 
   /** Run open loop at the specified percentage. */
   public default void setPercent(double percent) {}

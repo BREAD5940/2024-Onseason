@@ -1,6 +1,6 @@
-package frc.robot.subsystems.serializer;
+package frc.robot.subsystems.feeder;
 
-import static frc.robot.constants.Constants.Serializer.*;
+import static frc.robot.constants.Constants.Feeder.*;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
@@ -11,14 +11,13 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.commons.LoggedTunableNumber;
 
-public class SerializerIOFalcon500 implements SerializerIO {
+public class FeederIOFalcon500 implements FeederIO {
 
   /* Hardware */
-  private final TalonFX motor = new TalonFX(SERIALIZER_ID, "dabus");
+  private final TalonFX motor = new TalonFX(FEEDER_ID, "dabus");
   private final DigitalInput beamBreak = new DigitalInput(0); 
 
   /* Configurator */
@@ -36,7 +35,7 @@ public class SerializerIOFalcon500 implements SerializerIO {
   LoggedTunableNumber kI = new LoggedTunableNumber("Serializer/kI", 0.0);
   LoggedTunableNumber kD = new LoggedTunableNumber("Serializer/kD", 0.0);
 
-  public SerializerIOFalcon500() {
+  public FeederIOFalcon500() {
     /* Instantiate configurator */
     configurator = motor.getConfigurator();
 
@@ -69,12 +68,12 @@ public class SerializerIOFalcon500 implements SerializerIO {
   }
 
   @Override
-  public void updateInputs(SerializerIOInputs inputs) {
-    inputs.positionRads = Units.rotationsToRadians(motor.getPosition().getValue());
-    inputs.velocityRpm = motor.getVelocity().getValue() * 60;
+  public void updateInputs(FeederIOInputs inputs) {
+    inputs.posMeters = motor.getPosition().getValue() * Math.PI * FEEDER_ROLLER_DIAMETER / FEEDER_GEAR_RATIO;
+    inputs.velocityMps = motor.getVelocity().getValue() * Math.PI * FEEDER_ROLLER_DIAMETER / FEEDER_GEAR_RATIO;
     inputs.appliedVolts = motor.getMotorVoltage().getValue();
-    inputs.currentAmps = motor.getSupplyCurrent().getValue();
-    inputs.tempCelcius = motor.getDeviceTemp().getValue();
+    inputs.tempCelcius = motor.getDeviceTemp().getValue(); 
+    inputs.currentAmps = motor.getStatorCurrent().getValue();
     inputs.beamBreakTriggered = !beamBreak.get();
   }
 
@@ -84,8 +83,12 @@ public class SerializerIOFalcon500 implements SerializerIO {
   }
 
   @Override
-  public void setVelocity(double velocityRpm) {
-    motor.setControl(new VelocityVoltage(velocityRpm / 60.0));
+  public void setVelocity(double velocityMps) {
+    if (velocityMps > 0.0) {
+      motor.setControl(new VelocityVoltage((velocityMps * FEEDER_GEAR_RATIO) / (Math.PI * FEEDER_ROLLER_DIAMETER)));
+    } else {
+      motor.setControl(new DutyCycleOut(0.0));
+    }
   }
 
   @Override
@@ -101,11 +104,8 @@ public class SerializerIOFalcon500 implements SerializerIO {
 
   @Override
   public void enableBrakeMode(boolean enable) {
-    if (enable) {
-      motorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
-    } else {
-      motorOutputConfigs.NeutralMode = NeutralModeValue.Coast;
-    }
+    motorOutputConfigs.NeutralMode = enable ? NeutralModeValue.Brake : NeutralModeValue.Coast;
+    
     configurator.apply(motorOutputConfigs);
   }
 
