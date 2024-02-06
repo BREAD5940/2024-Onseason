@@ -2,11 +2,8 @@ package frc.robot.subsystems;
 
 import static frc.robot.constants.Constants.Elevator.*;
 import static frc.robot.constants.Constants.Pivot.*;
-import static frc.robot.constants.Constants.Shooter.*;
-import static frc.robot.constants.Constants.Intake.*;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.commons.BreadUtil;
@@ -16,10 +13,6 @@ import frc.robot.subsystems.elevatorpivot.ElevatorPivot.ElevatorPivotState;
 import frc.robot.subsystems.feeder.Feeder;
 import frc.robot.subsystems.feeder.FeederIO;
 import frc.robot.subsystems.elevatorpivot.PivotIO;
-import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.intake.IntakeIO;
-import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShotParameter;
 import java.util.function.Function;
 

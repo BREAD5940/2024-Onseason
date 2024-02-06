@@ -117,7 +117,7 @@ public class Swerve extends SubsystemBase {
     /* If the driver station is enabled, set the modules to break. Otherwise set them to coast */
     boolean stillMoving = false;
     for (int i = 0; i < 4; i++) {
-      if (drivetrain.getModule(i).getCurrentState().speedMetersPerSecond > COAST_TRESHOLD_MPS) {
+      if (drivetrain.getModule(i).getCurrentState().speedMetersPerSecond > SWERVE_COAST_TRESHOLD_MPS) {
         stillMoving = true;
       }
     }
@@ -128,7 +128,7 @@ public class Swerve extends SubsystemBase {
         drivetrain.configNeutralMode(NeutralModeValue.Brake);
       }
     } else {
-      if (isBrakeMode && lastMovementTimer.hasElapsed(COAST_TRESHOLD_SEC)) {
+      if (isBrakeMode && lastMovementTimer.hasElapsed(SWERVE_COAST_TRESHOLD_SEC)) {
         isBrakeMode = false;
         drivetrain.configNeutralMode(NeutralModeValue.Coast);
       }

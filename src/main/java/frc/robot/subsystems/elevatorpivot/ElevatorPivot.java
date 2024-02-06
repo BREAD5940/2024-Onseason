@@ -7,7 +7,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.commons.BreadUtil;
 
-public class ElevatorPivotLowLevel {
+public class ElevatorPivot {
 
   /* IO objects encapsulating the hardware involved in the pivot and elevator */
   private final ElevatorIO elevatorIO;
@@ -37,7 +37,7 @@ public class ElevatorPivotLowLevel {
   }
 
   /* Instantiate io interfaces in constructor */
-  public ElevatorPivotLowLevel(ElevatorIO elevatorIO, PivotIO pivotIO) {
+  public ElevatorPivot(ElevatorIO elevatorIO, PivotIO pivotIO) {
     this.elevatorIO = elevatorIO;
     this.pivotIO = pivotIO;
   }

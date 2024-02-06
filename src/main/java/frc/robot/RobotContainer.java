@@ -24,6 +24,7 @@ import frc.robot.subsystems.intake.IntakeIOFalcon500;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOKrakenX60;
+import frc.robot.subsystems.shooter.ShotParameter;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.TrajectoryFollowerCommand;
 import frc.robot.vision.northstar.AprilTagVision;
@@ -33,8 +34,6 @@ import frc.robot.vision.northstar.AprilTagVisionIONorthstar;
 public class RobotContainer {
 
   public static XboxController driver = new XboxController(0);
-  public static Swerve swerve =
-
   public static ShooterIO shooterIO = new ShooterIOKrakenX60();
   public static Shooter shooter = new Shooter(shooterIO);
   public static IntakeIO intakeIO = new IntakeIOFalcon500();
@@ -42,7 +41,8 @@ public class RobotContainer {
   public static ElevatorIO elevatorIO = new ElevatorIOKrakenX60();
   public static PivotIO pivotIO = new PivotIOKrakenX60();
   public static FeederIO feederIO = new FeederIOFalcon500();
-  public static Superstructure superstructure = new Superstructure(elevatorIO, pivotIO, feederIO);
+  public static Superstructure superstructure = new Superstructure(elevatorIO, pivotIO, feederIO, (pluh) -> new ShotParameter(0, 0, 0));
+  public static final Swerve swerve = 
       new Swerve(
           TunerConstants.DrivetrainConstants,
           TunerConstants.FrontLeft,

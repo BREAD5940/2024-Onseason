@@ -15,13 +15,6 @@ public interface ShooterIO {
     public double shooterRightAppliedVolts = 0.0;
     public double shooterRightTempCelcius = 0.0;
 
-    public double feederPosMeters = 0.0;
-    public double feederVelocityMps = 0.0;
-    public double feederAppliedVolts = 0.0;
-    public double feederTempCelcius = 0.0;
-    public double feederCurrentAmps = 0.0;
-    public boolean feederBeamBreakTriggered = false;
-
     public double[] shooterCurrentAmps = new double[] {}; // {left, right}
   }
 
@@ -40,7 +33,7 @@ public interface ShooterIO {
       double currentLimit, double supplyCurrentThreshold, double supplyTimeThreshold) {}
 
   /* Enables or disables flywheel brake mode. */
-  public default void enableBrakeMOd(boolean enable) {}
+  public default void enableBrakeMode(boolean enable) {}
   
   /* Updates the tunable numbers. */
   public default void updateTunableNumbers() {}

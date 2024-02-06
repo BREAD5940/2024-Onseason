@@ -99,5 +99,10 @@ public class Robot extends LoggedRobot {
   public void testPeriodic() {}
 
   @Override
-  public void testExit() {}
+  public void testExit() {
+  }
+  
+  private void configureTeleopControls() {
+    
+  }
 }
