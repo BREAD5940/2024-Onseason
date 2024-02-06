@@ -24,7 +24,7 @@ public interface FeederIO {
 
   /** Sets current limit for the feeder motor. */
   public default void setCurrentLimit(
-      double statorCurrentLimit,
+      double currentLimit,
       double currentLimitTriggerThreshold,
       double currentLimitThresholdTime) {}
 

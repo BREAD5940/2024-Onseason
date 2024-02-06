@@ -3,7 +3,6 @@ package frc.robot.subsystems.shooter;
 import frc.robot.commons.BreadUtil;
 import org.littletonrobotics.junction.Logger;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static frc.robot.constants.Constants.Shooter.*;

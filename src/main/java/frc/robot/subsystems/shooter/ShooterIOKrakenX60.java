@@ -1,7 +1,6 @@
 package frc.robot.subsystems.shooter;
 
 import static frc.robot.constants.Constants.Shooter.*;
-import static frc.robot.constants.Constants.Feeder.*;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
@@ -28,6 +27,7 @@ public class ShooterIOKrakenX60 implements ShooterIO {
   private MotorOutputConfigs leftMotorOutputConfigs;
   private MotorOutputConfigs rightMotorOutputConfigs;
   private Slot0Configs shooterSlot0Configs;
+  private double lastSetCurrentLimit;
 
   /* Gains */
   LoggedTunableNumber shooterkS = new LoggedTunableNumber("Shooter/kS", 0.0);
@@ -131,13 +131,17 @@ public class ShooterIOKrakenX60 implements ShooterIO {
   @Override
   public void setCurrentLimit(
       double currentLimit, double supplyCurrentThreshold, double supplyTimeThreshold) {
-    shooterCurrentLimitConfigs.StatorCurrentLimitEnable = true;
+    if (currentLimit != lastSetCurrentLimit) {
+          shooterCurrentLimitConfigs.StatorCurrentLimitEnable = true;
     shooterCurrentLimitConfigs.StatorCurrentLimit = currentLimit;
     shooterCurrentLimitConfigs.SupplyCurrentThreshold = supplyCurrentThreshold;
     shooterCurrentLimitConfigs.SupplyTimeThreshold = supplyTimeThreshold;
 
     leftConfigurator.apply(shooterCurrentLimitConfigs);
     rightConfigurator.apply(shooterCurrentLimitConfigs);
+
+    lastSetCurrentLimit = currentLimit;
+    }
   }
 
   @Override

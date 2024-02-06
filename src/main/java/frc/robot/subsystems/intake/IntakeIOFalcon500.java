@@ -25,6 +25,7 @@ public class IntakeIOFalcon500 implements IntakeIO {
   private final CurrentLimitsConfigs currentLimitConfigs;
   private final Slot0Configs slot0Configs;
   private final MotorOutputConfigs motorOutputConfigs;
+  private double lastSetCurrentLimit;
 
   /* Gains */
   LoggedTunableNumber kS = new LoggedTunableNumber("Intake/kS", 0.0);
@@ -86,13 +87,17 @@ public class IntakeIOFalcon500 implements IntakeIO {
 
   @Override
   public void setCurrentLimit(
-      double statorCurrentLimit, double supplyCurrentThreshold, double supplyTimeThreshold) {
-    currentLimitConfigs.StatorCurrentLimitEnable = true;
-    currentLimitConfigs.SupplyCurrentThreshold = supplyCurrentThreshold;
-    currentLimitConfigs.SupplyTimeThreshold = supplyTimeThreshold;
-    currentLimitConfigs.StatorCurrentLimit = statorCurrentLimit;
+      double currentLimit, double supplyCurrentThreshold, double supplyTimeThreshold) {
+    if (currentLimit != lastSetCurrentLimit) {
+        currentLimitConfigs.StatorCurrentLimitEnable = true;
+        currentLimitConfigs.SupplyCurrentThreshold = supplyCurrentThreshold;
+        currentLimitConfigs.SupplyTimeThreshold = supplyTimeThreshold;
+        currentLimitConfigs.StatorCurrentLimit = currentLimit;
 
-    configurator.apply(currentLimitConfigs);
+        configurator.apply(currentLimitConfigs);
+
+        lastSetCurrentLimit = currentLimit; 
+    }
   }
 
   @Override

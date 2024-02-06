@@ -36,6 +36,7 @@ public class PivotIOKrakenX60 implements PivotIO {
   private final CurrentLimitsConfigs currentLimitConfigs;
   private final MotorOutputConfigs motorOutputConfigs;
   private final Slot0Configs slot0Configs;
+  private double lastSetCurrentLimit;
 
   /* Gains */
   LoggedTunableNumber kS = new LoggedTunableNumber("Pivot/kS", 0.0);
@@ -134,12 +135,16 @@ public class PivotIOKrakenX60 implements PivotIO {
   @Override
   public void setCurrentLimit(
       double currentLimit, double supplyCurrentThreshold, double supplyTimeThreshold) {
-    currentLimitConfigs.StatorCurrentLimitEnable = true;
-    currentLimitConfigs.StatorCurrentLimit = currentLimit;
-    currentLimitConfigs.SupplyCurrentThreshold = supplyCurrentThreshold;
-    currentLimitConfigs.SupplyTimeThreshold = supplyTimeThreshold;
+    if (currentLimit != lastSetCurrentLimit) {
+        currentLimitConfigs.StatorCurrentLimitEnable = true;
+        currentLimitConfigs.SupplyCurrentThreshold = supplyCurrentThreshold;
+        currentLimitConfigs.SupplyTimeThreshold = supplyTimeThreshold;
+        currentLimitConfigs.StatorCurrentLimit = currentLimit;
 
-    pivotConfigurator.apply(currentLimitConfigs);
+        pivotConfigurator.apply(currentLimitConfigs);
+
+        lastSetCurrentLimit = currentLimit; 
+    }
   }
 
   @Override
