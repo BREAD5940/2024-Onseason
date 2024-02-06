@@ -22,7 +22,7 @@ public interface FeederIO {
   /** Run closed loop at the specified velocity. */
   public default void setVelocity(double velocityRpm) {}
 
-  /** Sets current limit for the motor serializer. */
+  /** Sets current limit for the feeder motor. */
   public default void setCurrentLimit(
       double statorCurrentLimit,
       double currentLimitTriggerThreshold,

@@ -29,11 +29,11 @@ public class FeederIOFalcon500 implements FeederIO {
   private final MotorOutputConfigs motorOutputConfigs;
 
   /* Gains */
-  LoggedTunableNumber kS = new LoggedTunableNumber("Serializer/kS", 0.0);
-  LoggedTunableNumber kV = new LoggedTunableNumber("Serializer/kV", 0.0);
-  LoggedTunableNumber kP = new LoggedTunableNumber("Serializer/kP", 0.0);
-  LoggedTunableNumber kI = new LoggedTunableNumber("Serializer/kI", 0.0);
-  LoggedTunableNumber kD = new LoggedTunableNumber("Serializer/kD", 0.0);
+  LoggedTunableNumber kS = new LoggedTunableNumber("Feeder/kS", 0.0);
+  LoggedTunableNumber kV = new LoggedTunableNumber("Feeder/kV", 0.0);
+  LoggedTunableNumber kP = new LoggedTunableNumber("Feeder/kP", 0.0);
+  LoggedTunableNumber kI = new LoggedTunableNumber("Feeder/kI", 0.0);
+  LoggedTunableNumber kD = new LoggedTunableNumber("Feeder/kD", 0.0);
 
   public FeederIOFalcon500() {
     /* Instantiate configurator */
