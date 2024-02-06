@@ -102,8 +102,8 @@ public class ElevatorIOKrakenX60 implements ElevatorIO {
   public void updateInputs(ElevatorIOInputs inputs) {
     inputs.posMeters = getHeight();
     inputs.velMetersPerSecond = getVelocity();
-    inputs.velTarget = leader.getClosedLoopReferenceSlope().getValue();
-    inputs.posTarget = leader.getClosedLoopReference().getValue();
+    inputs.motionMagicTarget = leader.getClosedLoopReferenceSlope().getValue();
+    inputs.pidTarget = leader.getClosedLoopReference().getValue();
     inputs.appliedVoltage = leader.getMotorVoltage().getValue();
     inputs.currentAmps =
         new double[] {leader.getStatorCurrent().getValue(), follower.getStatorCurrent().getValue()};

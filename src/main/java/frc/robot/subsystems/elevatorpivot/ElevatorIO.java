@@ -8,8 +8,8 @@ public interface ElevatorIO {
   public static class ElevatorIOInputs {
     public double posMeters = 0.0;
     public double velMetersPerSecond = 0.0;
-    public double velTarget = 0.0;
-    public double posTarget = 0.0;
+    public double motionMagicTarget = 0.0;
+    public double pidTarget = 0.0;
     public double appliedVoltage = 0.0;
     public double[] currentAmps = new double[] {}; // {leader, follower}
     public double[] tempCelcius = new double[] {}; // {leader, follower}
