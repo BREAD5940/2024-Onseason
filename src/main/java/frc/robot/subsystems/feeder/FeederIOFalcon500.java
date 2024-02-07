@@ -18,7 +18,7 @@ public class FeederIOFalcon500 implements FeederIO {
 
   /* Hardware */
   private final TalonFX motor = new TalonFX(FEEDER_ID, "dabus");
-  private final DigitalInput beamBreak = new DigitalInput(0); 
+  private final DigitalInput beamBreak = new DigitalInput(0);
 
   /* Configurator */
   private final TalonFXConfigurator configurator;
@@ -70,10 +70,12 @@ public class FeederIOFalcon500 implements FeederIO {
 
   @Override
   public void updateInputs(FeederIOInputs inputs) {
-    inputs.posMeters = motor.getPosition().getValue() * Math.PI * FEEDER_ROLLER_DIAMETER / FEEDER_GEAR_RATIO;
-    inputs.velocityMps = motor.getVelocity().getValue() * Math.PI * FEEDER_ROLLER_DIAMETER / FEEDER_GEAR_RATIO;
+    inputs.posMeters =
+        motor.getPosition().getValue() * Math.PI * FEEDER_ROLLER_DIAMETER / FEEDER_GEAR_RATIO;
+    inputs.velocityMps =
+        motor.getVelocity().getValue() * Math.PI * FEEDER_ROLLER_DIAMETER / FEEDER_GEAR_RATIO;
     inputs.appliedVolts = motor.getMotorVoltage().getValue();
-    inputs.tempCelcius = motor.getDeviceTemp().getValue(); 
+    inputs.tempCelcius = motor.getDeviceTemp().getValue();
     inputs.currentAmps = motor.getStatorCurrent().getValue();
     inputs.beamBreakTriggered = !beamBreak.get();
   }
@@ -86,7 +88,9 @@ public class FeederIOFalcon500 implements FeederIO {
   @Override
   public void setVelocity(double velocityMps) {
     if (velocityMps > 0.0) {
-      motor.setControl(new VelocityVoltage((velocityMps * FEEDER_GEAR_RATIO) / (Math.PI * FEEDER_ROLLER_DIAMETER)));
+      motor.setControl(
+          new VelocityVoltage(
+              (velocityMps * FEEDER_GEAR_RATIO) / (Math.PI * FEEDER_ROLLER_DIAMETER)));
     } else {
       motor.setControl(new DutyCycleOut(0.0));
     }
@@ -95,22 +99,22 @@ public class FeederIOFalcon500 implements FeederIO {
   @Override
   public void setCurrentLimit(
       double currentLimit, double supplyCurrentThreshold, double supplyTimeThreshold) {
-   if (currentLimit != lastSetCurrentLimit) {
-        currentLimitConfigs.StatorCurrentLimitEnable = true;
-        currentLimitConfigs.SupplyCurrentThreshold = supplyCurrentThreshold;
-        currentLimitConfigs.SupplyTimeThreshold = supplyTimeThreshold;
-        currentLimitConfigs.StatorCurrentLimit = currentLimit;
+    if (currentLimit != lastSetCurrentLimit) {
+      currentLimitConfigs.StatorCurrentLimitEnable = true;
+      currentLimitConfigs.SupplyCurrentThreshold = supplyCurrentThreshold;
+      currentLimitConfigs.SupplyTimeThreshold = supplyTimeThreshold;
+      currentLimitConfigs.StatorCurrentLimit = currentLimit;
 
-        configurator.apply(currentLimitConfigs);
+      configurator.apply(currentLimitConfigs);
 
-        lastSetCurrentLimit = currentLimit; 
+      lastSetCurrentLimit = currentLimit;
     }
   }
 
   @Override
   public void enableBrakeMode(boolean enable) {
     motorOutputConfigs.NeutralMode = enable ? NeutralModeValue.Brake : NeutralModeValue.Coast;
-    
+
     configurator.apply(motorOutputConfigs);
   }
 

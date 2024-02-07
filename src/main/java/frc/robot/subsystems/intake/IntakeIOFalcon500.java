@@ -89,14 +89,14 @@ public class IntakeIOFalcon500 implements IntakeIO {
   public void setCurrentLimit(
       double currentLimit, double supplyCurrentThreshold, double supplyTimeThreshold) {
     if (currentLimit != lastSetCurrentLimit) {
-        currentLimitConfigs.StatorCurrentLimitEnable = true;
-        currentLimitConfigs.SupplyCurrentThreshold = supplyCurrentThreshold;
-        currentLimitConfigs.SupplyTimeThreshold = supplyTimeThreshold;
-        currentLimitConfigs.StatorCurrentLimit = currentLimit;
+      currentLimitConfigs.StatorCurrentLimitEnable = true;
+      currentLimitConfigs.SupplyCurrentThreshold = supplyCurrentThreshold;
+      currentLimitConfigs.SupplyTimeThreshold = supplyTimeThreshold;
+      currentLimitConfigs.StatorCurrentLimit = currentLimit;
 
-        configurator.apply(currentLimitConfigs);
+      configurator.apply(currentLimitConfigs);
 
-        lastSetCurrentLimit = currentLimit; 
+      lastSetCurrentLimit = currentLimit;
     }
   }
 

@@ -8,7 +8,7 @@ public interface FeederIO {
     public double posMeters = 0.0;
     public double velocityMps = 0.0;
     public double appliedVolts = 0.0;
-    public double tempCelcius  = 0.0;
+    public double tempCelcius = 0.0;
     public double currentAmps = 0.0;
     public boolean beamBreakTriggered = false;
   }
@@ -24,9 +24,7 @@ public interface FeederIO {
 
   /** Sets current limit for the feeder motor. */
   public default void setCurrentLimit(
-      double currentLimit,
-      double currentLimitTriggerThreshold,
-      double currentLimitThresholdTime) {}
+      double currentLimit, double currentLimitTriggerThreshold, double currentLimitThresholdTime) {}
 
   /** Enables or disables brake mode for the motor. */
   public default void enableBrakeMode(boolean enable) {}

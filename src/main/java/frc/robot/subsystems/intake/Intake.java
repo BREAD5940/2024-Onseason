@@ -1,11 +1,10 @@
 package frc.robot.subsystems.intake;
 
-import org.littletonrobotics.junction.Logger;
+import static frc.robot.constants.Constants.Intake.*;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commons.BreadUtil;
-
-import static frc.robot.constants.Constants.Intake.*;
+import org.littletonrobotics.junction.Logger;
 
 public class Intake extends SubsystemBase {
 
@@ -86,7 +85,7 @@ public class Intake extends SubsystemBase {
   public void requestIdle() {
     unsetAllRequests();
   }
-  
+
   public void requestIntake() {
     unsetAllRequests();
     requestIntake = true;
@@ -101,5 +100,4 @@ public class Intake extends SubsystemBase {
     requestIntake = false;
     requestSpit = false;
   }
-
 }

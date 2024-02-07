@@ -10,9 +10,9 @@ import frc.robot.commons.BreadUtil;
 import frc.robot.subsystems.elevatorpivot.ElevatorIO;
 import frc.robot.subsystems.elevatorpivot.ElevatorPivot;
 import frc.robot.subsystems.elevatorpivot.ElevatorPivot.ElevatorPivotState;
+import frc.robot.subsystems.elevatorpivot.PivotIO;
 import frc.robot.subsystems.feeder.Feeder;
 import frc.robot.subsystems.feeder.FeederIO;
-import frc.robot.subsystems.elevatorpivot.PivotIO;
 import frc.robot.subsystems.shooter.ShotParameter;
 import java.util.function.Function;
 
@@ -60,12 +60,11 @@ public class Superstructure extends SubsystemBase {
   }
 
   /* Take in io objects and construct subsystems */
-    public Superstructure(
+  public Superstructure(
       ElevatorIO elevatorIO,
       PivotIO pivotIO,
       FeederIO feederIO,
-      Function<Boolean, ShotParameter> speakerShotFunction
-    ) {
+      Function<Boolean, ShotParameter> speakerShotFunction) {
     elevatorPivot = new ElevatorPivot(elevatorIO, pivotIO);
     feeder = new Feeder(feederIO);
     this.speakerShotFunction = speakerShotFunction;
@@ -81,7 +80,7 @@ public class Superstructure extends SubsystemBase {
     /* Handle state machine logic */
     SuperstructureState nextSystemState = systemState;
     if (systemState == SuperstructureState.STARTING_CONFIG) {
-      feeder.requestIdle();  
+      feeder.requestIdle();
 
       if (requestHome) {
         elevatorPivot.requestHome();

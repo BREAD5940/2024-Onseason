@@ -1,5 +1,7 @@
 package frc.robot.subsystems.elevatorpivot;
 
+import static frc.robot.constants.Constants.Elevator.*;
+
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
@@ -12,8 +14,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.MathUtil;
 import frc.robot.commons.LoggedTunableNumber;
-
-import static frc.robot.constants.Constants.Elevator.*;
 
 public class ElevatorIOKrakenX60 implements ElevatorIO {
 
@@ -44,8 +44,6 @@ public class ElevatorIOKrakenX60 implements ElevatorIO {
   LoggedTunableNumber motionCruiseVelocity =
       new LoggedTunableNumber("Elevator/MotionCruiseVelocity", 1.0);
   LoggedTunableNumber motionJerk = new LoggedTunableNumber("Elevator/MotionJerk", 0.0);
-
-  /* For tracking */
 
   public ElevatorIOKrakenX60() {
     /* Instantiate motors and configurators */
@@ -115,7 +113,9 @@ public class ElevatorIOKrakenX60 implements ElevatorIO {
   public void setHeight(double heightMeters) {
     double kG = getHeight() < ELEVATOR_S2_HEIGHT ? ELEVATOR_S1_KG : ELEVATOR_S2_KG;
     double arbFF = MathUtil.clamp(kG, -0.999, 0.999);
-    leader.setControl(new MotionMagicVoltage(heightMeters, true, arbFF, 0, false, false, false));
+    leader.setControl(
+        new MotionMagicVoltage(
+            metersToRotations(heightMeters), true, arbFF, 0, false, false, false));
     follower.setControl(new Follower(ELEVATOR_LEFT_ID, true));
   }
 
@@ -127,7 +127,7 @@ public class ElevatorIOKrakenX60 implements ElevatorIO {
 
   @Override
   public void resetHeight(double newHeightMeters) {
-    leader.setPosition(newHeightMeters / (ELEVATOR_GEAR_RATIO * Math.PI * ELEVATOR_SPOOL_DIAMETER));
+    leader.setPosition(metersToRotations(newHeightMeters));
   }
 
   @Override
@@ -160,16 +160,19 @@ public class ElevatorIOKrakenX60 implements ElevatorIO {
   }
 
   private double getHeight() {
-    return leader.getPosition().getValue()
-        * ELEVATOR_GEAR_RATIO
-        * Math.PI
-        * ELEVATOR_SPOOL_DIAMETER;
+    return rotationsToMeters(leader.getPosition().getValue());
   }
 
   private double getVelocity() {
-    return leader.getVelocity().getValue()
-        * ELEVATOR_GEAR_RATIO
-        * Math.PI
-        * ELEVATOR_SPOOL_DIAMETER;
+    return rotationsToMeters(leader.getVelocity().getValue());
+  }
+
+  /* Helper conversion methods */
+  private double metersToRotations(double heightMeters) {
+    return heightMeters / (ELEVATOR_GEAR_RATIO * Math.PI * ELEVATOR_SPOOL_DIAMETER);
+  }
+
+  private double rotationsToMeters(double rotations) {
+    return rotations * (ELEVATOR_GEAR_RATIO * Math.PI * ELEVATOR_SPOOL_DIAMETER);
   }
 }

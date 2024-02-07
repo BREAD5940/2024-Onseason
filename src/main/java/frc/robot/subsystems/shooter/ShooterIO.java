@@ -25,8 +25,7 @@ public interface ShooterIO {
   public default void setPercent(double percentLeft, double percentRight) {}
 
   /** Run the shooter closed loop at the specified velocity. */
-  public default void setVelocity(double velocityRpmLeft, double velocityRpmRight) {
-  }
+  public default void setVelocity(double velocityRpmLeft, double velocityRpmRight) {}
 
   /* Sets current limit for the flywheel motors. */
   public default void setCurrentLimit(
@@ -34,7 +33,7 @@ public interface ShooterIO {
 
   /* Enables or disables flywheel brake mode. */
   public default void enableBrakeMode(boolean enable) {}
-  
+
   /* Updates the tunable numbers. */
   public default void updateTunableNumbers() {}
 }

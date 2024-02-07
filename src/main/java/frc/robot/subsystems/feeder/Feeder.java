@@ -2,10 +2,9 @@ package frc.robot.subsystems.feeder;
 
 import static frc.robot.constants.Constants.Feeder.*;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.commons.BreadUtil;
+import org.littletonrobotics.junction.Logger;
 
 public class Feeder {
 
@@ -28,8 +27,8 @@ public class Feeder {
 
   // System States
   public enum FeederState {
-    IDLE, 
-    INTAKE, 
+    IDLE,
+    INTAKE,
     SPIT,
     SHOOT
   }
@@ -80,7 +79,8 @@ public class Feeder {
 
       if (!requestShoot) {
         nextSystemState = FeederState.IDLE;
-      } if (!inputs.beamBreakTriggered && shootingTimer.get() > 2.0) {
+      }
+      if (!inputs.beamBreakTriggered && shootingTimer.get() > 2.0) {
         hasPiece = false;
         nextSystemState = FeederState.IDLE;
       }
@@ -90,7 +90,6 @@ public class Feeder {
       stateStartTime = BreadUtil.getFPGATimeSeconds();
       systemState = nextSystemState;
     }
-
   }
 
   public boolean hasPiece() {
@@ -114,7 +113,7 @@ public class Feeder {
     unsetAllRequests();
     requestSpit = true;
   }
-  
+
   public void requestShoot() {
     unsetAllRequests();
     requestShoot = true;
@@ -125,5 +124,4 @@ public class Feeder {
     requestSpit = false;
     requestShoot = false;
   }
-  
 }

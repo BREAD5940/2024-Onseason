@@ -31,10 +31,10 @@ public class ShooterIOKrakenX60 implements ShooterIO {
 
   /* Gains */
   LoggedTunableNumber shooterkS = new LoggedTunableNumber("Shooter/kS", 0.0);
-  LoggedTunableNumber  shooterkV =
+  LoggedTunableNumber shooterkV =
       new LoggedTunableNumber("Shooter/kV", (12.0 / SHOOTER_MAX_VELOCITY));
-  LoggedTunableNumber  shooterkP = new LoggedTunableNumber("Shooter/kP", 0.5);
-  LoggedTunableNumber  shooterkI = new LoggedTunableNumber("Shooter/kI", 0.0);
+  LoggedTunableNumber shooterkP = new LoggedTunableNumber("Shooter/kP", 0.5);
+  LoggedTunableNumber shooterkI = new LoggedTunableNumber("Shooter/kI", 0.0);
   LoggedTunableNumber shooterkD = new LoggedTunableNumber("Shooter/kD", 0.0);
 
   public void ShooterIOFalcon500() {
@@ -70,7 +70,6 @@ public class ShooterIOKrakenX60 implements ShooterIO {
     shooterSlot0Configs.kI = shooterkI.get();
     shooterSlot0Configs.kD = shooterkD.get();
 
-
     /* Apply Configurations */
     leftConfigurator.apply(shooterCurrentLimitConfigs);
     leftConfigurator.apply(leftMotorOutputConfigs);
@@ -101,10 +100,7 @@ public class ShooterIOKrakenX60 implements ShooterIO {
     inputs.shooterRightTempCelcius = right.getDeviceTemp().getValue();
 
     inputs.shooterCurrentAmps =
-        new double[] {
-          left.getSupplyCurrent().getValue(), right.getSupplyCurrent().getValue()
-        };
-
+        new double[] {left.getSupplyCurrent().getValue(), right.getSupplyCurrent().getValue()};
   }
 
   @Override
@@ -132,15 +128,15 @@ public class ShooterIOKrakenX60 implements ShooterIO {
   public void setCurrentLimit(
       double currentLimit, double supplyCurrentThreshold, double supplyTimeThreshold) {
     if (currentLimit != lastSetCurrentLimit) {
-          shooterCurrentLimitConfigs.StatorCurrentLimitEnable = true;
-    shooterCurrentLimitConfigs.StatorCurrentLimit = currentLimit;
-    shooterCurrentLimitConfigs.SupplyCurrentThreshold = supplyCurrentThreshold;
-    shooterCurrentLimitConfigs.SupplyTimeThreshold = supplyTimeThreshold;
+      shooterCurrentLimitConfigs.StatorCurrentLimitEnable = true;
+      shooterCurrentLimitConfigs.StatorCurrentLimit = currentLimit;
+      shooterCurrentLimitConfigs.SupplyCurrentThreshold = supplyCurrentThreshold;
+      shooterCurrentLimitConfigs.SupplyTimeThreshold = supplyTimeThreshold;
 
-    leftConfigurator.apply(shooterCurrentLimitConfigs);
-    rightConfigurator.apply(shooterCurrentLimitConfigs);
+      leftConfigurator.apply(shooterCurrentLimitConfigs);
+      rightConfigurator.apply(shooterCurrentLimitConfigs);
 
-    lastSetCurrentLimit = currentLimit;
+      lastSetCurrentLimit = currentLimit;
     }
   }
 

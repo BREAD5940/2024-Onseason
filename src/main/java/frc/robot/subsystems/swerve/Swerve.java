@@ -2,8 +2,6 @@ package frc.robot.subsystems.swerve;
 
 import static frc.robot.constants.Constants.Swerve.*;
 
-import java.util.List;
-
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
@@ -18,7 +16,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commons.TimestampedVisionUpdate;
-
+import java.util.List;
 import org.littletonrobotics.junction.Logger;
 
 public class Swerve extends SubsystemBase {
@@ -117,7 +115,8 @@ public class Swerve extends SubsystemBase {
     /* If the driver station is enabled, set the modules to break. Otherwise set them to coast */
     boolean stillMoving = false;
     for (int i = 0; i < 4; i++) {
-      if (drivetrain.getModule(i).getCurrentState().speedMetersPerSecond > SWERVE_COAST_TRESHOLD_MPS) {
+      if (drivetrain.getModule(i).getCurrentState().speedMetersPerSecond
+          > SWERVE_COAST_TRESHOLD_MPS) {
         stillMoving = true;
       }
     }
