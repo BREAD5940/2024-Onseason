@@ -2,12 +2,14 @@ package frc.robot.constants;
 
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 
 public class Constants {
 
   public static final boolean tuningMode = true;
+
+  public static final double FALCON_FREE_SPEED = 6380.0;
+  public static final double KRAKEN_FREE_SPEED = 6000.0;
 
   /* Constants pertaining to the intake */
   public static class Intake {
@@ -70,7 +72,8 @@ public class Constants {
     public static final double ELEVATOR_HOMING_TRESHOLD_MPS = 0.1;
     public static final double ELEVATOR_GEAR_RATIO = 1.0;
     public static final double ELEVATOR_MAX_SPEED = 1.0;
-    public static final InvertedValue ELEVATOR_LEFT_INVERSION = InvertedValue.CounterClockwise_Positive;
+    public static final InvertedValue ELEVATOR_LEFT_INVERSION =
+        InvertedValue.CounterClockwise_Positive;
     public static final InvertedValue ELEVATOR_RIGHT_INVERSION = InvertedValue.Clockwise_Positive;
 
     public static final double ELEVATOR_S2_HEIGHT = 0.0;
@@ -116,14 +119,15 @@ public class Constants {
     /* Misc. constants */
     public static final double PIVOT_SETPOINT_TOLERANCE_RADS = 0.01;
     public static final InvertedValue PIVOT_INVERSION = InvertedValue.Clockwise_Positive;
-    public static final SensorDirectionValue PIVOT_ENCODER_INVERSION = SensorDirectionValue.CounterClockwise_Positive;
-    public static final double PIVOT_GEAR_RATIO = 1.0;
-    public static final double PIVOT_MAX_SPEED = ((6380.0 / 60.0) * (1.0 / PIVOT_GEAR_RATIO));
+    public static final SensorDirectionValue PIVOT_ENCODER_INVERSION =
+        SensorDirectionValue.CounterClockwise_Positive;
+    public static final double PIVOT_GEAR_RATIO = 118.0556;
+    public static final double PIVOT_MAX_SPEED =
+        ((FALCON_FREE_SPEED / 60.0) * (1.0 / PIVOT_GEAR_RATIO));
   }
 
   /* Constants pertaining to the shooter */
   public static class Shooter {
-
 
     /* IDs */
     public static final int SHOOTER_LEFT_ID = 10;
@@ -148,14 +152,15 @@ public class Constants {
     public static final double SHOOTER_LEFT_GEAR_RATIO = 1.0;
     public static final double SHOOTER_RIGHT_GEAR_RATIO = 1.0;
     public static final double SHOOTER_MAX_VELOCITY = (6380.0 / 60.0);
-    public static final InvertedValue SHOOTER_RIGHT_INVERSION = InvertedValue.CounterClockwise_Positive;
-    public static final InvertedValue SHOOTER_LEFT_INVERSION = InvertedValue.CounterClockwise_Positive;
-
+    public static final InvertedValue SHOOTER_RIGHT_INVERSION =
+        InvertedValue.CounterClockwise_Positive;
+    public static final InvertedValue SHOOTER_LEFT_INVERSION =
+        InvertedValue.CounterClockwise_Positive;
   }
 
   /* Constants pertaining to the feeder */
   public static class Feeder {
-    
+
     /* IDs */
     public static final int FEEDER_ID = 9;
 
@@ -171,5 +176,4 @@ public class Constants {
     public static final double FEEDER_ROLLER_DIAMETER = 1.0;
     public static final InvertedValue FEEDER_INVERSION = InvertedValue.CounterClockwise_Positive;
   }
-  
 }

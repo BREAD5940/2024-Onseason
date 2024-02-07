@@ -40,9 +40,7 @@ public class PivotIOKrakenX60 implements PivotIO {
   /* Gains */
   LoggedTunableNumber kS = new LoggedTunableNumber("Pivot/kS", 0.0);
   LoggedTunableNumber kG = new LoggedTunableNumber("Pivot/kG", 0.0);
-  LoggedTunableNumber kV =
-      new LoggedTunableNumber(
-          "Pivot/kV", 12.0 / PIVOT_MAX_SPEED);
+  LoggedTunableNumber kV = new LoggedTunableNumber("Pivot/kV", 12.0 / PIVOT_MAX_SPEED);
   LoggedTunableNumber kP = new LoggedTunableNumber("Pivot/kP", 10);
   LoggedTunableNumber kI = new LoggedTunableNumber("Pivot/kI", 0.0);
   LoggedTunableNumber kD = new LoggedTunableNumber("Pivot/kD", 0.0);

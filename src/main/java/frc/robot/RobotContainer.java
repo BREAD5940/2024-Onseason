@@ -41,19 +41,24 @@ public class RobotContainer {
   public static ElevatorIO elevatorIO = new ElevatorIOKrakenX60();
   public static PivotIO pivotIO = new PivotIOKrakenX60();
   public static FeederIO feederIO = new FeederIOFalcon500();
-  public static Superstructure superstructure = new Superstructure(elevatorIO, pivotIO, feederIO, (pluh) -> new ShotParameter(0, 0, 0));
-  public static final Swerve swerve = 
+  public static Superstructure superstructure =
+      new Superstructure(elevatorIO, pivotIO, feederIO, (pluh) -> new ShotParameter(0, 0, 0));
+  public static final Swerve swerve =
       new Swerve(
           TunerConstants.DrivetrainConstants,
           TunerConstants.FrontLeft,
           TunerConstants.FrontRight,
           TunerConstants.BackLeft,
           TunerConstants.BackRight);
-  public static final AprilTagVisionIO frontLeft = new AprilTagVisionIONorthstar("front-left-camera");
-  public static final AprilTagVisionIO frontRight = new AprilTagVisionIONorthstar("front-right-camera");
+  public static final AprilTagVisionIO frontLeft =
+      new AprilTagVisionIONorthstar("front-left-camera");
+  public static final AprilTagVisionIO frontRight =
+      new AprilTagVisionIONorthstar("front-right-camera");
   public static final AprilTagVisionIO backLeft = new AprilTagVisionIONorthstar("back-left-camera");
-  public static final AprilTagVisionIO backRight = new AprilTagVisionIONorthstar("back-right-camera");
-  public static final AprilTagVision northstarVision = new AprilTagVision(frontLeft, frontRight, backLeft, backRight);
+  public static final AprilTagVisionIO backRight =
+      new AprilTagVisionIONorthstar("back-right-camera");
+  public static final AprilTagVision northstarVision =
+      new AprilTagVision(frontLeft, frontRight, backLeft, backRight);
 
   public RobotContainer() {
     configureBindings();
@@ -95,13 +100,11 @@ public class RobotContainer {
 
   private void configureNorthstar() {
     northstarVision.setDataInterfaces(swerve::getPose, swerve::addVisionData);
-    }
-  
+  }
 
   public Command getAutonomousCommand() {
     return new TrajectoryFollowerCommand(Robot.sixNoteA, swerve, true)
         .andThen(new TrajectoryFollowerCommand(Robot.sixNoteB, swerve))
         .andThen(new TrajectoryFollowerCommand(Robot.sixNoteC, swerve));
   }
-
 }

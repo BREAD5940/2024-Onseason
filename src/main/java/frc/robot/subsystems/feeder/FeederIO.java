@@ -8,7 +8,7 @@ public interface FeederIO {
     public double posMeters = 0.0;
     public double velocityMps = 0.0;
     public double appliedVolts = 0.0;
-    public double tempCelcius  = 0.0;
+    public double tempCelcius = 0.0;
     public double currentAmps = 0.0;
     public boolean beamBreakTriggered = false;
   }

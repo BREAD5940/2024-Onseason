@@ -1,5 +1,7 @@
 package frc.robot.subsystems.elevatorpivot;
 
+import static frc.robot.constants.Constants.Elevator.*;
+
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
@@ -12,8 +14,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.MathUtil;
 import frc.robot.commons.LoggedTunableNumber;
-
-import static frc.robot.constants.Constants.Elevator.*;
 
 public class ElevatorIOKrakenX60 implements ElevatorIO {
 

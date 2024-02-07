@@ -1,12 +1,10 @@
 package frc.robot.subsystems.shooter;
 
+import static frc.robot.constants.Constants.Shooter.*;
+
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commons.BreadUtil;
 import org.littletonrobotics.junction.Logger;
-
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-import static frc.robot.constants.Constants.Shooter.*;
 
 public class Shooter extends SubsystemBase {
 
@@ -67,7 +65,7 @@ public class Shooter extends SubsystemBase {
       // Transitions
       if (!requestFender) {
         nextSystemState = ShooterState.IDLE;
-      } 
+      }
     } else if (systemState == ShooterState.VISION_SPEAKER) {
       // Outputs
       // TODO add output here
@@ -94,7 +92,7 @@ public class Shooter extends SubsystemBase {
   public boolean atSetpoint() {
     return false;
   }
-  
+
   public void requestIdle() {
     unsetAllRequests();
   }
@@ -110,7 +108,7 @@ public class Shooter extends SubsystemBase {
     requestVisionSpeaker = true;
     this.wantsShootOverDefense = wantsShootOverDefense;
   }
-  
+
   public void requestAmp() {
     unsetAllRequests();
     requestAmp = true;

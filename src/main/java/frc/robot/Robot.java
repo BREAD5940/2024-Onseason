@@ -85,7 +85,9 @@ public class Robot extends LoggedRobot {
   }
 
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    RobotContainer.pivotIO.setPercent(0.01);
+  }
 
   @Override
   public void teleopExit() {}
@@ -99,10 +101,7 @@ public class Robot extends LoggedRobot {
   public void testPeriodic() {}
 
   @Override
-  public void testExit() {
-  }
-  
-  private void configureTeleopControls() {
-    
-  }
+  public void testExit() {}
+
+  private void configureTeleopControls() {}
 }
