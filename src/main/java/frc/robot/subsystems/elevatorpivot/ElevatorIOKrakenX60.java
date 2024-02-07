@@ -53,6 +53,8 @@ public class ElevatorIOKrakenX60 implements ElevatorIO {
     this.leaderConfigurator = leader.getConfigurator();
     this.followerConfigurator = follower.getConfigurator();
 
+    this.follower.setControl(new Follower(this.leader.getDeviceID(), false));
+
     /* Create configs */
     currentLimitsConfigs = new CurrentLimitsConfigs();
     currentLimitsConfigs.StatorCurrentLimitEnable = true;
@@ -116,13 +118,11 @@ public class ElevatorIOKrakenX60 implements ElevatorIO {
     leader.setControl(
         new MotionMagicVoltage(
             metersToRotations(heightMeters), true, arbFF, 0, false, false, false));
-    follower.setControl(new Follower(ELEVATOR_LEFT_ID, true));
   }
 
   @Override
   public void setPercent(double percent) {
     leader.setControl(new DutyCycleOut(percent));
-    follower.setControl(new Follower(ELEVATOR_LEFT_ID, true));
   }
 
   @Override
