@@ -2,6 +2,9 @@ package frc.robot.subsystems.elevatorpivot;
 
 import static frc.robot.constants.Constants.Pivot.*;
 
+import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfigurator;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
@@ -10,8 +13,8 @@ import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
-import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
@@ -26,8 +29,8 @@ import frc.robot.commons.LoggedTunableNumber;
 public class PivotIOKrakenX60 implements PivotIO {
 
   /* Hardware */
-  private final TalonFX pivot = new TalonFX(PIVOT_ID, "dabus");
-  private final CANcoder azimuth = new CANcoder(PIVOT_AZIMUTH_ID, "dabus");
+  private final TalonFX pivot = new TalonFX(PIVOT_ID);
+  private final CANcoder azimuth = new CANcoder(PIVOT_AZIMUTH_ID);
 
   /* Configurators */
   private TalonFXConfigurator pivotConfigurator;
@@ -37,19 +40,30 @@ public class PivotIOKrakenX60 implements PivotIO {
   private final MotorOutputConfigs motorOutputConfigs;
   private final Slot0Configs slot0Configs;
 
+  /* Status Signals */
+  private final StatusSignal<Double> position;
+  private final StatusSignal<Double> velocity;
+  private final StatusSignal<Double> supplyCurrent;
+  private final StatusSignal<Double> appliedVoltage;
+  private final StatusSignal<Double> motionMagicPositionTarget;
+  private final StatusSignal<Double> motionMagicVelocityTarget;
+
   /* Gains */
-  LoggedTunableNumber kS = new LoggedTunableNumber("Pivot/kS", 0.0);
+  LoggedTunableNumber kS = new LoggedTunableNumber("Pivot/kS", 0.3);
   LoggedTunableNumber kG = new LoggedTunableNumber("Pivot/kG", 0.0);
   LoggedTunableNumber kV = new LoggedTunableNumber("Pivot/kV", 12.0 / PIVOT_MAX_SPEED);
-  LoggedTunableNumber kP = new LoggedTunableNumber("Pivot/kP", 10);
+  LoggedTunableNumber kP = new LoggedTunableNumber("Pivot/kP", 200);
   LoggedTunableNumber kI = new LoggedTunableNumber("Pivot/kI", 0.0);
-  LoggedTunableNumber kD = new LoggedTunableNumber("Pivot/kD", 0.0);
+  LoggedTunableNumber kD = new LoggedTunableNumber("Pivot/kD", 20);
 
   LoggedTunableNumber motionAcceleration =
-      new LoggedTunableNumber("ShooterPivot/MotionAcceleration", 2.5);
+      new LoggedTunableNumber("ShooterPivot/MotionAcceleration", 1.5);
   LoggedTunableNumber motionCruiseVelocity =
       new LoggedTunableNumber("ShooterPivot/MotionCruiseVelocity", 1.0);
-  LoggedTunableNumber motionJerk = new LoggedTunableNumber("ShooterPivot/MotionJerk", 0.0);
+
+  StatusCode pivotStatusCode;
+
+  double setpointDeg = 0.0; // for tuning cuz we're the goats
 
   public PivotIOKrakenX60() {
     /* Configurators */
@@ -59,14 +73,15 @@ public class PivotIOKrakenX60 implements PivotIO {
     /* Configure pivot hardware */
     currentLimitConfigs = new CurrentLimitsConfigs();
     currentLimitConfigs.StatorCurrentLimitEnable = true;
-    currentLimitConfigs.StatorCurrentLimit = 250.0;
-    currentLimitConfigs.SupplyCurrentLimit = 250.0;
+    currentLimitConfigs.StatorCurrentLimit = 50.0;
+    currentLimitConfigs.SupplyCurrentLimit = 50.0;
+    currentLimitConfigs.SupplyTimeThreshold = 1.0;
 
     motorOutputConfigs = new MotorOutputConfigs();
     motorOutputConfigs.Inverted = PIVOT_INVERSION;
     motorOutputConfigs.PeakForwardDutyCycle = 1.0;
     motorOutputConfigs.PeakReverseDutyCycle = -1.0;
-    motorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
+    motorOutputConfigs.NeutralMode = NeutralModeValue.Coast;
 
     slot0Configs = new Slot0Configs();
     slot0Configs.kS = kS.get();
@@ -83,7 +98,7 @@ public class PivotIOKrakenX60 implements PivotIO {
     pivotMagnetSensorConfigs.MagnetOffset = PIVOT_MAGNET_OFFSET;
 
     FeedbackConfigs pivotFeedbackConfigs = new FeedbackConfigs();
-    pivotFeedbackConfigs.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+    pivotFeedbackConfigs.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
     pivotFeedbackConfigs.FeedbackRemoteSensorID = azimuth.getDeviceID();
     pivotFeedbackConfigs.RotorToSensorRatio = PIVOT_GEAR_RATIO;
     pivotFeedbackConfigs.SensorToMechanismRatio = 1.0;
@@ -91,7 +106,13 @@ public class PivotIOKrakenX60 implements PivotIO {
     MotionMagicConfigs pivotMotionMagicConfigs = new MotionMagicConfigs();
     pivotMotionMagicConfigs.MotionMagicAcceleration = motionAcceleration.get();
     pivotMotionMagicConfigs.MotionMagicCruiseVelocity = motionCruiseVelocity.get();
-    pivotMotionMagicConfigs.MotionMagicJerk = motionJerk.get();
+
+    position = azimuth.getAbsolutePosition().clone();
+    velocity = pivot.getVelocity().clone();
+    supplyCurrent = pivot.getSupplyCurrent().clone();
+    appliedVoltage = pivot.getMotorVoltage().clone();
+    motionMagicPositionTarget = pivot.getClosedLoopReference().clone();
+    motionMagicVelocityTarget = pivot.getClosedLoopReferenceSlope().clone();
 
     /* Apply Configurations */
     azimuthConfigurator.apply(pivotMagnetSensorConfigs);
@@ -101,28 +122,45 @@ public class PivotIOKrakenX60 implements PivotIO {
     pivotConfigurator.apply(pivotFeedbackConfigs);
     pivotConfigurator.apply(pivotMotionMagicConfigs);
 
-    pivot.optimizeBusUtilization();
+    pivotStatusCode =
+        BaseStatusSignal.setUpdateFrequencyForAll(
+            50.0,
+            position,
+            velocity,
+            supplyCurrent,
+            appliedVoltage,
+            motionMagicPositionTarget,
+            motionMagicVelocityTarget);
   }
 
   @Override
   public void updateInputs(PivotIOInputs inputs) {
-    inputs.angleDegrees = Units.rotationsToDegrees(azimuth.getAbsolutePosition().getValue());
-    inputs.angleRads = Units.rotationsToRadians(azimuth.getAbsolutePosition().getValue());
-    inputs.velDegreesPerSecond = Units.rotationsToDegrees(pivot.getVelocity().getValue());
-    inputs.currentAmps = pivot.getSupplyCurrent().getValue();
-    inputs.appliedVoltage = pivot.getMotorVoltage().getValue();
+    BaseStatusSignal.refreshAll(
+        position,
+        velocity,
+        supplyCurrent,
+        appliedVoltage,
+        motionMagicPositionTarget,
+        motionMagicVelocityTarget);
+    inputs.angleDegrees = Units.rotationsToDegrees(position.getValue());
+    inputs.angleRads = Units.rotationsToRadians(position.getValue());
+    inputs.velDegreesPerSecond = Units.rotationsToDegrees(velocity.getValue());
+    inputs.currentAmps = supplyCurrent.getValue();
+    inputs.appliedVoltage = appliedVoltage.getValue();
     inputs.tempCelcius = pivot.getDeviceTemp().getValue();
-    inputs.armTargetPosition = pivot.getClosedLoopReference().getValue();
-    inputs.armTargetVelocity = pivot.getClosedLoopReferenceSlope().getValue();
+    inputs.motionMagicPositionTargetDeg = motionMagicPositionTarget.getValue();
+    inputs.motionMagicVelocityTargetDeg = motionMagicVelocityTarget.getValue();
+    inputs.setpointDeg = setpointDeg;
   }
 
   @Override
-  public void setPercent(double percent) {
-    pivot.setControl(new DutyCycleOut(percent));
+  public void setVoltage(double voltage) {
+    pivot.setControl(new VoltageOut(voltage));
   }
 
   @Override
   public void setAngle(Rotation2d angle) {
+    setpointDeg = angle.getDegrees();
     double setpoint =
         MathUtil.clamp(
             angle.getRotations(), PIVOT_MIN_ANGLE.getRotations(), PIVOT_MAX_ANGLE.getRotations());

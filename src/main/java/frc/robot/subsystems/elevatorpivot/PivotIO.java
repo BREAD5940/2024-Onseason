@@ -13,8 +13,9 @@ public interface PivotIO {
     public double currentAmps = 0.0;
     public double appliedVoltage = 0.0;
     public double tempCelcius = 0.0;
-    public double armTargetPosition = 0.0;
-    public double armTargetVelocity = 0.0;
+    public double motionMagicPositionTargetDeg = 0.0;
+    public double motionMagicVelocityTargetDeg = 0.0;
+    public double setpointDeg = 0.0;
   }
 
   /** Updates the set of loggable inputs */
@@ -24,7 +25,7 @@ public interface PivotIO {
   public default void setAngle(Rotation2d angle) {}
 
   /** Sets the speed of the pivot to the desired percent output */
-  public default void setPercent(double percent) {}
+  public default void setVoltage(double voltage) {}
 
   /** Sets current limit for the pivot motor. */
   public default void setCurrentLimit(

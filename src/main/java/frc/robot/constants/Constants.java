@@ -3,10 +3,11 @@ package frc.robot.constants;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 
 public class Constants {
 
-  public static final boolean tuningMode = true;
+  public static final boolean tuningMode = false;
 
   public static final double FALCON_FREE_SPEED = 6380.0;
   public static final double KRAKEN_FREE_SPEED = 6000.0;
@@ -36,16 +37,11 @@ public class Constants {
   public static class Elevator {
 
     /* IDs */
-    public static final int ELEVATOR_LEFT_ID = 0;
-    public static final int ELEVATOR_RIGHT_ID = 1;
-
-    /* Limits */
-    public static final double ELEVATOR_MIN_HEIGHT = 0.0;
-    public static final double ELEVATOR_END_OF_DANGER_ZONE = 0.0; // Top gun reference?!?!?!
-    public static final double ELEVATOR_MAX_HEIGHT = 0.0;
+    public static final int ELEVATOR_LEFT_ID = 11;
+    public static final int ELEVATOR_RIGHT_ID = 12;
 
     /* Elevator setpoints speeds and positions */
-    public static final double ELEVATOR_HOMING_PERCENT = -0.3;
+    public static final double ELEVATOR_HOMING_VOLTAGE = -1;
 
     public static final double ELEVATOR_IDLE_HEIGHT = 0.0;
 
@@ -65,42 +61,50 @@ public class Constants {
 
     public static final double ELEVATOR_TRAP_HEIGHT = 0.0;
 
-    /* Misc. constants */
-    public static final double ELEVATOR_SPOOL_DIAMETER = 0.0;
+    /* Physical Measurements */
+    public static final double ELEVATOR_SPOOL_DIAMETER = Units.inchesToMeters(1.463);
     public static final double ELEVATOR_SETPOINT_TOLERANCE_METERS = 0.01;
     public static final double ELEVATOR_HOMING_TRESHOLD_SEC = 0.25;
-    public static final double ELEVATOR_HOMING_TRESHOLD_MPS = 0.1;
-    public static final double ELEVATOR_GEAR_RATIO = 1.0;
-    public static final double ELEVATOR_MAX_SPEED = 1.0;
-    public static final InvertedValue ELEVATOR_LEFT_INVERSION =
-        InvertedValue.CounterClockwise_Positive;
-    public static final InvertedValue ELEVATOR_RIGHT_INVERSION = InvertedValue.Clockwise_Positive;
+    public static final double ELEVATOR_HOMING_TRESHOLD_MPS = 0.01;
+    public static final double ELEVATOR_GEAR_RATIO =
+        1.0 / ((9.0 / 70.0) * (20.0 / 32.0) * (30.0 / 36.0));
+    public static final double ELEVATOR_MAX_SPEED =
+        ((KRAKEN_FREE_SPEED / 60.0) * (1.0 / ELEVATOR_GEAR_RATIO))
+            * Math.PI
+            * ELEVATOR_SPOOL_DIAMETER;
+    public static final InvertedValue ELEVATOR_LEFT_INVERSION = InvertedValue.Clockwise_Positive;
+    public static final double ELEVATOR_MIN_HEIGHT = 0.0;
+    public static final double ELEVATOR_END_OF_DANGER_ZONE = 0.26; // Top gun reference?!?!?!
+    public static final double ELEVATOR_MAX_HEIGHT = 0.475;
 
-    public static final double ELEVATOR_S2_HEIGHT = 0.0;
-
-    public static final double ELEVATOR_S1_KG = 0.0;
-
-    public static final double ELEVATOR_S2_KG = 0.0;
+    //
   }
 
   /* Constants pertaining to the pivot */
   public static class Pivot {
+    // -55.92578125 degrees emd pof danger zone, arm minimum danger zone
+    // arm minimum = -7.9
+    // -10.8 arm safe
+
+    // -56.42578125
+    // 0.26
 
     /* IDs and Offsets */
-    public static final int PIVOT_ID = 15;
-    public static final int PIVOT_AZIMUTH_ID = 15;
-    public static final double PIVOT_MAGNET_OFFSET = 1.0;
+    public static final int PIVOT_ID = 18;
+    public static final int PIVOT_AZIMUTH_ID = 19;
+    public static final double PIVOT_MAGNET_OFFSET = Units.degreesToRotations(-36.03515625);
 
-    public static final Rotation2d PIVOT_MAX_ANGLE = Rotation2d.fromDegrees(0.0);
+    public static final Rotation2d PIVOT_MAX_ANGLE = Rotation2d.fromDegrees(23);
     public static final Rotation2d PIVOT_MIN_SAFE_ANGLE =
         Rotation2d.fromDegrees(
-            0.0); // This would be the minimum rotation at the bottom of the elevator's travel
+            -12.8); // This would be the minimum rotation at the bottom of the elevator's travel
     public static final Rotation2d PIVOT_MIN_ANGLE =
         Rotation2d.fromDegrees(
-            0.0); // This would be the minumum rotation at any point in the elevator's "safe range"
+            -56.42578125); // This would be the minumum rotation at any point in the elevator's
+    // "safe range"
 
     /* Pivot setpoint angles */
-    public static final Rotation2d PIVOT_NEUTRAL_ANGLE = Rotation2d.fromDegrees(45.0);
+    public static final Rotation2d PIVOT_NEUTRAL_ANGLE = Rotation2d.fromDegrees(0.0);
 
     public static final Rotation2d PIVOT_IDLE_ANGLE = Rotation2d.fromDegrees(0.0);
 
@@ -120,7 +124,7 @@ public class Constants {
     public static final double PIVOT_SETPOINT_TOLERANCE_RADS = 0.01;
     public static final InvertedValue PIVOT_INVERSION = InvertedValue.Clockwise_Positive;
     public static final SensorDirectionValue PIVOT_ENCODER_INVERSION =
-        SensorDirectionValue.CounterClockwise_Positive;
+        SensorDirectionValue.Clockwise_Positive;
     public static final double PIVOT_GEAR_RATIO = 118.0556;
     public static final double PIVOT_MAX_SPEED =
         ((FALCON_FREE_SPEED / 60.0) * (1.0 / PIVOT_GEAR_RATIO));

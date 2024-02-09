@@ -21,6 +21,8 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath sixNoteB;
   public static PathPlannerPath sixNoteC;
 
+  private boolean requestedHome = false;
+
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
@@ -66,6 +68,11 @@ public class Robot extends LoggedRobot {
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
+    if (!requestedHome) {
+      RobotContainer.superstructure.elevatorPivot.requestHome();
+      requestedHome = true;
+    }
+
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
@@ -82,11 +89,22 @@ public class Robot extends LoggedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+    if (!requestedHome) {
+      RobotContainer.superstructure.elevatorPivot.requestHome();
+      requestedHome = true;
+    }
   }
 
   @Override
   public void teleopPeriodic() {
-    RobotContainer.pivotIO.setPercent(0.01);
+    // if (RobotContainer.driver.getRightTriggerAxis() > 0.1) {
+    //   RobotContainer.intakeIO.setPercent(-1.0);
+    // } else if (RobotContainer.driver.getLeftTriggerAxis() > 0.1) {
+    //   RobotContainer.intakeIO.setPercent(0.9);
+    // } else {
+    //   RobotContainer.intakeIO.setPercent(0.0);
+    // }
   }
 
   @Override

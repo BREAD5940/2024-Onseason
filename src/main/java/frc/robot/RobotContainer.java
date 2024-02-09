@@ -18,7 +18,6 @@ import frc.robot.subsystems.elevatorpivot.PivotIO;
 import frc.robot.subsystems.elevatorpivot.PivotIOKrakenX60;
 import frc.robot.subsystems.feeder.FeederIO;
 import frc.robot.subsystems.feeder.FeederIOFalcon500;
-import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOFalcon500;
 import frc.robot.subsystems.shooter.Shooter;
@@ -37,7 +36,7 @@ public class RobotContainer {
   public static ShooterIO shooterIO = new ShooterIOKrakenX60();
   public static Shooter shooter = new Shooter(shooterIO);
   public static IntakeIO intakeIO = new IntakeIOFalcon500();
-  public static Intake intake = new Intake(intakeIO);
+  // public static Intake intake = new Intake(intakeIO);
   public static ElevatorIO elevatorIO = new ElevatorIOKrakenX60();
   public static PivotIO pivotIO = new PivotIOKrakenX60();
   public static FeederIO feederIO = new FeederIOFalcon500();

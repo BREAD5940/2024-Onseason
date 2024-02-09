@@ -16,7 +16,7 @@ import java.util.function.Function;
 public class Superstructure extends SubsystemBase {
 
   /* Subsystems */
-  private final ElevatorPivot elevatorPivot;
+  public final ElevatorPivot elevatorPivot;
   private final Feeder feeder;
 
   /* State variables */

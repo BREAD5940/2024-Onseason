@@ -6,6 +6,7 @@ import static frc.robot.constants.Constants.Pivot.*;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.commons.BreadUtil;
+import org.littletonrobotics.junction.Logger;
 
 public class ElevatorPivot {
 
@@ -48,30 +49,44 @@ public class ElevatorPivot {
     /* Update loggable inputs */
     elevatorIO.updateInputs(elevatorInputs);
     pivotIO.updateInputs(pivotInputs);
+    pivotIO.updateTunableNumbers();
+    Logger.processInputs("Elevator", elevatorInputs);
+    Logger.processInputs("Pivot", pivotInputs);
+    Logger.recordOutput("ElevatorPivot/SystemState", this.getSystemState());
 
     /* Constrain the pivot and elevator setpoints based on the positions of each system */
+    desiredElevatorHeight = 0.4;
+    desiredPivotAngle = Rotation2d.fromDegrees(-50.0);
     Rotation2d adjustedDesiredPivotAngle =
-        getPivotMinAngleFromElevatorHeight(desiredElevatorHeight);
-    double adjustedDesiredElevatorHeight = getElevatorMinHeightFromPivotAngle(desiredPivotAngle);
+        Rotation2d.fromRadians(
+            MathUtil.clamp(
+                desiredPivotAngle.getRadians(),
+                getPivotMinAngleFromElevatorHeight(elevatorInputs.posMeters).getRadians(),
+                PIVOT_MAX_ANGLE.getRadians()));
+    double adjustedDesiredElevatorHeight =
+        MathUtil.clamp(
+            desiredElevatorHeight,
+            getElevatorMinHeightFromPivotAngle(new Rotation2d(pivotInputs.angleRads)),
+            ELEVATOR_MAX_HEIGHT);
 
     /* Handle statemachine logic */
     ElevatorPivotState nextSystemState = systemState;
     if (systemState == ElevatorPivotState.STARTING_CONFIG) {
-      elevatorIO.setPercent(0.0);
-      pivotIO.setPercent(0.0);
+      elevatorIO.setVoltage(0.0);
+      pivotIO.setVoltage(0.0);
 
       if (requestHome) {
         nextSystemState = ElevatorPivotState.NEUTRALIZING_PIVOT;
       }
     } else if (systemState == ElevatorPivotState.NEUTRALIZING_PIVOT) {
-      elevatorIO.setPercent(0.0);
+      elevatorIO.setVoltage(0.0);
       pivotIO.setAngle(PIVOT_NEUTRAL_ANGLE);
 
       if (atPivotSetpoint(PIVOT_NEUTRAL_ANGLE)) {
         nextSystemState = ElevatorPivotState.HOMING;
       }
     } else if (systemState == ElevatorPivotState.HOMING) {
-      elevatorIO.setPercent(ELEVATOR_HOMING_PERCENT);
+      elevatorIO.setVoltage(-2.0);
       pivotIO.setAngle(PIVOT_NEUTRAL_ANGLE);
 
       if (BreadUtil.getFPGATimeSeconds() - mStateStartTime > ELEVATOR_HOMING_TRESHOLD_SEC
@@ -81,8 +96,8 @@ public class ElevatorPivot {
         requestHome = false;
       }
     } else if (systemState == ElevatorPivotState.IDLE) {
-      elevatorIO.setPercent(0.0);
-      pivotIO.setAngle(PIVOT_NEUTRAL_ANGLE);
+      elevatorIO.setHeight(adjustedDesiredElevatorHeight);
+      pivotIO.setAngle(adjustedDesiredPivotAngle);
 
       if (requestHome) {
         nextSystemState = ElevatorPivotState.NEUTRALIZING_PIVOT;
@@ -185,7 +200,7 @@ public class ElevatorPivot {
         BreadUtil.numericalMap(
             arccosOfNormalizedElevatorHeight,
             0.0,
-            Math.PI,
+            Math.PI / 2.0,
             PIVOT_MIN_ANGLE.getRadians(),
             PIVOT_MIN_SAFE_ANGLE.getRadians());
 
@@ -200,7 +215,7 @@ public class ElevatorPivot {
             MathUtil.clamp(
                 pivotAngle.getRadians(),
                 PIVOT_MIN_ANGLE.getRadians(),
-                PIVOT_MIN_SAFE_ANGLE.getRadians()));
+                PIVOT_MAX_ANGLE.getRadians()));
 
     // If the pivot is in the "safe range" then return the absolute minimum height of the elevator
     if (pivotAngle.getRadians() > PIVOT_MIN_SAFE_ANGLE.getRadians()) {
@@ -214,7 +229,7 @@ public class ElevatorPivot {
             PIVOT_MIN_ANGLE.getRadians(),
             PIVOT_MIN_SAFE_ANGLE.getRadians(),
             0.0,
-            Math.PI);
+            Math.PI / 2.0);
 
     // Remove the arccos by taking the cos
     double normalizedElevatorHeight = Math.cos(arccosOfNormalizedElevatorHeight);

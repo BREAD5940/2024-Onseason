@@ -7,12 +7,11 @@ import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
-import com.ctre.phoenix6.controls.DutyCycleOut;
-import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.commons.LoggedTunableNumber;
 
 public class ElevatorIOKrakenX60 implements ElevatorIO {
@@ -30,19 +29,21 @@ public class ElevatorIOKrakenX60 implements ElevatorIO {
   private final MotorOutputConfigs leaderMotorConfigs;
   private final MotorOutputConfigs followerMotorConfigs;
   private final Slot0Configs slot0Configs;
+  private double posTarget;
 
   /* Gains */
   LoggedTunableNumber kA = new LoggedTunableNumber("Elevator/kA", 0.0);
-  LoggedTunableNumber kS = new LoggedTunableNumber("Elevator/kS", 0.0);
-  LoggedTunableNumber kV = new LoggedTunableNumber("Elevator/kV", 12.0 / ELEVATOR_MAX_SPEED);
-  LoggedTunableNumber kP = new LoggedTunableNumber("Elevator/kP", 0.0);
+  LoggedTunableNumber kS = new LoggedTunableNumber("Elevator/kS", 0.3);
+  LoggedTunableNumber kV =
+      new LoggedTunableNumber("Elevator/kV", 12.0 / metersToRotations(ELEVATOR_MAX_SPEED));
+  LoggedTunableNumber kP = new LoggedTunableNumber("Elevator/kP", 10);
   LoggedTunableNumber kI = new LoggedTunableNumber("Elevator/kI", 0.0);
   LoggedTunableNumber kD = new LoggedTunableNumber("Elevator/kD", 0.0);
 
   LoggedTunableNumber motionAcceleration =
-      new LoggedTunableNumber("Elevator/MotionAcceleration", 2.5);
+      new LoggedTunableNumber("Elevator/MotionAcceleration", metersToRotations(3.0));
   LoggedTunableNumber motionCruiseVelocity =
-      new LoggedTunableNumber("Elevator/MotionCruiseVelocity", 1.0);
+      new LoggedTunableNumber("Elevator/MotionCruiseVelocity", metersToRotations(3.0));
   LoggedTunableNumber motionJerk = new LoggedTunableNumber("Elevator/MotionJerk", 0.0);
 
   /* For tracking */
@@ -58,20 +59,20 @@ public class ElevatorIOKrakenX60 implements ElevatorIO {
     /* Create configs */
     currentLimitsConfigs = new CurrentLimitsConfigs();
     currentLimitsConfigs.StatorCurrentLimitEnable = true;
-    currentLimitsConfigs.StatorCurrentLimit = 250.0;
-    currentLimitsConfigs.SupplyCurrentLimit = 250.0;
+    currentLimitsConfigs.StatorCurrentLimit = 50.0;
+    currentLimitsConfigs.SupplyCurrentLimit = 70.0;
+    currentLimitsConfigs.SupplyTimeThreshold = 1.0;
 
     leaderMotorConfigs = new MotorOutputConfigs();
     leaderMotorConfigs.Inverted = ELEVATOR_LEFT_INVERSION;
     leaderMotorConfigs.PeakForwardDutyCycle = 1.0;
     leaderMotorConfigs.PeakReverseDutyCycle = -1.0;
-    leaderMotorConfigs.NeutralMode = NeutralModeValue.Brake;
+    leaderMotorConfigs.NeutralMode = NeutralModeValue.Coast;
 
     followerMotorConfigs = new MotorOutputConfigs();
-    followerMotorConfigs.Inverted = ELEVATOR_RIGHT_INVERSION;
     followerMotorConfigs.PeakForwardDutyCycle = 1.0;
     followerMotorConfigs.PeakReverseDutyCycle = -1.0;
-    followerMotorConfigs.NeutralMode = NeutralModeValue.Brake;
+    followerMotorConfigs.NeutralMode = NeutralModeValue.Coast;
 
     slot0Configs = new Slot0Configs();
     slot0Configs.kA = kA.get();
@@ -102,32 +103,38 @@ public class ElevatorIOKrakenX60 implements ElevatorIO {
   public void updateInputs(ElevatorIOInputs inputs) {
     inputs.posMeters = getHeight();
     inputs.velMetersPerSecond = getVelocity();
-    inputs.velTarget = leader.getClosedLoopReferenceSlope().getValue();
-    inputs.posTarget = leader.getClosedLoopReference().getValue();
+    inputs.motionMagicVelocityTarget =
+        rotationsToMeters(leader.getClosedLoopReferenceSlope().getValue());
+    inputs.motionMagicPositionTarget =
+        rotationsToMeters(leader.getClosedLoopReference().getValue());
     inputs.appliedVoltage = leader.getMotorVoltage().getValue();
     inputs.currentAmps =
         new double[] {leader.getStatorCurrent().getValue(), follower.getStatorCurrent().getValue()};
     inputs.tempCelcius =
         new double[] {leader.getStatorCurrent().getValue(), follower.getStatorCurrent().getValue()};
+    inputs.setpointMeters = posTarget;
   }
 
   @Override
   public void setHeight(double heightMeters) {
-    double kG = getHeight() < ELEVATOR_S2_HEIGHT ? ELEVATOR_S1_KG : ELEVATOR_S2_KG;
-    double arbFF = MathUtil.clamp(kG, -0.999, 0.999);
-    leader.setControl(new MotionMagicVoltage(heightMeters, true, arbFF, 0, false, false, false));
-    follower.setControl(new Follower(ELEVATOR_LEFT_ID, true));
+    if (!DriverStation.isEnabled()) {
+      leader.setControl(new VoltageOut(0.0));
+      return;
+    }
+    posTarget = heightMeters;
+    // double kG = getHeight() < ELEVATOR_S2_HEIGHT ? ELEVATOR_S1_KG : ELEVATOR_S2_KG;
+    // double arbFF = MathUtil.clamp(kG, -0.999, 0.999);
+    leader.setControl(new MotionMagicVoltage(metersToRotations(heightMeters)));
   }
 
   @Override
-  public void setPercent(double percent) {
-    leader.setControl(new DutyCycleOut(percent));
-    follower.setControl(new Follower(ELEVATOR_LEFT_ID, true));
+  public void setVoltage(double volts) {
+    leader.setControl(new VoltageOut(volts));
   }
 
   @Override
   public void resetHeight(double newHeightMeters) {
-    leader.setPosition(newHeightMeters / (ELEVATOR_GEAR_RATIO * Math.PI * ELEVATOR_SPOOL_DIAMETER));
+    leader.setPosition(metersToRotations(newHeightMeters));
   }
 
   @Override
@@ -160,16 +167,18 @@ public class ElevatorIOKrakenX60 implements ElevatorIO {
   }
 
   private double getHeight() {
-    return leader.getPosition().getValue()
-        * ELEVATOR_GEAR_RATIO
-        * Math.PI
-        * ELEVATOR_SPOOL_DIAMETER;
+    return rotationsToMeters(leader.getPosition().getValueAsDouble());
   }
 
   private double getVelocity() {
-    return leader.getVelocity().getValue()
-        * ELEVATOR_GEAR_RATIO
-        * Math.PI
-        * ELEVATOR_SPOOL_DIAMETER;
+    return rotationsToMeters(leader.getVelocity().getValueAsDouble());
+  }
+
+  private double metersToRotations(double heightMeters) {
+    return (heightMeters / (Math.PI * ELEVATOR_SPOOL_DIAMETER)) * ELEVATOR_GEAR_RATIO;
+  }
+
+  private double rotationsToMeters(double rotations) {
+    return rotations * (Math.PI * ELEVATOR_SPOOL_DIAMETER) / ELEVATOR_GEAR_RATIO;
   }
 }
