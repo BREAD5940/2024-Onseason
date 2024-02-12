@@ -2,23 +2,27 @@ package frc.robot.subsystems.feeder;
 
 import static frc.robot.constants.Constants.Feeder.*;
 
+import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.HardwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.ForwardLimitSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.wpilibj.DigitalInput;
+import com.ctre.phoenix6.signals.ReverseLimitSourceValue;
+import com.ctre.phoenix6.signals.ReverseLimitValue;
 import frc.robot.commons.LoggedTunableNumber;
 
 public class FeederIOFalcon500 implements FeederIO {
 
   /* Hardware */
-  private final TalonFX motor = new TalonFX(FEEDER_ID, "dabus");
-  private final DigitalInput beamBreak = new DigitalInput(0);
+  private final TalonFX motor = new TalonFX(FEEDER_ID);
 
   /* Configurator */
   private final TalonFXConfigurator configurator;
@@ -27,6 +31,13 @@ public class FeederIOFalcon500 implements FeederIO {
   private final CurrentLimitsConfigs currentLimitConfigs;
   private final Slot0Configs slot0Configs;
   private final MotorOutputConfigs motorOutputConfigs;
+  private final HardwareLimitSwitchConfigs hardwareLimitSwitchConfigs;
+
+  private StatusSignal<Double> position;
+  private StatusSignal<Double> velocity;
+  private StatusSignal<Double> current;
+  private StatusSignal<Double> temperature;
+  private StatusSignal<ReverseLimitValue> beamBreak;
 
   /* Gains */
   LoggedTunableNumber kS = new LoggedTunableNumber("Feeder/kS", 0.0);
@@ -41,9 +52,9 @@ public class FeederIOFalcon500 implements FeederIO {
 
     /* Create configs */
     currentLimitConfigs = new CurrentLimitsConfigs();
-    currentLimitConfigs.SupplyCurrentLimit = 300.0;
-    currentLimitConfigs.SupplyCurrentThreshold = 300.0;
-    currentLimitConfigs.SupplyTimeThreshold = 1.0;
+    currentLimitConfigs.SupplyCurrentLimit = 100.0;
+    currentLimitConfigs.SupplyCurrentThreshold = 100.0;
+    currentLimitConfigs.SupplyTimeThreshold = 1.5;
     currentLimitConfigs.SupplyCurrentLimitEnable = true;
 
     motorOutputConfigs = new MotorOutputConfigs();
@@ -59,24 +70,41 @@ public class FeederIOFalcon500 implements FeederIO {
     slot0Configs.kI = kI.get();
     slot0Configs.kD = kD.get();
 
+    hardwareLimitSwitchConfigs = new HardwareLimitSwitchConfigs();
+    hardwareLimitSwitchConfigs.ReverseLimitEnable = false;
+    hardwareLimitSwitchConfigs.ForwardLimitEnable = false;
+    hardwareLimitSwitchConfigs.ReverseLimitSource = ReverseLimitSourceValue.LimitSwitchPin;
+    hardwareLimitSwitchConfigs.ForwardLimitSource = ForwardLimitSourceValue.LimitSwitchPin;
+
+    /* Set status signals */
+    position = motor.getPosition();
+    velocity = motor.getVelocity();
+    current = motor.getSupplyCurrent();
+    temperature = motor.getDeviceTemp();
+    beamBreak = motor.getReverseLimit();
+
     /* Apply configs */
     configurator.apply(currentLimitConfigs);
     configurator.apply(motorOutputConfigs);
     configurator.apply(slot0Configs);
+    configurator.apply(hardwareLimitSwitchConfigs);
+
+    BaseStatusSignal.setUpdateFrequencyForAll(
+        50, position, velocity, current, temperature, beamBreak);
 
     motor.optimizeBusUtilization();
   }
 
   @Override
   public void updateInputs(FeederIOInputs inputs) {
-    inputs.posMeters =
-        motor.getPosition().getValue() * Math.PI * FEEDER_ROLLER_DIAMETER / FEEDER_GEAR_RATIO;
-    inputs.velocityMps =
-        motor.getVelocity().getValue() * Math.PI * FEEDER_ROLLER_DIAMETER / FEEDER_GEAR_RATIO;
+    BaseStatusSignal.refreshAll(position, velocity, current, temperature, beamBreak);
+
+    inputs.posMeters = position.getValue() * Math.PI * FEEDER_ROLLER_DIAMETER / FEEDER_GEAR_RATIO;
+    inputs.velocityMps = velocity.getValue() * Math.PI * FEEDER_ROLLER_DIAMETER / FEEDER_GEAR_RATIO;
     inputs.appliedVolts = motor.getMotorVoltage().getValue();
-    inputs.tempCelcius = motor.getDeviceTemp().getValue();
-    inputs.currentAmps = motor.getStatorCurrent().getValue();
-    inputs.beamBreakTriggered = !beamBreak.get();
+    inputs.tempCelcius = temperature.getValue();
+    inputs.currentAmps = current.getValue();
+    inputs.beamBreakTriggered = beamBreak.getValue().value == 0;
   }
 
   @Override

@@ -18,6 +18,7 @@ import frc.robot.subsystems.elevatorpivot.PivotIO;
 import frc.robot.subsystems.elevatorpivot.PivotIOKrakenX60;
 import frc.robot.subsystems.feeder.FeederIO;
 import frc.robot.subsystems.feeder.FeederIOFalcon500;
+import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOFalcon500;
 import frc.robot.subsystems.shooter.Shooter;
@@ -33,10 +34,14 @@ import frc.robot.vision.northstar.AprilTagVisionIONorthstar;
 public class RobotContainer {
 
   public static XboxController driver = new XboxController(0);
+  public static XboxController operator = new XboxController(1);
+
   public static ShooterIO shooterIO = new ShooterIOKrakenX60();
-  public static Shooter shooter = new Shooter(shooterIO);
+  public static Shooter shooter = new Shooter(shooterIO, (pluh) -> new ShotParameter(0, 0, 0));
+
   public static IntakeIO intakeIO = new IntakeIOFalcon500();
-  // public static Intake intake = new Intake(intakeIO);
+  public static Intake intake = new Intake(intakeIO);
+
   public static ElevatorIO elevatorIO = new ElevatorIOKrakenX60();
   public static PivotIO pivotIO = new PivotIOKrakenX60();
   public static FeederIO feederIO = new FeederIOFalcon500();

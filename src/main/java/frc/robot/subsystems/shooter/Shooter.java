@@ -4,6 +4,7 @@ import static frc.robot.constants.Constants.Shooter.*;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commons.BreadUtil;
+import java.util.function.Function;
 import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends SubsystemBase {
@@ -11,9 +12,6 @@ public class Shooter extends SubsystemBase {
   /* IO and inputs */
   private final ShooterIO io;
   private final ShooterIOInputsAutoLogged inputs = new ShooterIOInputsAutoLogged();
-
-  private double desiredLeftRPM = 0.0;
-  private double desiredRightRPM = 0.0;
 
   /* System variables and parameters */
   private ShooterState systemState = ShooterState.IDLE;
@@ -26,6 +24,12 @@ public class Shooter extends SubsystemBase {
 
   private double stateStartTime = 0.0;
 
+  /* Setpoints */
+  private double desiredLeftRPM = 0.0;
+  private double desiredRightRPM = 0.0;
+
+  private Function<Boolean, ShotParameter> speakerShotFunction;
+
   /* System states */
   public enum ShooterState {
     IDLE,
@@ -34,8 +38,9 @@ public class Shooter extends SubsystemBase {
     AMP
   }
 
-  public Shooter(ShooterIO io) {
+  public Shooter(ShooterIO io, Function<Boolean, ShotParameter> speakerShotFunction) {
     this.io = io;
+    this.speakerShotFunction = speakerShotFunction;
   }
 
   @Override
@@ -43,12 +48,14 @@ public class Shooter extends SubsystemBase {
     io.updateInputs(inputs);
     Logger.processInputs("Shooter", inputs);
 
+    Logger.recordOutput("Shooter/SystemState", systemState);
+
     /* Handle statemachine loic */
     ShooterState nextSystemState = systemState;
 
     if (systemState == ShooterState.IDLE) {
       // Outputs
-      io.setVelocity(SHOOTER_LEFT_IDLE_RPM, SHOOTER_RIGHT_IDLE_RPM);
+      io.setVelocity(desiredLeftRPM, desiredRightRPM);
 
       // Transitions
       if (requestFender) {
@@ -60,7 +67,7 @@ public class Shooter extends SubsystemBase {
       }
     } else if (systemState == ShooterState.FENDER) {
       // Outputs
-      io.setVelocity(SHOOTER_LEFT_FENDER_RPM, SHOOTER_RIGHT_FENDER_RPM);
+      io.setVelocity(desiredLeftRPM, desiredRightRPM);
 
       // Transitions
       if (!requestFender) {
@@ -68,14 +75,14 @@ public class Shooter extends SubsystemBase {
       }
     } else if (systemState == ShooterState.VISION_SPEAKER) {
       // Outputs
-      // TODO add output here
+      io.setVelocity(desiredLeftRPM, desiredRightRPM);
 
       // Transitions
       if (!requestVisionSpeaker) {
         nextSystemState = ShooterState.IDLE;
       }
     } else if (systemState == ShooterState.AMP) {
-      io.setVelocity(SHOOTER_LEFT_AMP_RPM, SHOOTER_RIGHT_AMP_RPM);
+      io.setVelocity(desiredLeftRPM, desiredRightRPM);
 
       if (!requestAmp) {
         nextSystemState = ShooterState.IDLE;
@@ -90,26 +97,38 @@ public class Shooter extends SubsystemBase {
 
   // Returns whether the shooter is at setpoint for the superstructure
   public boolean atSetpoint() {
-    return false;
+    Logger.recordOutput("Shooter error 1", desiredLeftRPM - inputs.shooterLeftVelocityRpm);
+    Logger.recordOutput("Shooter error 2", desiredRightRPM - inputs.shooterRightVelocityRpm);
+    return Math.abs(desiredLeftRPM - inputs.shooterLeftVelocityRpm) < SHOOTER_SETPOINT_TOLERANCE_RPM
+        && Math.abs(desiredRightRPM - inputs.shooterRightVelocityRpm)
+            < SHOOTER_SETPOINT_TOLERANCE_RPM;
   }
 
   public void requestIdle() {
+    desiredLeftRPM = SHOOTER_LEFT_IDLE_RPM;
+    desiredRightRPM = SHOOTER_RIGHT_IDLE_RPM;
     unsetAllRequests();
   }
 
-  public void requestFender(boolean wantsShootOverDefense) {
+  public void requestFender() {
+    desiredLeftRPM = SHOOTER_LEFT_FENDER_RPM;
+    desiredRightRPM = SHOOTER_RIGHT_FENDER_RPM;
     unsetAllRequests();
     requestFender = true;
-    this.wantsShootOverDefense = wantsShootOverDefense;
   }
 
   public void requestVisionSpeaker(boolean wantsShootOverDefense) {
+    ShotParameter shot = speakerShotFunction.apply(wantsShootOverDefense);
+    desiredLeftRPM = shot.leftRPM;
+    desiredRightRPM = shot.rightRPM;
     unsetAllRequests();
     requestVisionSpeaker = true;
     this.wantsShootOverDefense = wantsShootOverDefense;
   }
 
   public void requestAmp() {
+    desiredLeftRPM = SHOOTER_LEFT_AMP_RPM;
+    desiredRightRPM = SHOOTER_RIGHT_AMP_RPM;
     unsetAllRequests();
     requestAmp = true;
   }

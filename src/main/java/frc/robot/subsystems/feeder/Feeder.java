@@ -9,7 +9,7 @@ import org.littletonrobotics.junction.Logger;
 public class Feeder {
 
   // Hardware
-  private FeederIO io;
+  public FeederIO io;
   private FeederIOInputsAutoLogged inputs = new FeederIOInputsAutoLogged();
 
   // System variables and parameters
@@ -45,10 +45,12 @@ public class Feeder {
     io.updateInputs(inputs);
     Logger.processInputs("Feeder", inputs);
 
+    Logger.recordOutput("Feeder/SystemState", systemState.toString());
+
     // Handle statemachine logic
     FeederState nextSystemState = systemState;
     if (systemState == FeederState.IDLE) {
-      io.setVelocity(0.0);
+      io.setPercent(0.0);
 
       if (requestIntake && !hasPiece) {
         nextSystemState = FeederState.INTAKE;
@@ -59,7 +61,7 @@ public class Feeder {
         nextSystemState = FeederState.SHOOT;
       }
     } else if (systemState == FeederState.INTAKE) {
-      io.setVelocity(FEEDER_INTAKE_SPEED);
+      io.setPercent(FEEDER_INTAKE_SPEED);
 
       if (!requestIntake) {
         nextSystemState = FeederState.IDLE;
@@ -68,14 +70,14 @@ public class Feeder {
         nextSystemState = FeederState.IDLE;
       }
     } else if (systemState == FeederState.SPIT) {
-      io.setVelocity(FEEDER_SPIT_SPEED);
+      io.setPercent(FEEDER_SPIT_SPEED);
 
       if (!requestSpit) {
         hasPiece = false;
         nextSystemState = FeederState.IDLE;
       }
     } else if (systemState == FeederState.SHOOT) {
-      io.setVelocity(FEEDER_SHOOT_SPEED);
+      io.setPercent(FEEDER_SHOOT_SPEED);
 
       if (!requestShoot) {
         nextSystemState = FeederState.IDLE;

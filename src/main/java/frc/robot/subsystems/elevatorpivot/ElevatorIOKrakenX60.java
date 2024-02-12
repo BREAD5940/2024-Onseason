@@ -7,6 +7,7 @@ import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -59,9 +60,9 @@ public class ElevatorIOKrakenX60 implements ElevatorIO {
     /* Create configs */
     currentLimitsConfigs = new CurrentLimitsConfigs();
     currentLimitsConfigs.StatorCurrentLimitEnable = true;
-    currentLimitsConfigs.StatorCurrentLimit = 50.0;
-    currentLimitsConfigs.SupplyCurrentLimit = 70.0;
-    currentLimitsConfigs.SupplyTimeThreshold = 1.0;
+    currentLimitsConfigs.StatorCurrentLimit = 100.0;
+    currentLimitsConfigs.SupplyCurrentLimit = 100.0;
+    currentLimitsConfigs.SupplyTimeThreshold = 1.5;
 
     leaderMotorConfigs = new MotorOutputConfigs();
     leaderMotorConfigs.Inverted = ELEVATOR_LEFT_INVERSION;
@@ -97,6 +98,8 @@ public class ElevatorIOKrakenX60 implements ElevatorIO {
     followerConfigurator.apply(leaderMotorConfigs);
     followerConfigurator.apply(slot0Configs);
     followerConfigurator.apply(motionMagicConfigs);
+
+    follower.setControl(new Follower(ELEVATOR_LEFT_ID, false));
   }
 
   @Override

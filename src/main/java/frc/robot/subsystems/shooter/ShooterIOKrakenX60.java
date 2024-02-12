@@ -3,6 +3,8 @@ package frc.robot.subsystems.shooter;
 import static frc.robot.constants.Constants.Feeder.*;
 import static frc.robot.constants.Constants.Shooter.*;
 
+import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -29,15 +31,25 @@ public class ShooterIOKrakenX60 implements ShooterIO {
   private MotorOutputConfigs rightMotorOutputConfigs;
   private Slot0Configs shooterSlot0Configs;
 
+  /* Setpoints for logging */
+  private double desiredLeft = 0.0;
+  private double desiredRight = 0.0;
+
+  /* Status signals */
+  private StatusSignal<Double> velocityRight;
+  private StatusSignal<Double> velocityLeft;
+  private StatusSignal<Double> positionRight;
+  private StatusSignal<Double> positionLeft;
+
   /* Gains */
   LoggedTunableNumber shooterkS = new LoggedTunableNumber("Shooter/kS", 0.0);
   LoggedTunableNumber shooterkV =
-      new LoggedTunableNumber("Shooter/kV", (12.0 / SHOOTER_MAX_VELOCITY));
-  LoggedTunableNumber shooterkP = new LoggedTunableNumber("Shooter/kP", 0.5);
+      new LoggedTunableNumber("Shooter/kV", 12.0 / SHOOTER_MAX_VELOCITY * (3000.0 / 2400.0));
+  LoggedTunableNumber shooterkP = new LoggedTunableNumber("Shooter/kP", 1);
   LoggedTunableNumber shooterkI = new LoggedTunableNumber("Shooter/kI", 0.0);
   LoggedTunableNumber shooterkD = new LoggedTunableNumber("Shooter/kD", 0.0);
 
-  public void ShooterIOFalcon500() {
+  public ShooterIOKrakenX60() {
     /* Instantiate configuators */
     leftConfigurator = left.getConfigurator();
     rightConfigurator = right.getConfigurator();
@@ -48,6 +60,7 @@ public class ShooterIOKrakenX60 implements ShooterIO {
     shooterCurrentLimitConfigs = new CurrentLimitsConfigs();
     shooterCurrentLimitConfigs.StatorCurrentLimitEnable = true;
     shooterCurrentLimitConfigs.StatorCurrentLimit = 250.0;
+    shooterCurrentLimitConfigs.SupplyCurrentLimit = 250.0;
 
     // Motor output configs
     leftMotorOutputConfigs = new MotorOutputConfigs();
@@ -79,25 +92,35 @@ public class ShooterIOKrakenX60 implements ShooterIO {
     rightConfigurator.apply(rightMotorOutputConfigs);
     rightConfigurator.apply(shooterSlot0Configs);
 
-    left.optimizeBusUtilization();
-    right.optimizeBusUtilization();
+    /* Status Signals */
+    velocityLeft = left.getVelocity();
+    velocityRight = right.getVelocity();
+    positionLeft = left.getPosition();
+    positionRight = right.getPosition();
+
+    BaseStatusSignal.setUpdateFrequencyForAll(
+        50, velocityLeft, velocityRight, positionLeft, positionRight);
   }
 
   @Override
   public void updateInputs(ShooterIOInputs inputs) {
+    BaseStatusSignal.refreshAll(velocityLeft, velocityRight, positionLeft, positionRight);
+
     // Shooter left
     inputs.shooterLeftPosRad =
-        Units.rotationsToRadians(left.getPosition().getValue()) / SHOOTER_LEFT_GEAR_RATIO;
-    inputs.shooterLeftVelocityRpm = left.getVelocity().getValue() * 60.0;
+        Units.rotationsToRadians(positionLeft.getValue()) / SHOOTER_LEFT_GEAR_RATIO;
+    inputs.shooterLeftVelocityRpm = velocityLeft.getValue() * 60.0;
     inputs.shooterLeftAppliedVolts = left.getMotorVoltage().getValue();
     inputs.shooterLeftTempCelcius = left.getDeviceTemp().getValue();
+    inputs.shooterLeftSetpointRPM = desiredLeft;
 
     // Shooter right
     inputs.shooterRightPosRad =
-        Units.rotationsToRadians(right.getPosition().getValue()) / SHOOTER_RIGHT_GEAR_RATIO;
-    inputs.shooterRightVelocityRpm = right.getVelocity().getValue() * 60.0;
+        Units.rotationsToRadians(positionRight.getValue()) / SHOOTER_RIGHT_GEAR_RATIO;
+    inputs.shooterRightVelocityRpm = velocityRight.getValue() * 60.0;
     inputs.shooterRightAppliedVolts = right.getMotorVoltage().getValue();
     inputs.shooterRightTempCelcius = right.getDeviceTemp().getValue();
+    inputs.shooterRightSetpointRPM = desiredRight;
 
     inputs.shooterCurrentAmps =
         new double[] {left.getSupplyCurrent().getValue(), right.getSupplyCurrent().getValue()};
@@ -111,14 +134,17 @@ public class ShooterIOKrakenX60 implements ShooterIO {
 
   @Override
   public void setVelocity(double velocityLeft, double velocityRight) {
+    desiredLeft = velocityLeft;
+    desiredRight = velocityRight;
+
     if (velocityLeft > 0.0) {
-      left.setControl(new VelocityVoltage(velocityLeft));
+      left.setControl(new VelocityVoltage(velocityLeft / 60.0).withSlot(0));
     } else {
       left.setControl(new DutyCycleOut(0.0));
     }
 
     if (velocityRight > 0.0) {
-      right.setControl(new VelocityVoltage(velocityRight));
+      right.setControl(new VelocityVoltage(velocityRight / 60.0).withSlot(0));
     } else {
       right.setControl(new DutyCycleOut(0.0));
     }

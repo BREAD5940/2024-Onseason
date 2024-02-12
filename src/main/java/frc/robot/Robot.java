@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commons.LoggedTunableNumber;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -22,6 +23,10 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath sixNoteC;
 
   private boolean requestedHome = false;
+
+  private LoggedTunableNumber testHeight =
+      new LoggedTunableNumber("TestMode/ElevatorSetpoint", 0.0);
+  private LoggedTunableNumber testAngle = new LoggedTunableNumber("TestMode/PivotAngle", 0.0);
 
   @Override
   public void robotInit() {
@@ -69,7 +74,7 @@ public class Robot extends LoggedRobot {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     if (!requestedHome) {
-      RobotContainer.superstructure.elevatorPivot.requestHome();
+      RobotContainer.superstructure.requestHome();
       requestedHome = true;
     }
 
@@ -91,20 +96,40 @@ public class Robot extends LoggedRobot {
     }
 
     if (!requestedHome) {
-      RobotContainer.superstructure.elevatorPivot.requestHome();
+      RobotContainer.superstructure.requestHome();
       requestedHome = true;
     }
   }
 
   @Override
   public void teleopPeriodic() {
-    // if (RobotContainer.driver.getRightTriggerAxis() > 0.1) {
-    //   RobotContainer.intakeIO.setPercent(-1.0);
-    // } else if (RobotContainer.driver.getLeftTriggerAxis() > 0.1) {
-    //   RobotContainer.intakeIO.setPercent(0.9);
-    // } else {
-    //   RobotContainer.intakeIO.setPercent(0.0);
-    // }
+    /* Intake requests */
+    if (RobotContainer.driver.getRightTriggerAxis() > 0.1) {
+      RobotContainer.intake.requestIntake();
+      RobotContainer.superstructure.requestIntake(true);
+    } else if (RobotContainer.driver.getLeftTriggerAxis() > 0.1) {
+      RobotContainer.intake.requestSpit();
+    } else {
+      RobotContainer.superstructure.requestIntake(false);
+      RobotContainer.intake.requestIdle();
+    }
+
+    /* Shooting Requests */
+    if (RobotContainer.driver.getAButton()) {
+      RobotContainer.shooter.requestAmp();
+      RobotContainer.superstructure.requestAmp(true, RobotContainer.driver.getBButton());
+    } else if (RobotContainer.driver.getBButton()) {
+      boolean wantsShootOverDefense = RobotContainer.operator.getAButton();
+      RobotContainer.shooter.requestVisionSpeaker(wantsShootOverDefense);
+      RobotContainer.superstructure.requestVisionSpeaker(wantsShootOverDefense);
+    } else {
+      RobotContainer.shooter.requestIdle();
+      RobotContainer.superstructure.requestAmp(false, false);
+    }
+
+    /* Superstructure spit requests */
+
+    /* Climb requests */
   }
 
   @Override
@@ -116,7 +141,12 @@ public class Robot extends LoggedRobot {
   }
 
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+    // double targetHeight = testHeight.get();
+    // Rotation2d targetAngle = Rotation2d.fromDegrees(testAngle.get());
+
+    // RobotContainer.superstructure.elevatorPivot.requestPursueSetpoint(targetAngle, targetHeight);
+  }
 
   @Override
   public void testExit() {}

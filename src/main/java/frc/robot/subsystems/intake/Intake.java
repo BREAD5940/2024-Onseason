@@ -3,7 +3,9 @@ package frc.robot.subsystems.intake;
 import static frc.robot.constants.Constants.Intake.*;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 import frc.robot.commons.BreadUtil;
+import frc.robot.subsystems.Superstructure.SuperstructureState;
 import org.littletonrobotics.junction.Logger;
 
 public class Intake extends SubsystemBase {
@@ -26,6 +28,7 @@ public class Intake extends SubsystemBase {
   public enum IntakeState {
     IDLE,
     INTAKE,
+    FEED,
     SPIT
   }
 
@@ -40,6 +43,8 @@ public class Intake extends SubsystemBase {
     io.updateInputs(inputs);
     Logger.processInputs("Intake", inputs);
 
+    Logger.recordOutput("Intake/SystemState", systemState);
+
     // Handle statemachine logic
     IntakeState nextSystemState = systemState;
     if (systemState == IntakeState.IDLE) {
@@ -49,13 +54,16 @@ public class Intake extends SubsystemBase {
         nextSystemState = IntakeState.INTAKE;
       } else if (requestSpit) {
         nextSystemState = IntakeState.SPIT;
+      } else if (RobotContainer.superstructure.getSystemState() == SuperstructureState.INTAKE
+          && RobotContainer.superstructure.atElevatorPivotSetpoint()) {
+        nextSystemState = IntakeState.FEED;
       }
     } else if (systemState == IntakeState.INTAKE) {
       io.setPercent(INTAKE_SPEED);
 
       if (!requestIntake) {
         nextSystemState = IntakeState.IDLE;
-      } else if (inputs.topBeamBreakTriggered) {
+      } else if (inputs.beamBreakTriggered) {
         hasPiece = true;
         nextSystemState = IntakeState.IDLE;
       }
@@ -65,6 +73,16 @@ public class Intake extends SubsystemBase {
       if (!requestSpit) {
         hasPiece = false;
         nextSystemState = IntakeState.IDLE;
+      }
+    } else if (systemState == IntakeState.FEED) {
+      io.setPercent(FEED_SPEED);
+
+      if (RobotContainer.superstructure.hasPiece()
+          || RobotContainer.superstructure.getSystemState() != SuperstructureState.INTAKE) {
+        hasPiece = false;
+        nextSystemState = IntakeState.IDLE;
+      } else if (requestSpit) {
+        nextSystemState = IntakeState.SPIT;
       }
     }
 

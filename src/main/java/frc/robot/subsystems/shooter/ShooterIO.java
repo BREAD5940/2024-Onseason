@@ -9,11 +9,13 @@ public interface ShooterIO {
     public double shooterLeftVelocityRpm = 0.0;
     public double shooterLeftAppliedVolts = 0.0;
     public double shooterLeftTempCelcius = 0.0;
+    public double shooterLeftSetpointRPM = 0.0;
 
     public double shooterRightPosRad = 0.0;
     public double shooterRightVelocityRpm = 0.0;
     public double shooterRightAppliedVolts = 0.0;
     public double shooterRightTempCelcius = 0.0;
+    public double shooterRightSetpointRPM = 0.0;
 
     public double[] shooterCurrentAmps = new double[] {}; // {left, right}
   }

@@ -11,12 +11,14 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.commons.LoggedTunableNumber;
 
 public class IntakeIOFalcon500 implements IntakeIO {
 
   /* Hardware */
-  private final TalonFX motor = new TalonFX(INTAKE_ID, "rio");
+  private final TalonFX motor = new TalonFX(INTAKE_ID);
+  private final DigitalInput beamBreak = new DigitalInput(9);
 
   /* Configurator */
   private final TalonFXConfigurator configurator;
@@ -39,8 +41,8 @@ public class IntakeIOFalcon500 implements IntakeIO {
 
     /* Create configs */
     currentLimitConfigs = new CurrentLimitsConfigs();
-    currentLimitConfigs.SupplyCurrentLimit = 300.0;
-    currentLimitConfigs.SupplyCurrentThreshold = 300.0;
+    currentLimitConfigs.SupplyCurrentLimit = 50.0;
+    currentLimitConfigs.SupplyCurrentThreshold = 50.0;
     currentLimitConfigs.SupplyTimeThreshold = 1;
     currentLimitConfigs.SupplyCurrentLimitEnable = true;
 
@@ -72,6 +74,7 @@ public class IntakeIOFalcon500 implements IntakeIO {
     inputs.currentAmps = motor.getSupplyCurrent().getValue();
     inputs.appliedVolts = motor.getMotorVoltage().getValue();
     inputs.tempCelcius = motor.getDeviceTemp().getValue();
+    inputs.beamBreakTriggered = !beamBreak.get();
   }
 
   @Override

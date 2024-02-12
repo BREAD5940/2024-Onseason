@@ -11,8 +11,8 @@ import org.littletonrobotics.junction.Logger;
 public class ElevatorPivot {
 
   /* IO objects encapsulating the hardware involved in the pivot and elevator */
-  private final ElevatorIO elevatorIO;
-  private final PivotIO pivotIO;
+  public final ElevatorIO elevatorIO;
+  public final PivotIO pivotIO;
 
   private final ElevatorIOInputsAutoLogged elevatorInputs = new ElevatorIOInputsAutoLogged();
   private final PivotIOInputsAutoLogged pivotInputs = new PivotIOInputsAutoLogged();
@@ -55,8 +55,6 @@ public class ElevatorPivot {
     Logger.recordOutput("ElevatorPivot/SystemState", this.getSystemState());
 
     /* Constrain the pivot and elevator setpoints based on the positions of each system */
-    desiredElevatorHeight = 0.4;
-    desiredPivotAngle = Rotation2d.fromDegrees(-50.0);
     Rotation2d adjustedDesiredPivotAngle =
         Rotation2d.fromRadians(
             MathUtil.clamp(
@@ -86,7 +84,7 @@ public class ElevatorPivot {
         nextSystemState = ElevatorPivotState.HOMING;
       }
     } else if (systemState == ElevatorPivotState.HOMING) {
-      elevatorIO.setVoltage(-2.0);
+      elevatorIO.setVoltage(-3.0);
       pivotIO.setAngle(PIVOT_NEUTRAL_ANGLE);
 
       if (BreadUtil.getFPGATimeSeconds() - mStateStartTime > ELEVATOR_HOMING_TRESHOLD_SEC
@@ -96,8 +94,8 @@ public class ElevatorPivot {
         requestHome = false;
       }
     } else if (systemState == ElevatorPivotState.IDLE) {
-      elevatorIO.setHeight(adjustedDesiredElevatorHeight);
-      pivotIO.setAngle(adjustedDesiredPivotAngle);
+      elevatorIO.setVoltage(0.0);
+      pivotIO.setAngle(PIVOT_NEUTRAL_ANGLE);
 
       if (requestHome) {
         nextSystemState = ElevatorPivotState.NEUTRALIZING_PIVOT;
@@ -149,18 +147,9 @@ public class ElevatorPivot {
     requestPursueSetpoint = true;
     requestIdle = false;
 
-    // Limit pivot angle and elevator height
-    double minPivotAngleRad =
-        getPivotMinAngleFromElevatorHeight(elevatorInputs.posMeters).getRadians();
-    double minElevatorHeight =
-        getElevatorMinHeightFromPivotAngle(new Rotation2d(pivotInputs.angleRads));
-
     // Set setpoints
-    desiredPivotAngle =
-        new Rotation2d(
-            MathUtil.clamp(
-                pivotAngle.getRadians(), minPivotAngleRad, PIVOT_MAX_ANGLE.getRadians()));
-    desiredElevatorHeight = MathUtil.clamp(elevatorHeight, minElevatorHeight, ELEVATOR_MAX_HEIGHT);
+    desiredPivotAngle = pivotAngle;
+    desiredElevatorHeight = elevatorHeight;
   }
 
   /* Requests the elevator/pivot to go into idle mode */

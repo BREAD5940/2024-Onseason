@@ -3,14 +3,19 @@ package frc.robot.subsystems;
 import static frc.robot.constants.Constants.Elevator.*;
 import static frc.robot.constants.Constants.Pivot.*;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
+import frc.robot.commons.BreadUtil;
 import frc.robot.subsystems.elevatorpivot.ElevatorIO;
 import frc.robot.subsystems.elevatorpivot.ElevatorPivot;
+import frc.robot.subsystems.elevatorpivot.ElevatorPivot.ElevatorPivotState;
 import frc.robot.subsystems.elevatorpivot.PivotIO;
 import frc.robot.subsystems.feeder.Feeder;
 import frc.robot.subsystems.feeder.FeederIO;
 import frc.robot.subsystems.shooter.ShotParameter;
 import java.util.function.Function;
+import org.littletonrobotics.junction.Logger;
 
 /* Superstructure class for handling the interaction between all the subsystems minus swerve */
 public class Superstructure extends SubsystemBase {
@@ -73,198 +78,247 @@ public class Superstructure extends SubsystemBase {
     elevatorPivot.onLoop();
     feeder.onLoop();
 
-    // /* Handle state machine logic */
-    // SuperstructureState nextSystemState = systemState;
-    // if (systemState == SuperstructureState.STARTING_CONFIG) {
-    //   feeder.requestIdle();
+    Logger.recordOutput("Superstructure/State", systemState);
+    Logger.recordOutput("Superstructure/ElevatorPivotAtSetpoint", elevatorPivot.atSetpoint());
+    Logger.recordOutput("Superstructure/ShooterAtSetpoint", RobotContainer.shooter.atSetpoint());
 
-    //   if (requestHome) {
-    //     elevatorPivot.requestHome();
-    //     nextSystemState = SuperstructureState.HOMING;
-    //   }
-    // } else if (systemState == SuperstructureState.HOMING) {
-    //   feeder.requestIdle();
+    /* Handle state machine logic */
+    SuperstructureState nextSystemState = systemState;
+    if (systemState == SuperstructureState.STARTING_CONFIG) {
+      feeder.requestIdle();
 
-    //   if (elevatorPivot.getSystemState() == ElevatorPivotState.IDLE) {
-    //     nextSystemState = SuperstructureState.IDLE;
-    //     requestHome = false;
-    //   }
-    // } else if (systemState == SuperstructureState.IDLE) {
-    //   feeder.requestIdle();
-    //   elevatorPivot.requestPursueSetpoint(PIVOT_IDLE_ANGLE, ELEVATOR_IDLE_HEIGHT);
+      if (requestHome) {
+        elevatorPivot.requestHome();
+        nextSystemState = SuperstructureState.HOMING;
+      }
+    } else if (systemState == SuperstructureState.HOMING) {
+      feeder.requestIdle();
 
-    //   if (requestHome) {
-    //     nextSystemState = SuperstructureState.HOMING;
-    //   } else if (requestIntake && !feeder.hasPiece()) {
-    //     nextSystemState = SuperstructureState.INTAKE;
-    //   } else if (requestSpit) {
-    //     nextSystemState = SuperstructureState.SPIT;
-    //   } else if (requestFender) {
-    //     nextSystemState = SuperstructureState.FENDER;
-    //   } else if (requestVisionSpeaker) {
-    //     nextSystemState = SuperstructureState.VISION_SPEAKER;
-    //   } else if (requestAmp) {
-    //     nextSystemState = SuperstructureState.AMP;
-    //   } else if (requestPreClimb) {
-    //     nextSystemState = SuperstructureState.PRE_CLIMB;
-    //   } else if (requestClimb) {
-    //     nextSystemState = SuperstructureState.CLIMB;
-    //   } else if (requestTrap) {
-    //     nextSystemState = SuperstructureState.TRAP;
-    //   }
-    // } else if (systemState == SuperstructureState.INTAKE) {
-    //   feeder.requestIntake();
-    //   elevatorPivot.requestIdle();
+      if (elevatorPivot.getSystemState() == ElevatorPivotState.IDLE) {
+        nextSystemState = SuperstructureState.IDLE;
+        requestHome = false;
+      }
+    } else if (systemState == SuperstructureState.IDLE) {
+      feeder.requestIdle();
+      elevatorPivot.requestPursueSetpoint(PIVOT_IDLE_ANGLE, ELEVATOR_IDLE_HEIGHT);
 
-    //   if (!requestIntake) {
-    //     nextSystemState = SuperstructureState.IDLE;
-    //   } else if (feeder.hasPiece()) {
-    //     nextSystemState = SuperstructureState.IDLE;
-    //   }
-    // } else if (systemState == SuperstructureState.SPIT) {
-    //   feeder.requestSpit();
-    //   elevatorPivot.requestPursueSetpoint(PIVOT_SPIT_ANGLE, ELEVATOR_SPIT_HEIGHT);
+      if (requestHome) {
+        nextSystemState = SuperstructureState.HOMING;
+      } else if (requestIntake && !feeder.hasPiece()) {
+        nextSystemState = SuperstructureState.INTAKE;
+      } else if (requestSpit) {
+        nextSystemState = SuperstructureState.SPIT;
+      } else if (requestFender) {
+        nextSystemState = SuperstructureState.FENDER;
+      } else if (requestVisionSpeaker) {
+        nextSystemState = SuperstructureState.VISION_SPEAKER;
+      } else if (requestAmp) {
+        nextSystemState = SuperstructureState.AMP;
+      } else if (requestPreClimb) {
+        nextSystemState = SuperstructureState.PRE_CLIMB;
+      } else if (requestClimb) {
+        nextSystemState = SuperstructureState.CLIMB;
+      } else if (requestTrap) {
+        nextSystemState = SuperstructureState.TRAP;
+      }
+    } else if (systemState == SuperstructureState.INTAKE) {
+      feeder.requestIntake();
+      elevatorPivot.requestPursueSetpoint(PIVOT_INTAKE_ANGLE, ELEVATOR_INTAKE_HEIGHT);
 
-    //   if (!requestSpit) {
-    //     nextSystemState = SuperstructureState.IDLE;
-    //   }
-    // } else if (systemState == SuperstructureState.VISION_SPEAKER) {
-    //   ShotParameter shot = speakerShotFunction.apply(wantsShootOverDefense);
-    //   if (shouldShoot) {
-    //     feeder.requestShoot();
-    //   } else {
-    //     feeder.requestIdle();
-    //   }
-    //   if (wantsShootOverDefense) {
-    //     elevatorPivot.requestPursueSetpoint(
-    //         new Rotation2d(shot.pivotAngleDeg), ELEVATOR_SPEAKER_DEFENSE_HEIGHT);
-    //   } else {
-    //     elevatorPivot.requestPursueSetpoint(
-    //         new Rotation2d(shot.pivotAngleDeg), ELEVATOR_SPEAKER_SHORT_HEIGHT);
-    //   }
+      if (requestHome) {
+        nextSystemState = SuperstructureState.HOMING;
+      }
+      if (requestSpit) {
+        nextSystemState = SuperstructureState.SPIT;
+      } else if (requestPreClimb) {
+        nextSystemState = SuperstructureState.PRE_CLIMB;
+      } else if (!requestIntake) {
+        nextSystemState = SuperstructureState.IDLE;
+      } else if (feeder.hasPiece()) {
+        nextSystemState = SuperstructureState.IDLE;
+      }
+    } else if (systemState == SuperstructureState.SPIT) {
+      elevatorPivot.requestPursueSetpoint(PIVOT_SPIT_ANGLE, ELEVATOR_SPIT_HEIGHT);
+      if (elevatorPivot.atSetpoint()) {
+        feeder.requestSpit();
+      } else {
+        feeder.requestIdle();
+      }
 
-    //   if (wantsShoot && elevatorPivot.atSetpoint() && RobotContainer.shooter.atSetpoint()) {
-    //     shouldShoot = true;
-    //   }
+      if (requestHome) {
+        nextSystemState = SuperstructureState.HOMING;
+      } else if (!requestSpit) {
+        nextSystemState = SuperstructureState.IDLE;
+      }
+    } else if (systemState == SuperstructureState.FENDER) {
+      if (shouldShoot) {
+        feeder.requestShoot();
+      } else {
+        feeder.requestIdle();
+      }
+      elevatorPivot.requestPursueSetpoint(Rotation2d.fromDegrees(-20.0), 0.3);
+      if (wantsShoot && elevatorPivot.atSetpoint() && RobotContainer.shooter.atSetpoint()) {
+        shouldShoot = true;
+      }
 
-    //   if (!requestVisionSpeaker) {
-    //     shouldShoot = false;
-    //     nextSystemState = SuperstructureState.IDLE;
-    //   } else if (!feeder.hasPiece()) {
-    //     shouldShoot = false;
-    //     nextSystemState = SuperstructureState.IDLE;
-    //   }
-    // } else if (systemState == SuperstructureState.AMP) {
-    //   elevatorPivot.requestPursueSetpoint(PIVOT_AMP_ANGLE, ELEVATOR_AMP_HEIGHT);
-    //   if (shouldShoot) {
-    //     feeder.requestShoot();
-    //   } else {
-    //     feeder.requestIdle();
-    //   }
+      if (requestHome) {
+        shouldShoot = false;
+        nextSystemState = SuperstructureState.HOMING;
+      } else if (requestSpit) {
+        shouldShoot = false;
+        nextSystemState = SuperstructureState.SPIT;
+      } else if (!requestFender && !shouldShoot) {
+        nextSystemState = SuperstructureState.IDLE;
+      } else if (!feeder.hasPiece() && shouldShoot) {
+        shouldShoot = false;
+        nextSystemState = SuperstructureState.IDLE;
+      }
+    } else if (systemState == SuperstructureState.VISION_SPEAKER) {
+      ShotParameter shot = speakerShotFunction.apply(wantsShootOverDefense);
+      if (shouldShoot) {
+        feeder.requestShoot();
+      } else {
+        feeder.requestIdle();
+      }
+      if (wantsShootOverDefense) {
+        elevatorPivot.requestPursueSetpoint(
+            new Rotation2d(shot.pivotAngleDeg), ELEVATOR_SPEAKER_DEFENSE_HEIGHT);
+      } else {
+        elevatorPivot.requestPursueSetpoint(
+            new Rotation2d(shot.pivotAngleDeg), ELEVATOR_SPEAKER_SHORT_HEIGHT);
+      }
 
-    //   if (wantsShoot && elevatorPivot.atSetpoint() && RobotContainer.shooter.atSetpoint()) {
-    //     shouldShoot = true;
-    //   }
+      if (wantsShoot && elevatorPivot.atSetpoint() && RobotContainer.shooter.atSetpoint()) {
+        shouldShoot = true;
+      }
 
-    //   if (!requestAmp) {
-    //     shouldShoot = false;
-    //     nextSystemState = SuperstructureState.IDLE;
-    //   } else if (!feeder.hasPiece()) {
-    //     shouldShoot = false;
-    //     nextSystemState = SuperstructureState.IDLE;
-    //   }
-    // } else if (systemState == SuperstructureState.PRE_CLIMB) {
-    //   feeder.requestIdle();
-    //   elevatorPivot.requestPursueSetpoint(PIVOT_PRE_CLIMB_ANGLE, ELEVATOR_PRE_CLIMB_HEIGHT);
+      if (requestHome) {
+        shouldShoot = false;
+        nextSystemState = SuperstructureState.HOMING;
+      } else if (requestSpit) {
+        shouldShoot = false;
+        nextSystemState = SuperstructureState.SPIT;
+      } else if (!requestVisionSpeaker && !shouldShoot) {
+        shouldShoot = false;
+        nextSystemState = SuperstructureState.IDLE;
+      } else if (!feeder.hasPiece() && shouldShoot) {
+        shouldShoot = false;
+        nextSystemState = SuperstructureState.IDLE;
+      }
+    } else if (systemState == SuperstructureState.AMP) {
+      elevatorPivot.requestPursueSetpoint(PIVOT_AMP_ANGLE, ELEVATOR_AMP_HEIGHT);
+      if (shouldShoot) {
+        feeder.requestShoot();
+      } else {
+        feeder.requestIdle();
+      }
 
-    //   if (requestClimb && elevatorPivot.atSetpoint()) {
-    //     nextSystemState = SuperstructureState.CLIMB;
-    //   } else if (!requestClimb) {
-    //     nextSystemState = SuperstructureState.IDLE;
-    //   }
-    // } else if (systemState == SuperstructureState.CLIMB) {
-    //   elevatorPivot.requestPursueSetpoint(PIVOT_CLIMBED_ANGLE, ELEVATOR_CLIMBED_HEIGHT);
-    //   feeder.requestIdle();
+      if (wantsShoot && elevatorPivot.atSetpoint() && RobotContainer.shooter.atSetpoint()) {
+        shouldShoot = true;
+      }
 
-    //   if (requestTrap && elevatorPivot.atSetpoint()) {
-    //     nextSystemState = SuperstructureState.TRAP;
-    //   } else {
-    //     nextSystemState = SuperstructureState.IDLE;
-    //   }
-    // } else if (systemState == SuperstructureState.TRAP) {
-    //   if (shouldShoot) {
-    //     feeder.requestSpit();
-    //   } else {
-    //     feeder.requestIdle();
-    //   }
+      if (requestHome) {
+        shouldShoot = false;
+        nextSystemState = SuperstructureState.HOMING;
+      } else if (requestSpit) {
+        shouldShoot = false;
+        nextSystemState = SuperstructureState.SPIT;
+      } else if (!requestAmp && !shouldShoot) {
+        nextSystemState = SuperstructureState.IDLE;
+      } else if (shouldShoot && !feeder.hasPiece()) {
+        shouldShoot = false;
+        nextSystemState = SuperstructureState.IDLE;
+      }
+    } else if (systemState == SuperstructureState.PRE_CLIMB) {
+      feeder.requestIdle();
+      elevatorPivot.requestPursueSetpoint(PIVOT_PRE_CLIMB_ANGLE, ELEVATOR_PRE_CLIMB_HEIGHT);
 
-    //   if (wantsShoot && elevatorPivot.atSetpoint()) {
-    //     shouldShoot = true;
-    //   }
+      if (requestClimb && elevatorPivot.atSetpoint()) {
+        nextSystemState = SuperstructureState.CLIMB;
+      } else if (!requestPreClimb) {
+        nextSystemState = SuperstructureState.IDLE;
+      }
+    } else if (systemState == SuperstructureState.CLIMB) {
+      elevatorPivot.requestPursueSetpoint(PIVOT_CLIMBED_ANGLE, ELEVATOR_CLIMBED_HEIGHT);
+      feeder.requestIdle();
 
-    //   if (!requestTrap) {
-    //     nextSystemState = SuperstructureState.IDLE;
-    //   }
-    // }
+      if (requestTrap && elevatorPivot.atSetpoint()) {
+        nextSystemState = SuperstructureState.TRAP;
+      } else {
+        nextSystemState = SuperstructureState.IDLE;
+      }
+    } else if (systemState == SuperstructureState.TRAP) {
+      if (shouldShoot) {
+        feeder.requestSpit();
+      } else {
+        feeder.requestIdle();
+      }
 
-    // if (systemState != nextSystemState) {
-    //   stateStartTime = BreadUtil.getFPGATimeSeconds();
-    //   systemState = nextSystemState;
-    // }
-  }
+      if (wantsShoot && elevatorPivot.atSetpoint()) {
+        shouldShoot = true;
+      }
 
-  /** User-facing requests */
-  public void requestIdle() {
-    unsetAllRequests();
+      if (!requestTrap) {
+        nextSystemState = SuperstructureState.IDLE;
+      }
+    }
+
+    if (systemState != nextSystemState) {
+      stateStartTime = BreadUtil.getFPGATimeSeconds();
+      systemState = nextSystemState;
+    }
   }
 
   public void requestHome() {
-    unsetAllRequests();
     requestHome = true;
   }
 
-  public void requestSpit() {
-    unsetAllRequests();
+  public void requestSpit(boolean set) {
     requestSpit = true;
   }
 
-  public void requestVisionSpeaker(boolean wantsShoot, boolean wantsShootOverDefense) {
-    unsetAllRequests();
-    requestVisionSpeaker = true;
+  public void requestFender(boolean set, boolean wantsShoot) {
+    requestFender = set;
+    this.wantsShoot = wantsShoot;
+  }
+
+  public void requestVisionSpeaker(boolean set, boolean wantsShoot, boolean wantsShootOverDefense) {
+    requestVisionSpeaker = set;
     this.wantsShoot = wantsShoot;
     this.wantsShootOverDefense = wantsShootOverDefense;
   }
 
-  public void requestAmp(boolean wantsShoot) {
-    unsetAllRequests();
-    requestAmp = true;
+  public void requestAmp(boolean set, boolean wantsShoot) {
+    requestAmp = set;
     this.wantsShoot = wantsShoot;
   }
 
+  public void requestIntake(boolean set) {
+    requestIntake = set;
+  }
+
   public void requestPreClimb() {
-    unsetAllRequests();
     requestPreClimb = true;
   }
 
   public void requestClimb() {
-    unsetAllRequests();
     requestClimb = true;
   }
 
   public void requestTrap(boolean wantsShoot) {
-    unsetAllRequests();
     requestTrap = true;
     this.wantsShoot = wantsShoot;
   }
 
-  private void unsetAllRequests() {
-    requestHome = false;
-    requestIntake = false;
-    requestSpit = false;
-    requestVisionSpeaker = false;
-    requestAmp = false;
-    requestPreClimb = false;
-    requestClimb = false;
-    requestTrap = false;
+  public boolean atElevatorPivotSetpoint() {
+    return elevatorPivot.atSetpoint();
+  }
+
+  public SuperstructureState getSystemState() {
+    return systemState;
+  }
+
+  public boolean hasPiece() {
+    return feeder.hasPiece();
   }
 }

@@ -52,12 +52,12 @@ public class PivotIOKrakenX60 implements PivotIO {
   LoggedTunableNumber kS = new LoggedTunableNumber("Pivot/kS", 0.3);
   LoggedTunableNumber kG = new LoggedTunableNumber("Pivot/kG", 0.0);
   LoggedTunableNumber kV = new LoggedTunableNumber("Pivot/kV", 12.0 / PIVOT_MAX_SPEED);
-  LoggedTunableNumber kP = new LoggedTunableNumber("Pivot/kP", 200);
+  LoggedTunableNumber kP = new LoggedTunableNumber("Pivot/kP", 75);
   LoggedTunableNumber kI = new LoggedTunableNumber("Pivot/kI", 0.0);
-  LoggedTunableNumber kD = new LoggedTunableNumber("Pivot/kD", 20);
+  LoggedTunableNumber kD = new LoggedTunableNumber("Pivot/kD", 0);
 
   LoggedTunableNumber motionAcceleration =
-      new LoggedTunableNumber("ShooterPivot/MotionAcceleration", 1.5);
+      new LoggedTunableNumber("ShooterPivot/MotionAcceleration", 1.0);
   LoggedTunableNumber motionCruiseVelocity =
       new LoggedTunableNumber("ShooterPivot/MotionCruiseVelocity", 1.0);
 
@@ -73,9 +73,9 @@ public class PivotIOKrakenX60 implements PivotIO {
     /* Configure pivot hardware */
     currentLimitConfigs = new CurrentLimitsConfigs();
     currentLimitConfigs.StatorCurrentLimitEnable = true;
-    currentLimitConfigs.StatorCurrentLimit = 50.0;
-    currentLimitConfigs.SupplyCurrentLimit = 50.0;
-    currentLimitConfigs.SupplyTimeThreshold = 1.0;
+    currentLimitConfigs.StatorCurrentLimit = 20.0;
+    currentLimitConfigs.SupplyCurrentLimit = 20.0;
+    currentLimitConfigs.SupplyTimeThreshold = 1.5;
 
     motorOutputConfigs = new MotorOutputConfigs();
     motorOutputConfigs.Inverted = PIVOT_INVERSION;
