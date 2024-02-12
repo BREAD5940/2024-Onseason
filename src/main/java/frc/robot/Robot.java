@@ -107,6 +107,8 @@ public class Robot extends LoggedRobot {
     if (RobotContainer.driver.getRightTriggerAxis() > 0.1) {
       RobotContainer.intake.requestIntake();
       RobotContainer.superstructure.requestIntake(true);
+
+      RobotContainer.superstructure.requestIntake(true);
     } else if (RobotContainer.driver.getLeftTriggerAxis() > 0.1) {
       RobotContainer.intake.requestSpit();
     } else {
@@ -115,21 +117,29 @@ public class Robot extends LoggedRobot {
     }
 
     /* Shooting Requests */
+    boolean wantsShoot = RobotContainer.driver.getYButton();
+    boolean wantsShootOverDefense = RobotContainer.operator.getAButton();
+
     if (RobotContainer.driver.getAButton()) {
       RobotContainer.shooter.requestAmp();
-      RobotContainer.superstructure.requestAmp(true, RobotContainer.driver.getBButton());
+      RobotContainer.superstructure.requestAmp(true, wantsShoot);
     } else if (RobotContainer.driver.getBButton()) {
-      boolean wantsShootOverDefense = RobotContainer.operator.getAButton();
+      RobotContainer.shooter.requestFender();
+      RobotContainer.superstructure.requestFender(true, wantsShoot);
+    } else if (RobotContainer.driver.getYButton()) {
       RobotContainer.shooter.requestVisionSpeaker(wantsShootOverDefense);
-      RobotContainer.superstructure.requestVisionSpeaker(wantsShootOverDefense);
+      RobotContainer.superstructure.requestVisionSpeaker(true, wantsShoot, wantsShootOverDefense);
     } else {
       RobotContainer.shooter.requestIdle();
+      RobotContainer.superstructure.requestVisionSpeaker(false, false, false);
+      RobotContainer.superstructure.requestFender(false, false);
       RobotContainer.superstructure.requestAmp(false, false);
     }
 
     /* Superstructure spit requests */
 
     /* Climb requests */
+    // TODO figure this out later
   }
 
   @Override

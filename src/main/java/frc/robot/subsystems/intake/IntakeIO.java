@@ -18,7 +18,10 @@ public interface IntakeIO {
   public default void updateInputs(IntakeIOInputs inputs) {}
 
   /** Run open loop at the specified percent. */
-  public default void setPercent(double percent) {}
+  public default void setIntakePercent(double percent) {}
+
+  /* Run the vectoring motor open loop */
+  public default void setVectorPercent(double percent) {}
 
   /** Run closed loop at the specified velocity. */
   public default void setVelocity(double velocityRpm) {}

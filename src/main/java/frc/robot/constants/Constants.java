@@ -17,6 +17,7 @@ public class Constants {
 
     /* IDs */
     public static final int INTAKE_ID = 16;
+    public static final int VECTOR_ID = 27;
 
     /* Setpoints and tolerances */
     public static final double INTAKE_SPEED = 1.0;
@@ -25,6 +26,7 @@ public class Constants {
 
     /* Physical Measurements */
     public static final InvertedValue INTAKE_INVERSION = InvertedValue.Clockwise_Positive;
+    public static final InvertedValue VECTOR_INVERSION = InvertedValue.Clockwise_Positive;
   }
 
   /* Constants pertaining to the swerve drive */

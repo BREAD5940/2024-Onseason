@@ -56,8 +56,10 @@ public class RobotContainer {
           TunerConstants.BackRight);
   public static final AprilTagVisionIO frontLeft =
       new AprilTagVisionIONorthstar("front-left-camera");
-  public static final AprilTagVisionIO frontRight =
-      new AprilTagVisionIONorthstar("front-right-camera");
+  // public static final AprilTagVisionIO frontRight =
+  //     new AprilTagVisionIONorthstar("front-right-camera");
+  public static final AprilTagVisionIO frontRight = new AprilTagVisionIO() {};
+
   public static final AprilTagVisionIO backLeft = new AprilTagVisionIONorthstar("back-left-camera");
   public static final AprilTagVisionIO backRight =
       new AprilTagVisionIONorthstar("back-right-camera");

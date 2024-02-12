@@ -48,7 +48,8 @@ public class Intake extends SubsystemBase {
     // Handle statemachine logic
     IntakeState nextSystemState = systemState;
     if (systemState == IntakeState.IDLE) {
-      io.setPercent(0);
+      io.setIntakePercent(0);
+      io.setVectorPercent(0);
 
       if (requestIntake && !hasPiece) {
         nextSystemState = IntakeState.INTAKE;
@@ -59,7 +60,8 @@ public class Intake extends SubsystemBase {
         nextSystemState = IntakeState.FEED;
       }
     } else if (systemState == IntakeState.INTAKE) {
-      io.setPercent(INTAKE_SPEED);
+      io.setIntakePercent(INTAKE_SPEED);
+      io.setVectorPercent(0.5);
 
       if (!requestIntake) {
         nextSystemState = IntakeState.IDLE;
@@ -68,14 +70,16 @@ public class Intake extends SubsystemBase {
         nextSystemState = IntakeState.IDLE;
       }
     } else if (systemState == IntakeState.SPIT) {
-      io.setPercent(SPIT_SPEED);
+      io.setIntakePercent(SPIT_SPEED);
+      io.setVectorPercent(-0.5);
 
       if (!requestSpit) {
         hasPiece = false;
         nextSystemState = IntakeState.IDLE;
       }
     } else if (systemState == IntakeState.FEED) {
-      io.setPercent(FEED_SPEED);
+      io.setIntakePercent(FEED_SPEED);
+      io.setVectorPercent(0.5);
 
       if (RobotContainer.superstructure.hasPiece()
           || RobotContainer.superstructure.getSystemState() != SuperstructureState.INTAKE) {

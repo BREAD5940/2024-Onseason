@@ -60,22 +60,40 @@ public class AprilTagVision {
         new Pose3d[] {
           // Front Left
           new Pose3d(
-              Units.inchesToMeters(2.54300),
-              Units.inchesToMeters(11.57),
-              Units.inchesToMeters(13.207),
+              Units.inchesToMeters(6.67),
+              Units.inchesToMeters(12.74),
+              Units.inchesToMeters(25.1),
               new Rotation3d(
-                  Units.degreesToRadians(-90.0),
+                  Units.degreesToRadians(180.0),
                   Units.degreesToRadians(-25.0),
                   Units.degreesToRadians(15.0))),
           // Front Right
           new Pose3d(
-              Units.inchesToMeters(2.54300),
-              Units.inchesToMeters(-11.57),
-              Units.inchesToMeters(13.207),
+              Units.inchesToMeters(6.67),
+              Units.inchesToMeters(-12.74),
+              Units.inchesToMeters(25.1),
               new Rotation3d(
-                  Units.degreesToRadians(90.0),
+                  Units.degreesToRadians(180.0),
                   Units.degreesToRadians(-25.0),
                   Units.degreesToRadians(-15.0))),
+          // Back Left
+          new Pose3d(
+              Units.inchesToMeters(1.33),
+              Units.inchesToMeters(12.74),
+              Units.inchesToMeters(25.1),
+              new Rotation3d(
+                  Units.degreesToRadians(180.0),
+                  Units.degreesToRadians(25.0),
+                  Units.degreesToRadians(165.0))),
+          // Back Right
+          new Pose3d(
+              Units.inchesToMeters(1.33),
+              Units.inchesToMeters(-12.74),
+              Units.inchesToMeters(25.1),
+              new Rotation3d(
+                  Units.degreesToRadians(180.0),
+                  Units.degreesToRadians(25.0),
+                  Units.degreesToRadians(-165.0))),
         };
     xyStdDevModel =
         new PolynomialRegression(
