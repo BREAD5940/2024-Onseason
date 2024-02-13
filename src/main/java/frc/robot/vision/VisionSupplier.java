@@ -19,6 +19,14 @@ public class VisionSupplier extends SubsystemBase {
   private Rotation2d yaw;
   private ShotParameter shot;
 
+  public Rotation2d robotToSpeakerAngle() {
+    return yaw;
+  }
+
+  public ShotParameter robotToSpeakerShot() {
+    return shot;
+  }
+
   @Override
   public void periodic() {
     /* Get the robot's position */
