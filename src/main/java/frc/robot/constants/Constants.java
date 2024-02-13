@@ -79,8 +79,6 @@ public class Constants {
     public static final double ELEVATOR_MIN_HEIGHT = 0.0;
     public static final double ELEVATOR_END_OF_DANGER_ZONE = 0.26; // Top gun reference?!?!?!
     public static final double ELEVATOR_MAX_HEIGHT = 0.48495202978632623;
-
-    //
   }
 
   /* Constants pertaining to the pivot */

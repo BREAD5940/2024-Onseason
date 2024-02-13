@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commons.GeomUtil;
 import frc.robot.commons.LoggedTunableNumber;
 import frc.robot.commons.PolynomialRegression;
@@ -25,7 +26,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
-public class AprilTagVision {
+public class AprilTagVision extends SubsystemBase {
   public static LoggedTunableNumber mStdDevScalar =
       new LoggedTunableNumber("AprilTagVision/StdDevScalar", 2.0);
   private static final double ambiguityThreshold = 0.15;
@@ -83,7 +84,7 @@ public class AprilTagVision {
               Units.inchesToMeters(25.1),
               new Rotation3d(
                   Units.degreesToRadians(180.0),
-                  Units.degreesToRadians(25.0),
+                  Units.degreesToRadians(-25.0),
                   Units.degreesToRadians(165.0))),
           // Back Right
           new Pose3d(
@@ -92,7 +93,7 @@ public class AprilTagVision {
               Units.inchesToMeters(25.1),
               new Rotation3d(
                   Units.degreesToRadians(180.0),
-                  Units.degreesToRadians(25.0),
+                  Units.degreesToRadians(-25.0),
                   Units.degreesToRadians(-165.0))),
         };
     xyStdDevModel =
@@ -136,6 +137,7 @@ public class AprilTagVision {
     this.visionConsumer = visionConsumer;
   }
 
+  @Override
   public void periodic() {
     Logger.recordOutput("ApriltagVision/LeftCameraTransform", cameraPoses[0]);
     Logger.recordOutput("ApriltagVision/RightCameraTransform", cameraPoses[1]);

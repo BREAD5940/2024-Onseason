@@ -37,7 +37,7 @@ public class RobotContainer {
   public static XboxController operator = new XboxController(1);
 
   public static ShooterIO shooterIO = new ShooterIOKrakenX60();
-  public static Shooter shooter = new Shooter(shooterIO, (pluh) -> new ShotParameter(0, 0, 0));
+  public static Shooter shooter = new Shooter(shooterIO, (pluh) -> new ShotParameter(0, 0, 0, 0));
 
   public static IntakeIO intakeIO = new IntakeIOFalcon500();
   public static Intake intake = new Intake(intakeIO);
@@ -46,7 +46,7 @@ public class RobotContainer {
   public static PivotIO pivotIO = new PivotIOKrakenX60();
   public static FeederIO feederIO = new FeederIOFalcon500();
   public static Superstructure superstructure =
-      new Superstructure(elevatorIO, pivotIO, feederIO, (pluh) -> new ShotParameter(0, 0, 0));
+      new Superstructure(elevatorIO, pivotIO, feederIO, (pluh) -> new ShotParameter(0, 0, 0, 0));
   public static final Swerve swerve =
       new Swerve(
           TunerConstants.DrivetrainConstants,
@@ -56,10 +56,8 @@ public class RobotContainer {
           TunerConstants.BackRight);
   public static final AprilTagVisionIO frontLeft =
       new AprilTagVisionIONorthstar("front-left-camera");
-  // public static final AprilTagVisionIO frontRight =
-  //     new AprilTagVisionIONorthstar("front-right-camera");
-  public static final AprilTagVisionIO frontRight = new AprilTagVisionIO() {};
-
+  public static final AprilTagVisionIO frontRight =
+      new AprilTagVisionIONorthstar("front-right-camera");
   public static final AprilTagVisionIO backLeft = new AprilTagVisionIONorthstar("back-left-camera");
   public static final AprilTagVisionIO backRight =
       new AprilTagVisionIONorthstar("back-right-camera");

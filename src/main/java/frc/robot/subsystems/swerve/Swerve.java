@@ -11,6 +11,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.RobotCentric;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -41,8 +42,8 @@ public class Swerve extends SubsystemBase {
         new SwerveDrivetrain(
             drivetrainConstants,
             251,
-            VecBuilder.fill(0.003, 0.003, 0.0002),
-            VecBuilder.fill(0.003, 0.003, 0.0002),
+            VecBuilder.fill(0.0003, 0.0003, 0.0002),
+            VecBuilder.fill(0.0003, 0.0003, 0.0002),
             moduleConstants);
 
     drivetrain.configNeutralMode(NeutralModeValue.Brake);
@@ -176,6 +177,17 @@ public class Swerve extends SubsystemBase {
   /* Returns the robot relative speeds of the robot */
   public ChassisSpeeds getRobotRelativeSpeeds() {
     return drivetrain.getState().speeds;
+  }
+
+  /* Returns the field relative speeds of the robot */
+  public Translation2d getFieldRelativeSpeeds() {
+    ChassisSpeeds speeds = getRobotRelativeSpeeds();
+
+    Translation2d speeds2d = new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
+
+    Translation2d fieldRelativeSpeeds2d = speeds2d.rotateBy(getPose().getRotation());
+
+    return fieldRelativeSpeeds2d;
   }
 
   /* Swerve State */
