@@ -53,6 +53,12 @@ public class ElevatorPivot {
     Logger.processInputs("Elevator", elevatorInputs);
     Logger.processInputs("Pivot", pivotInputs);
     Logger.recordOutput("ElevatorPivot/SystemState", this.getSystemState());
+    Logger.recordOutput(
+        "ElevatorPivot/MinimumPivotAngle",
+        getPivotMinAngleFromElevatorHeight(elevatorInputs.posMeters).getDegrees());
+    Logger.recordOutput(
+        "ElevatorPivot/MinimumElevatorHeight",
+        getElevatorMinHeightFromPivotAngle(new Rotation2d(pivotInputs.angleRads)));
 
     /* Constrain the pivot and elevator setpoints based on the positions of each system */
     Rotation2d adjustedDesiredPivotAngle =

@@ -18,15 +18,21 @@ public class Robot extends LoggedRobot {
 
   private RobotContainer m_robotContainer;
 
-  public static PathPlannerPath sixNoteA;
-  public static PathPlannerPath sixNoteB;
-  public static PathPlannerPath sixNoteC;
+  public static PathPlannerPath threeNoteCenterA;
+  public static PathPlannerPath threeNoteCenterB;
+  public static PathPlannerPath threeNoteCenterC;
 
   private boolean requestedHome = false;
 
   private LoggedTunableNumber testHeight =
       new LoggedTunableNumber("TestMode/ElevatorSetpoint", 0.0);
   private LoggedTunableNumber testAngle = new LoggedTunableNumber("TestMode/PivotAngle", 0.0);
+
+  public static LoggedTunableNumber elevatorHeight =
+      new LoggedTunableNumber("Tuning/Elevator Height", 0.2);
+  public static LoggedTunableNumber pivotAngle = new LoggedTunableNumber("Tuning/Pivot Angle", 0.0);
+  public static LoggedTunableNumber leftRPM = new LoggedTunableNumber("Tuning/Left RPM", 0.0);
+  public static LoggedTunableNumber rightRPM = new LoggedTunableNumber("Tuning/Right RPM", 0.0);
 
   @Override
   public void robotInit() {
@@ -50,9 +56,11 @@ public class Robot extends LoggedRobot {
 
     Logger.start();
 
-    sixNoteA = PathPlannerPath.fromPathFile("Six Note A");
-    sixNoteB = PathPlannerPath.fromPathFile("Six Note B");
-    sixNoteC = PathPlannerPath.fromPathFile("Six Note C");
+    threeNoteCenterA = PathPlannerPath.fromPathFile("Three Note Center A");
+    threeNoteCenterB = PathPlannerPath.fromPathFile("Three Note Center B");
+    threeNoteCenterC = PathPlannerPath.fromPathFile("Three Note Center C");
+
+    m_robotContainer.configureAutonomousSelector();
   }
 
   @Override
@@ -124,9 +132,6 @@ public class Robot extends LoggedRobot {
       RobotContainer.shooter.requestAmp();
       RobotContainer.superstructure.requestAmp(true, wantsShoot);
     } else if (RobotContainer.driver.getBButton()) {
-      RobotContainer.shooter.requestFender();
-      RobotContainer.superstructure.requestFender(true, wantsShoot);
-    } else if (RobotContainer.driver.getYButton()) {
       RobotContainer.shooter.requestVisionSpeaker(wantsShootOverDefense);
       RobotContainer.superstructure.requestVisionSpeaker(true, wantsShoot, wantsShootOverDefense);
     } else {

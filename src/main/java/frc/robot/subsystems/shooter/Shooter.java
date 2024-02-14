@@ -3,8 +3,9 @@ package frc.robot.subsystems.shooter;
 import static frc.robot.constants.Constants.Shooter.*;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
+import frc.robot.RobotContainer;
 import frc.robot.commons.BreadUtil;
-import java.util.function.Function;
 import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends SubsystemBase {
@@ -28,8 +29,6 @@ public class Shooter extends SubsystemBase {
   private double desiredLeftRPM = 0.0;
   private double desiredRightRPM = 0.0;
 
-  private Function<Boolean, ShotParameter> speakerShotFunction;
-
   /* System states */
   public enum ShooterState {
     IDLE,
@@ -38,9 +37,8 @@ public class Shooter extends SubsystemBase {
     AMP
   }
 
-  public Shooter(ShooterIO io, Function<Boolean, ShotParameter> speakerShotFunction) {
+  public Shooter(ShooterIO io) {
     this.io = io;
-    this.speakerShotFunction = speakerShotFunction;
   }
 
   @Override
@@ -67,7 +65,7 @@ public class Shooter extends SubsystemBase {
       }
     } else if (systemState == ShooterState.FENDER) {
       // Outputs
-      io.setVelocity(desiredLeftRPM, desiredRightRPM);
+      io.setVelocity(Robot.leftRPM.get(), Robot.rightRPM.get());
 
       // Transitions
       if (!requestFender) {
@@ -111,14 +109,16 @@ public class Shooter extends SubsystemBase {
   }
 
   public void requestFender() {
-    desiredLeftRPM = SHOOTER_LEFT_FENDER_RPM;
-    desiredRightRPM = SHOOTER_RIGHT_FENDER_RPM;
+    // desiredLeftRPM = SHOOTER_LEFT_FENDER_RPM;
+    // desiredRightRPM = SHOOTER_RIGHT_FENDER_RPM;
+    desiredLeftRPM = Robot.leftRPM.get();
+    desiredRightRPM = Robot.rightRPM.get();
     unsetAllRequests();
     requestFender = true;
   }
 
   public void requestVisionSpeaker(boolean wantsShootOverDefense) {
-    ShotParameter shot = speakerShotFunction.apply(wantsShootOverDefense);
+    ShotParameter shot = RobotContainer.visionSupplier.robotToSpeakerShot();
     desiredLeftRPM = shot.leftRPM;
     desiredRightRPM = shot.rightRPM;
     unsetAllRequests();

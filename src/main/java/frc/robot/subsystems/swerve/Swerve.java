@@ -42,8 +42,8 @@ public class Swerve extends SubsystemBase {
         new SwerveDrivetrain(
             drivetrainConstants,
             251,
-            VecBuilder.fill(0.0003, 0.0003, 0.0002),
-            VecBuilder.fill(0.0003, 0.0003, 0.0002),
+            VecBuilder.fill(0.001, 0.001, 0.0002),
+            VecBuilder.fill(0.001, 0.001, 0.0002),
             moduleConstants);
 
     drivetrain.configNeutralMode(NeutralModeValue.Brake);
@@ -188,6 +188,11 @@ public class Swerve extends SubsystemBase {
     Translation2d fieldRelativeSpeeds2d = speeds2d.rotateBy(getPose().getRotation());
 
     return fieldRelativeSpeeds2d;
+  }
+
+  public boolean atAngularSetpoint(double setpointRad) {
+    return Math.abs(this.getPose().getRotation().getRadians() - setpointRad)
+        < SWERVE_ANGULAR_ERROR_TOLERANCE_RAD;
   }
 
   /* Swerve State */

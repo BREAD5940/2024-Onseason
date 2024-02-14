@@ -5,6 +5,7 @@ import static frc.robot.constants.Constants.Pivot.*;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.commons.BreadUtil;
 import frc.robot.subsystems.elevatorpivot.ElevatorIO;
@@ -14,7 +15,6 @@ import frc.robot.subsystems.elevatorpivot.PivotIO;
 import frc.robot.subsystems.feeder.Feeder;
 import frc.robot.subsystems.feeder.FeederIO;
 import frc.robot.subsystems.shooter.ShotParameter;
-import java.util.function.Function;
 import org.littletonrobotics.junction.Logger;
 
 /* Superstructure class for handling the interaction between all the subsystems minus swerve */
@@ -43,8 +43,6 @@ public class Superstructure extends SubsystemBase {
 
   private boolean shouldShoot = false;
 
-  private final Function<Boolean, ShotParameter> speakerShotFunction;
-
   /* System States */
   public enum SuperstructureState {
     STARTING_CONFIG,
@@ -61,14 +59,9 @@ public class Superstructure extends SubsystemBase {
   }
 
   /* Take in io objects and construct subsystems */
-  public Superstructure(
-      ElevatorIO elevatorIO,
-      PivotIO pivotIO,
-      FeederIO feederIO,
-      Function<Boolean, ShotParameter> speakerShotFunction) {
+  public Superstructure(ElevatorIO elevatorIO, PivotIO pivotIO, FeederIO feederIO) {
     elevatorPivot = new ElevatorPivot(elevatorIO, pivotIO);
     feeder = new Feeder(feederIO);
-    this.speakerShotFunction = speakerShotFunction;
   }
 
   /* Call onLoop() of subsystems, handle state machine logic, and log */
@@ -156,8 +149,12 @@ public class Superstructure extends SubsystemBase {
       } else {
         feeder.requestIdle();
       }
-      elevatorPivot.requestPursueSetpoint(Rotation2d.fromDegrees(-20.0), 0.3);
-      if (wantsShoot && elevatorPivot.atSetpoint() && RobotContainer.shooter.atSetpoint()) {
+      elevatorPivot.requestPursueSetpoint(
+          Rotation2d.fromDegrees(Robot.pivotAngle.get()), Robot.elevatorHeight.get());
+      if (wantsShoot
+          && elevatorPivot.atSetpoint()
+          && RobotContainer.shooter.atSetpoint()
+          && feeder.hasPiece()) {
         shouldShoot = true;
       }
 
@@ -174,21 +171,22 @@ public class Superstructure extends SubsystemBase {
         nextSystemState = SuperstructureState.IDLE;
       }
     } else if (systemState == SuperstructureState.VISION_SPEAKER) {
-      ShotParameter shot = speakerShotFunction.apply(wantsShootOverDefense);
+
+      ShotParameter shot = RobotContainer.visionSupplier.robotToSpeakerShot();
+
       if (shouldShoot) {
         feeder.requestShoot();
       } else {
         feeder.requestIdle();
       }
-      if (wantsShootOverDefense) {
-        elevatorPivot.requestPursueSetpoint(
-            new Rotation2d(shot.pivotAngleDeg), ELEVATOR_SPEAKER_DEFENSE_HEIGHT);
-      } else {
-        elevatorPivot.requestPursueSetpoint(
-            new Rotation2d(shot.pivotAngleDeg), ELEVATOR_SPEAKER_SHORT_HEIGHT);
-      }
 
-      if (wantsShoot && elevatorPivot.atSetpoint() && RobotContainer.shooter.atSetpoint()) {
+      elevatorPivot.requestPursueSetpoint(
+          Rotation2d.fromDegrees(shot.pivotAngleDeg), shot.elevatorHeight);
+
+      if (wantsShoot
+          && elevatorPivot.atSetpoint()
+          && RobotContainer.shooter.atSetpoint()
+          && feeder.hasPiece()) {
         shouldShoot = true;
       }
 
@@ -213,7 +211,10 @@ public class Superstructure extends SubsystemBase {
         feeder.requestIdle();
       }
 
-      if (wantsShoot && elevatorPivot.atSetpoint() && RobotContainer.shooter.atSetpoint()) {
+      if (wantsShoot
+          && elevatorPivot.atSetpoint()
+          && RobotContainer.shooter.atSetpoint()
+          && feeder.hasPiece()) {
         shouldShoot = true;
       }
 

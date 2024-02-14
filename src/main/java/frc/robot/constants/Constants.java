@@ -7,7 +7,7 @@ import edu.wpi.first.math.util.Units;
 
 public class Constants {
 
-  public static final boolean tuningMode = false;
+  public static final boolean tuningMode = true;
 
   public static final double FALCON_FREE_SPEED = 6380.0;
   public static final double KRAKEN_FREE_SPEED = 6000.0;
@@ -34,6 +34,7 @@ public class Constants {
 
     public static final double SWERVE_COAST_TRESHOLD_MPS = 0.05;
     public static final double SWERVE_COAST_TRESHOLD_SEC = 5.0;
+    public static final double SWERVE_ANGULAR_ERROR_TOLERANCE_RAD = Units.degreesToRadians(2);
   }
 
   /* Constants pertaining to the elevator */
@@ -169,7 +170,7 @@ public class Constants {
     public static final int FEEDER_ID = 15;
 
     /* Setpoints and tolerances */
-    public static final double FEEDER_INTAKE_SPEED = 0.5;
+    public static final double FEEDER_INTAKE_SPEED = 0.3;
 
     public static final double FEEDER_SPIT_SPEED = -0.1;
 

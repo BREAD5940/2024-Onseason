@@ -9,9 +9,12 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.commons.BreadUtil;
 import frc.robot.constants.TunerConstants;
 import frc.robot.subsystems.Superstructure;
+import frc.robot.subsystems.commands.AimAtSpeakerCommand;
 import frc.robot.subsystems.elevatorpivot.ElevatorIO;
 import frc.robot.subsystems.elevatorpivot.ElevatorIOKrakenX60;
 import frc.robot.subsystems.elevatorpivot.PivotIO;
@@ -24,9 +27,8 @@ import frc.robot.subsystems.intake.IntakeIOFalcon500;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOKrakenX60;
-import frc.robot.subsystems.shooter.ShotParameter;
 import frc.robot.subsystems.swerve.Swerve;
-import frc.robot.subsystems.swerve.TrajectoryFollowerCommand;
+import frc.robot.vision.VisionSupplier;
 import frc.robot.vision.northstar.AprilTagVision;
 import frc.robot.vision.northstar.AprilTagVisionIO;
 import frc.robot.vision.northstar.AprilTagVisionIONorthstar;
@@ -37,7 +39,7 @@ public class RobotContainer {
   public static XboxController operator = new XboxController(1);
 
   public static ShooterIO shooterIO = new ShooterIOKrakenX60();
-  public static Shooter shooter = new Shooter(shooterIO, (pluh) -> new ShotParameter(0, 0, 0, 0));
+  public static Shooter shooter = new Shooter(shooterIO);
 
   public static IntakeIO intakeIO = new IntakeIOFalcon500();
   public static Intake intake = new Intake(intakeIO);
@@ -45,8 +47,7 @@ public class RobotContainer {
   public static ElevatorIO elevatorIO = new ElevatorIOKrakenX60();
   public static PivotIO pivotIO = new PivotIOKrakenX60();
   public static FeederIO feederIO = new FeederIOFalcon500();
-  public static Superstructure superstructure =
-      new Superstructure(elevatorIO, pivotIO, feederIO, (pluh) -> new ShotParameter(0, 0, 0, 0));
+  public static Superstructure superstructure = new Superstructure(elevatorIO, pivotIO, feederIO);
   public static final Swerve swerve =
       new Swerve(
           TunerConstants.DrivetrainConstants,
@@ -63,6 +64,9 @@ public class RobotContainer {
       new AprilTagVisionIONorthstar("back-right-camera");
   public static final AprilTagVision northstarVision =
       new AprilTagVision(frontLeft, frontRight, backLeft, backRight);
+
+  public static final VisionSupplier visionSupplier = new VisionSupplier();
+  public static AutonomousSelector autonomousSelector;
 
   public RobotContainer() {
     configureBindings();
@@ -81,14 +85,14 @@ public class RobotContainer {
               double dy;
 
               if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-                dx = Math.pow(-x, 1) * 4.0;
-                dy = Math.pow(-y, 1) * 4.0;
+                dx = Math.pow(-x, 1) * 8.0;
+                dy = Math.pow(-y, 1) * 8.0;
 
               } else {
-                dx = Math.pow(-x, 1) * -1 * 4.0;
-                dy = Math.pow(-y, 1) * -1 * 4.0;
+                dx = Math.pow(-x, 1) * -1 * 8.0;
+                dy = Math.pow(-y, 1) * -1 * 8.0;
               }
-              double rot = Math.pow(-omega, 3) * 3.0;
+              double rot = Math.pow(-omega, 3) * 6.0;
               swerve.requestPercent(new ChassisSpeeds(dx, dy, rot), true);
 
               if (driver.getRawButtonPressed(XboxController.Button.kStart.value)) {
@@ -100,6 +104,9 @@ public class RobotContainer {
               }
             },
             swerve));
+
+    new JoystickButton(driver, XboxController.Button.kB.value)
+        .whileTrue(new AimAtSpeakerCommand(swerve));
   }
 
   private void configureNorthstar() {
@@ -107,8 +114,10 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return new TrajectoryFollowerCommand(Robot.sixNoteA, swerve, true)
-        .andThen(new TrajectoryFollowerCommand(Robot.sixNoteB, swerve))
-        .andThen(new TrajectoryFollowerCommand(Robot.sixNoteC, swerve));
+    return autonomousSelector.get();
+  }
+
+  public void configureAutonomousSelector() {
+    autonomousSelector = new AutonomousSelector(swerve, superstructure, shooter, intake);
   }
 }

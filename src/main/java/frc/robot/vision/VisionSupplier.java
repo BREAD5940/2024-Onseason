@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.shooter.InterpolatingTable;
 import frc.robot.subsystems.shooter.ShotParameter;
+import org.littletonrobotics.junction.Logger;
 
 public class VisionSupplier extends SubsystemBase {
 
@@ -43,5 +44,9 @@ public class VisionSupplier extends SubsystemBase {
     yaw = new Rotation2d(robotToVirtualTarget.getX(), robotToVirtualTarget.getY());
 
     shot = InterpolatingTable.get(robotToVirtualTarget.getNorm());
+
+    // Logs
+    Logger.recordOutput("Vision/DistanceToTarget", robotToVirtualTarget.getNorm());
+    Logger.recordOutput("Vision/VirtualTarget", virtualTarget);
   }
 }

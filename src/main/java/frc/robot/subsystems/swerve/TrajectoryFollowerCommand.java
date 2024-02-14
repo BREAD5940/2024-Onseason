@@ -40,6 +40,7 @@ public class TrajectoryFollowerCommand extends Command {
 
   @Override
   public void initialize() {
+    Logger.recordOutput("TrajectoryFollowerCommandAlliance", DriverStation.getAlliance().get());
     if (DriverStation.getAlliance().get() == Alliance.Red) {
       path = path.flipPath();
     }
