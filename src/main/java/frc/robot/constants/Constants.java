@@ -151,8 +151,8 @@ public class Constants {
     public static final double SHOOTER_LEFT_TRAP_RPM = 0.0;
     public static final double SHOOTER_RIGHT_TRAP_RPM = 0.0;
 
-    public static final double SHOOTER_LEFT_FENDER_RPM = 3000.0;
-    public static final double SHOOTER_RIGHT_FENDER_RPM = 3000.0;
+    public static final double SHOOTER_LEFT_FENDER_RPM = 2500.0;
+    public static final double SHOOTER_RIGHT_FENDER_RPM = 4500.0;
 
     /* Physical Measurements */
     public static final double SHOOTER_LEFT_GEAR_RATIO = 1.0;

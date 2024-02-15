@@ -129,8 +129,8 @@ public class Robot extends LoggedRobot {
     boolean wantsShootOverDefense = RobotContainer.operator.getAButton();
 
     if (RobotContainer.driver.getAButton()) {
-      RobotContainer.shooter.requestAmp();
-      RobotContainer.superstructure.requestAmp(true, wantsShoot);
+      RobotContainer.superstructure.requestFender(true, wantsShoot);
+      RobotContainer.shooter.requestFender();
     } else if (RobotContainer.driver.getBButton()) {
       RobotContainer.shooter.requestVisionSpeaker(wantsShootOverDefense);
       RobotContainer.superstructure.requestVisionSpeaker(true, wantsShoot, wantsShootOverDefense);
