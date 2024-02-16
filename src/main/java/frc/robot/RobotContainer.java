@@ -29,9 +29,8 @@ import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOKrakenX60;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.vision.VisionSupplier;
-import frc.robot.vision.northstar.AprilTagVision;
-import frc.robot.vision.northstar.AprilTagVisionIO;
-import frc.robot.vision.northstar.AprilTagVisionIONorthstar;
+import frc.robot.vision.photonvision.PhotonAprilTagVision;
+import org.photonvision.PhotonCamera;
 
 public class RobotContainer {
 
@@ -55,22 +54,29 @@ public class RobotContainer {
           TunerConstants.FrontRight,
           TunerConstants.BackLeft,
           TunerConstants.BackRight);
-  public static final AprilTagVisionIO frontLeft =
-      new AprilTagVisionIONorthstar("front-left-camera");
-  public static final AprilTagVisionIO frontRight =
-      new AprilTagVisionIONorthstar("front-right-camera");
-  public static final AprilTagVisionIO backLeft = new AprilTagVisionIONorthstar("back-left-camera");
-  public static final AprilTagVisionIO backRight =
-      new AprilTagVisionIONorthstar("back-right-camera");
-  public static final AprilTagVision northstarVision =
-      new AprilTagVision(frontLeft, frontRight, backLeft, backRight);
+  // public static final AprilTagVisionIO frontLeft =
+  //     new AprilTagVisionIONorthstar("front-left-camera");
+  // public static final AprilTagVisionIO frontRight =
+  //     new AprilTagVisionIONorthstar("front-right-camera");
+  // public static final AprilTagVisionIO backLeft = new
+  // AprilTagVisionIONorthstar("back-left-camera");
+  // public static final AprilTagVisionIO backRight =
+  //     new AprilTagVisionIONorthstar("back-right-camera");
+  // public static final AprilTagVision northstarVision =
+  //     new AprilTagVision(frontLeft, frontRight, backLeft, backRight);
 
+  public static final PhotonCamera frontLeftCamera = new PhotonCamera("front-left");
+  public static final PhotonCamera frontRightCamera = new PhotonCamera("front-right");
+
+  public static final PhotonAprilTagVision aprilTagVision =
+      new PhotonAprilTagVision(frontLeftCamera, frontRightCamera);
   public static final VisionSupplier visionSupplier = new VisionSupplier();
   public static AutonomousSelector autonomousSelector;
 
   public RobotContainer() {
     configureBindings();
-    configureNorthstar();
+    // configureNorthstar();
+    configureAprilTagVision();
   }
 
   private void configureBindings() {
@@ -109,8 +115,12 @@ public class RobotContainer {
         .whileTrue(new AimAtSpeakerCommand(swerve));
   }
 
-  private void configureNorthstar() {
-    northstarVision.setDataInterfaces(swerve::getPose, swerve::addVisionData);
+  // private void configureNorthstar() {
+  //   northstarVision.setDataInterfaces(swerve::getPose, swerve::addVisionData);
+  // }
+
+  private void configureAprilTagVision() {
+    aprilTagVision.setDataInterfaces(swerve::getPose, swerve::addVisionData);
   }
 
   public Command getAutonomousCommand() {
