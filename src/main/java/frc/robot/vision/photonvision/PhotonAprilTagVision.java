@@ -5,11 +5,14 @@ import static frc.robot.constants.FieldConstants.aprilTags;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commons.GeomUtil;
-import frc.robot.commons.LoggedTunableNumber;
 import frc.robot.commons.PolynomialRegression;
 import frc.robot.commons.TimestampedVisionUpdate;
 import frc.robot.constants.FieldConstants;
@@ -30,9 +33,17 @@ public class PhotonAprilTagVision extends SubsystemBase {
   private Consumer<List<TimestampedVisionUpdate>> visionConsumer = x -> {};
   private List<TimestampedVisionUpdate> visionUpdates;
   private Supplier<Pose2d> poseSupplier = () -> new Pose2d();
+  private double stdDevScalar = 1.0;
 
-  public static LoggedTunableNumber mStdDevScalar =
-      new LoggedTunableNumber("AprilTagVision/StdDevScalar", 2.0);
+  private double speakerTagTimestamp = 0.0;
+  private Pose3d lastRobotToSpeakerTagPose = new Pose3d();
+  private boolean seesTag4 = false;
+
+  public enum StdDevMode {
+    DEFAULT,
+    SHOOTING
+  }
+
   private PolynomialRegression xyStdDevModel =
       new PolynomialRegression(
           new double[] {
@@ -126,6 +137,11 @@ public class PhotonAprilTagVision extends SubsystemBase {
       double timestamp = latestCameraResult.getTimestampSeconds();
       Logger.recordOutput("Photon/Camera " + instanceIndex + " Timestamp", timestamp);
 
+      // Handle speaker distance and angle calculations
+      if (instanceIndex == 0) {
+        seesTag4 = handleSpeakerVisionCalcs(latestCameraResult.targets, timestamp);
+      }
+
       boolean shouldUseMultiTag = latestCameraResult.getMultiTagResult().estimatedPose.isPresent;
 
       if (shouldUseMultiTag) {
@@ -203,11 +219,13 @@ public class PhotonAprilTagVision extends SubsystemBase {
       double thetaStdDev = 0.0;
 
       if (shouldUseMultiTag) {
-        xyStdDev = xyStdDevCoefficient * Math.pow(avgDistance, 4.0) / tagPose3ds.size();
-        thetaStdDev = thetaStdDevCoefficient * Math.pow(avgDistance, 4.0) / tagPose3ds.size();
+        xyStdDev =
+            stdDevScalar * xyStdDevCoefficient * Math.pow(avgDistance, 4.0) / tagPose3ds.size();
+        thetaStdDev =
+            stdDevScalar * thetaStdDevCoefficient * Math.pow(avgDistance, 4.0) / tagPose3ds.size();
       } else {
-        xyStdDev = xyStdDevModel.predict(avgDistance) * mStdDevScalar.get();
-        thetaStdDev = thetaStdDevModel.predict(avgDistance) * mStdDevScalar.get();
+        xyStdDev = xyStdDevModel.predict(avgDistance) * stdDevScalar;
+        thetaStdDev = thetaStdDevModel.predict(avgDistance) * stdDevScalar;
       }
 
       visionUpdates.add(
@@ -216,9 +234,128 @@ public class PhotonAprilTagVision extends SubsystemBase {
 
       Logger.recordOutput("VisionData/" + instanceIndex, robotPose);
       Logger.recordOutput("Photon/Tags Used " + instanceIndex, tagPose3ds.size());
+      Logger.recordOutput("Photon/LastRobotToSpeakerTag", lastRobotToSpeakerTagPose);
+      Logger.recordOutput("Photon/SpeakerTagTimestamp", getSpeakerTagTimestamp());
+      Logger.recordOutput(
+          "Photon/RobotToSpeakerTagDistance",
+          aprilTags
+              .getTagPose(4)
+              .get()
+              .toPose2d()
+              .relativeTo(lastRobotToSpeakerTagPose.toPose2d()));
     }
 
     // Apply all vision updates to pose estimator
     visionConsumer.accept(visionUpdates);
+  }
+
+  public void setStdDevMode(StdDevMode mode) {
+    if (mode == StdDevMode.DEFAULT) {
+      stdDevScalar = 1.0;
+    } else if (mode == StdDevMode.SHOOTING) {
+      stdDevScalar = 1.0;
+    } else {
+      stdDevScalar = 1.0;
+    }
+  }
+
+  private boolean handleSpeakerVisionCalcs(List<PhotonTrackedTarget> targets, double timestamp) {
+    for (PhotonTrackedTarget target : targets) {
+      if (target.getFiducialId() == 4) { // TODO hard-coded for now but change later if works
+        lastRobotToSpeakerTagPose =
+            getRobotToSpeakerTag(
+                aprilTags.getTagPose(4).get().getTranslation(),
+                new Pose3d(poseSupplier.get()),
+                target);
+        speakerTagTimestamp = timestamp;
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private double getXYDistanceToTarget(
+      PhotonTrackedTarget detection, double targetHeightOffGround) {
+
+    Transform3d robotToCamera =
+        new Transform3d(
+            cameraPoses[0].getTranslation(),
+            new Rotation3d(
+                cameraPoses[0].getRotation().getX(),
+                cameraPoses[0].getRotation().getY(),
+                cameraPoses[0].getRotation().getZ()));
+
+    // Define the vector
+    double x = 1.0 * Math.tan(Units.degreesToRadians(-detection.getYaw()));
+    double y = 1.0 * Math.tan(Units.degreesToRadians(-detection.getPitch()));
+    double z = 1.0;
+    double norm = Math.sqrt(x * x + y * y + z * z);
+    x /= norm;
+    y /= norm;
+    z /= norm;
+
+    // Rotate the vector by the camera pitch
+    double xPrime = x;
+    Translation2d yzPrime =
+        new Translation2d(y, z).rotateBy(new Rotation2d(robotToCamera.getRotation().getY()));
+    double yPrime = yzPrime.getX();
+    double zPrime = yzPrime.getY();
+
+    // Solve for the intersection
+    double angleToTargetRadians = Math.asin(yPrime);
+    double diffHeight = targetHeightOffGround - robotToCamera.getZ();
+    double distance = diffHeight / Math.tan(angleToTargetRadians);
+
+    Logger.recordOutput("Photon/SpeakerDistance", distance);
+    return distance;
+  }
+
+  private Pose3d getRobotToSpeakerTag(
+      Translation3d target, Pose3d robotPose, PhotonTrackedTarget detection) {
+    Transform3d robotToCamera =
+        new Transform3d(
+            cameraPoses[0].getTranslation(),
+            new Rotation3d(
+                cameraPoses[0].getRotation().getX(),
+                cameraPoses[0].getRotation().getY(),
+                cameraPoses[0].getRotation().getZ()));
+
+    double targetHeightOffGround = target.getZ();
+    double xyDistanceToTarget = getXYDistanceToTarget(detection, targetHeightOffGround);
+    double distanceToTarget =
+        Math.hypot(xyDistanceToTarget, targetHeightOffGround - robotToCamera.getZ());
+
+    Pose3d estimatedCameraPose = robotPose.transformBy(robotToCamera);
+
+    Logger.recordOutput("Photon/EstimatedCameraPose (Speaker Tag)", estimatedCameraPose);
+
+    Translation3d cameraToTargetTranslation =
+        new Translation3d(
+            distanceToTarget,
+            new Rotation3d(
+                0.0,
+                Units.degreesToRadians(-detection.getPitch()),
+                Units.degreesToRadians(-detection.getYaw())));
+    cameraToTargetTranslation =
+        cameraToTargetTranslation.rotateBy(estimatedCameraPose.getRotation());
+
+    Translation3d cameraTranslation = target.minus(cameraToTargetTranslation);
+    Pose3d cameraPose = new Pose3d(cameraTranslation, estimatedCameraPose.getRotation());
+
+    Pose3d estimatedRobotPose = cameraPose.transformBy(robotToCamera.inverse());
+
+    return estimatedRobotPose;
+  }
+
+  public Pose2d getRobotToSpeakerTag() {
+    return lastRobotToSpeakerTagPose.toPose2d();
+  }
+
+  public double getSpeakerTagTimestamp() {
+    return speakerTagTimestamp;
+  }
+
+  public boolean seesTag4() {
+    return seesTag4;
   }
 }

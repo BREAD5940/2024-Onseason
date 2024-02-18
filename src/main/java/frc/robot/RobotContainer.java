@@ -14,7 +14,8 @@ import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.commons.BreadUtil;
 import frc.robot.constants.TunerConstants;
 import frc.robot.subsystems.Superstructure;
-import frc.robot.subsystems.commands.AimAtSpeakerCommand;
+import frc.robot.subsystems.commands.AmpCommand;
+import frc.robot.subsystems.commands.TeleopShootCommand;
 import frc.robot.subsystems.elevatorpivot.ElevatorIO;
 import frc.robot.subsystems.elevatorpivot.ElevatorIOKrakenX60;
 import frc.robot.subsystems.elevatorpivot.PivotIO;
@@ -114,7 +115,9 @@ public class RobotContainer {
             swerve));
 
     new JoystickButton(driver, XboxController.Button.kB.value)
-        .whileTrue(new AimAtSpeakerCommand(swerve));
+        .whileTrue(new TeleopShootCommand(swerve));
+
+    new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new AmpCommand(swerve));
   }
 
   // private void configureNorthstar() {

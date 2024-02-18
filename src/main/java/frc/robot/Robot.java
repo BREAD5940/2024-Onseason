@@ -6,6 +6,8 @@ import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commons.LoggedTunableNumber;
+import frc.robot.subsystems.Superstructure.SuperstructureState;
+import frc.robot.vision.photonvision.PhotonAprilTagVision.StdDevMode;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -80,6 +82,13 @@ public class Robot extends LoggedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+
+    // Set std dev scalar based on superstructure state
+    if (RobotContainer.superstructure.getSystemState() == SuperstructureState.VISION_SPEAKER) {
+      RobotContainer.aprilTagVision.setStdDevMode(StdDevMode.SHOOTING);
+    } else {
+      RobotContainer.aprilTagVision.setStdDevMode(StdDevMode.DEFAULT);
+    }
   }
 
   @Override
@@ -139,21 +148,22 @@ public class Robot extends LoggedRobot {
     }
 
     /* Shooting Requests */
-    boolean wantsShoot = RobotContainer.driver.getYButton();
-    boolean wantsShootOverDefense = RobotContainer.operator.getAButton();
+    // boolean wantsShoot = RobotContainer.driver.getYButton();
+    // boolean wantsShootOverDefense = RobotContainer.operator.getAButton();
 
-    if (RobotContainer.driver.getAButton()) {
-      RobotContainer.superstructure.requestFender(true, wantsShoot);
-      RobotContainer.shooter.requestFender();
-    } else if (RobotContainer.driver.getBButton()) {
-      RobotContainer.shooter.requestVisionSpeaker(wantsShootOverDefense);
-      RobotContainer.superstructure.requestVisionSpeaker(true, wantsShoot, wantsShootOverDefense);
-    } else {
-      RobotContainer.shooter.requestIdle();
-      RobotContainer.superstructure.requestVisionSpeaker(false, false, false);
-      RobotContainer.superstructure.requestFender(false, false);
-      RobotContainer.superstructure.requestAmp(false, false);
-    }
+    // if (RobotContainer.driver.getAButton()) {
+    //   RobotContainer.superstructure.requestFender(true, wantsShoot);
+    //   RobotContainer.shooter.requestFender();
+    // } else if (RobotContainer.driver.getBButton()) {
+    //   RobotContainer.shooter.requestVisionSpeaker(wantsShootOverDefense);
+    //   RobotContainer.superstructure.requestVisionSpeaker(true, wantsShoot,
+    // wantsShootOverDefense);
+    // } else {
+    //   RobotContainer.shooter.requestIdle();
+    //   RobotContainer.superstructure.requestVisionSpeaker(false, false, false);
+    //   RobotContainer.superstructure.requestFender(false, false);
+    //   RobotContainer.superstructure.requestAmp(false, false);
+    // }
 
     /* Superstructure spit requests */
 

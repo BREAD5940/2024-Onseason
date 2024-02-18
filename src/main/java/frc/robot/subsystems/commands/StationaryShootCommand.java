@@ -16,6 +16,7 @@ public class StationaryShootCommand extends Command {
   private Swerve swerve;
   private Superstructure superstructure;
   private Shooter shooter;
+  private boolean converged = false;
 
   // Feedback controllers
   private PIDController turnPID = new PIDController(7, 0, 0);
@@ -29,7 +30,13 @@ public class StationaryShootCommand extends Command {
   }
 
   @Override
+  public void initialize() {
+    converged = false;
+  }
+
+  @Override
   public void execute() {
+    // Calculuate swerve output
     double turnSetpoint = RobotContainer.visionSupplier.robotToSpeakerAngle().getRadians();
     double currentRotation = swerve.getPose().getRotation().getRadians();
 
