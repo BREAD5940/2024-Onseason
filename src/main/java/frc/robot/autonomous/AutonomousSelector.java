@@ -3,6 +3,7 @@ package frc.robot.autonomous;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.autonomous.modes.FourNote;
 import frc.robot.autonomous.modes.ThreeNoteCenter;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.intake.Intake;
@@ -19,6 +20,8 @@ public class AutonomousSelector {
     autonomousSelector.setDefaultOption("DO_NOTHING", new SequentialCommandGroup());
     autonomousSelector.addOption(
         "THREE_NOTE_CENTER", new ThreeNoteCenter(superstructure, swerve, shooter, intake));
+    autonomousSelector.addOption(
+        "FOUR_NOTE", new FourNote(superstructure, swerve, shooter, intake));
 
     SmartDashboard.putData("Autonomus Selector", autonomousSelector);
   }

@@ -22,6 +22,13 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath threeNoteCenterB;
   public static PathPlannerPath threeNoteCenterC;
 
+  public static PathPlannerPath fourNoteA;
+  public static PathPlannerPath fourNoteB;
+  public static PathPlannerPath fourNoteC;
+  public static PathPlannerPath fourNoteD;
+  public static PathPlannerPath fourNoteE;
+  public static PathPlannerPath fourNoteF;
+
   private boolean requestedHome = false;
 
   private LoggedTunableNumber testHeight =
@@ -59,6 +66,13 @@ public class Robot extends LoggedRobot {
     threeNoteCenterA = PathPlannerPath.fromPathFile("Three Note Center A");
     threeNoteCenterB = PathPlannerPath.fromPathFile("Three Note Center B");
     threeNoteCenterC = PathPlannerPath.fromPathFile("Three Note Center C");
+
+    fourNoteA = PathPlannerPath.fromPathFile("Four Note A");
+    fourNoteB = PathPlannerPath.fromPathFile("Four Note B");
+    fourNoteC = PathPlannerPath.fromPathFile("Four Note C");
+    fourNoteD = PathPlannerPath.fromPathFile("Four Note D");
+    fourNoteE = PathPlannerPath.fromPathFile("Four Note E");
+    fourNoteF = PathPlannerPath.fromPathFile("Four Note F");
 
     m_robotContainer.configureAutonomousSelector();
   }
