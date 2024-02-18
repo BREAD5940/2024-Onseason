@@ -52,4 +52,9 @@ public class StationaryShootCommand extends Command {
     return !superstructure.hasPiece()
         && superstructure.getSystemState() == SuperstructureState.IDLE;
   }
+
+  @Override
+  public void end(boolean interrupted) {
+    superstructure.requestVisionSpeaker(false, false, false);
+  }
 }

@@ -130,11 +130,13 @@ public class PhotonAprilTagVision extends SubsystemBase {
 
       if (shouldUseMultiTag) {
         // If multitag, use directly
-        cameraPose = GeomUtil.transform3dToPose3d(latestCameraResult.getMultiTagResult().estimatedPose.best);
+        cameraPose =
+            GeomUtil.transform3dToPose3d(latestCameraResult.getMultiTagResult().estimatedPose.best);
 
-        robotPose = cameraPose
-            .transformBy(GeomUtil.pose3dToTransform3d(cameraPoses[instanceIndex]).inverse())
-            .toPose2d();
+        robotPose =
+            cameraPose
+                .transformBy(GeomUtil.pose3dToTransform3d(cameraPoses[instanceIndex]).inverse())
+                .toPose2d();
 
         // Populate array of tag poses with tags used
         for (int id : latestCameraResult.getMultiTagResult().fiducialIDsUsed) {
@@ -150,12 +152,14 @@ public class PhotonAprilTagVision extends SubsystemBase {
 
         Pose3d cameraPose0 = tagPos.transformBy(target.getBestCameraToTarget().inverse());
         Pose3d cameraPose1 = tagPos.transformBy(target.getAlternateCameraToTarget().inverse());
-        Pose2d robotPose0 = cameraPose0
-            .transformBy(GeomUtil.pose3dToTransform3d(cameraPoses[instanceIndex]).inverse())
-            .toPose2d();
-        Pose2d robotPose1 = cameraPose1
-            .transformBy(GeomUtil.pose3dToTransform3d(cameraPoses[instanceIndex]).inverse())
-            .toPose2d();
+        Pose2d robotPose0 =
+            cameraPose0
+                .transformBy(GeomUtil.pose3dToTransform3d(cameraPoses[instanceIndex]).inverse())
+                .toPose2d();
+        Pose2d robotPose1 =
+            cameraPose1
+                .transformBy(GeomUtil.pose3dToTransform3d(cameraPoses[instanceIndex]).inverse())
+                .toPose2d();
 
         double projectionError = target.getPoseAmbiguity();
 
@@ -163,8 +167,8 @@ public class PhotonAprilTagVision extends SubsystemBase {
         if (projectionError < 0.15) {
           cameraPose = cameraPose0;
           robotPose = robotPose0;
-        } else if (Math.abs(robotPose0.getRotation().minus(currentPose.getRotation()).getRadians()) < Math
-            .abs(robotPose1.getRotation().minus(currentPose.getRotation()).getRadians())) {
+        } else if (Math.abs(robotPose0.getRotation().minus(currentPose.getRotation()).getRadians())
+            < Math.abs(robotPose1.getRotation().minus(currentPose.getRotation()).getRadians())) {
           cameraPose = cameraPose0;
           robotPose = robotPose0;
         } else {
@@ -199,8 +203,8 @@ public class PhotonAprilTagVision extends SubsystemBase {
       double thetaStdDev = 0.0;
 
       if (shouldUseMultiTag) {
-        xyStdDev = xyStdDevCoefficient * Math.pow(avgDistance, 2.0) / tagPose3ds.size();
-        thetaStdDev = thetaStdDevCoefficient * Math.pow(avgDistance, 2.0) / tagPose3ds.size();
+        xyStdDev = xyStdDevCoefficient * Math.pow(avgDistance, 4.0) / tagPose3ds.size();
+        thetaStdDev = thetaStdDevCoefficient * Math.pow(avgDistance, 4.0) / tagPose3ds.size();
       } else {
         xyStdDev = xyStdDevModel.predict(avgDistance) * mStdDevScalar.get();
         thetaStdDev = thetaStdDevModel.predict(avgDistance) * mStdDevScalar.get();
@@ -211,8 +215,9 @@ public class PhotonAprilTagVision extends SubsystemBase {
               robotPose, timestamp, VecBuilder.fill(xyStdDev, xyStdDev, thetaStdDev)));
 
       Logger.recordOutput("VisionData/" + instanceIndex, robotPose);
+      Logger.recordOutput("Photon/Tags Used " + instanceIndex, tagPose3ds.size());
     }
-    
+
     // Apply all vision updates to pose estimator
     visionConsumer.accept(visionUpdates);
   }

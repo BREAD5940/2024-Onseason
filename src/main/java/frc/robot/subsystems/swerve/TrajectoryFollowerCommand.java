@@ -20,12 +20,13 @@ public class TrajectoryFollowerCommand extends Command {
   private final boolean isInitialPoint;
   private final Swerve swerve;
   private final Timer timer = new Timer();
+  private boolean flippedForRed = false;
 
   public final BreadHolonomicDriveController autonomusController =
       new BreadHolonomicDriveController(
-          new PIDController(4.0, 0, 0.0),
-          new PIDController(4.0, 0, 0.0),
-          new PIDController(4.0, 0, 0.0));
+          new PIDController(3.0, 0, 0.0),
+          new PIDController(3.0, 0, 0.0),
+          new PIDController(5.0, 0, 0.0));
 
   public TrajectoryFollowerCommand(PathPlannerPath path, Swerve swerve, boolean isInitialPoint) {
     this.path = path;
@@ -41,13 +42,22 @@ public class TrajectoryFollowerCommand extends Command {
   @Override
   public void initialize() {
     Logger.recordOutput("TrajectoryFollowerCommandAlliance", DriverStation.getAlliance().get());
-    if (DriverStation.getAlliance().get() == Alliance.Red) {
+    if (DriverStation.getAlliance().get() == Alliance.Red && !flippedForRed) {
       path = path.flipPath();
+      flippedForRed = true;
+    }
+
+    if (DriverStation.getAlliance().get() == Alliance.Blue && flippedForRed) {
+      path = path.flipPath();
+      flippedForRed = false;
     }
     if (isInitialPoint) {
       trajectory =
           path.getTrajectory(
               new ChassisSpeeds(), path.getPreviewStartingHolonomicPose().getRotation());
+
+      Logger.recordOutput(
+          "TrajectoryFollower/InitialHolonomicPose", path.getPreviewStartingHolonomicPose());
       swerve.resetPose(path.getPreviewStartingHolonomicPose());
     } else {
       trajectory =

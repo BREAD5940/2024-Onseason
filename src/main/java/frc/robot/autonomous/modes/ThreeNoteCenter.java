@@ -1,5 +1,9 @@
 package frc.robot.autonomous.modes;
 
+import com.pathplanner.lib.path.PathPlannerPath;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Robot;
@@ -16,14 +20,32 @@ public class ThreeNoteCenter extends SequentialCommandGroup {
       Superstructure superstructure, Swerve swerve, Shooter shooter, Intake intake) {
     addRequirements(superstructure, swerve, shooter, intake);
     addCommands(
+        new InstantCommand(
+            () -> {
+              PathPlannerPath path = Robot.threeNoteCenterA;
+              if (DriverStation.getAlliance().get() == Alliance.Red) {
+                path = path.flipPath();
+              }
+              swerve.resetPose(path.getPreviewStartingHolonomicPose());
+            }),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(3),
-        new TrajectoryFollowerCommand(Robot.threeNoteCenterA, swerve, true)
-            .beforeStarting(intake::requestIntake),
+        new TrajectoryFollowerCommand(Robot.threeNoteCenterA, swerve, false)
+            .beforeStarting(
+                () -> {
+                  intake.requestIntake();
+                  superstructure.requestIntake(true);
+                  superstructure.requestVisionSpeaker(false, false, false);
+                }),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
         new TrajectoryFollowerCommand(Robot.threeNoteCenterB, swerve, false),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
         new TrajectoryFollowerCommand(Robot.threeNoteCenterC, swerve, false)
-            .beforeStarting(intake::requestIntake),
+            .beforeStarting(
+                () -> {
+                  intake.requestIntake();
+                  superstructure.requestIntake(true);
+                  superstructure.requestVisionSpeaker(false, false, false);
+                }),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
         new StationaryShootCommand(swerve, superstructure, shooter));
   }

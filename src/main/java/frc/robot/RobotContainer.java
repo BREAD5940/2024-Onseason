@@ -67,9 +67,11 @@ public class RobotContainer {
 
   public static final PhotonCamera frontLeftCamera = new PhotonCamera("front-left");
   public static final PhotonCamera frontRightCamera = new PhotonCamera("front-right");
+  public static final PhotonCamera backLeftCamera = new PhotonCamera("back-left");
+  public static final PhotonCamera backRightCamera = new PhotonCamera("back-right");
 
   public static final PhotonAprilTagVision aprilTagVision =
-      new PhotonAprilTagVision(frontLeftCamera, frontRightCamera);
+      new PhotonAprilTagVision(frontLeftCamera, frontRightCamera, backLeftCamera, backRightCamera);
   public static final VisionSupplier visionSupplier = new VisionSupplier();
   public static AutonomousSelector autonomousSelector;
 

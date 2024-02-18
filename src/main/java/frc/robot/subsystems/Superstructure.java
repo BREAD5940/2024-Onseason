@@ -74,6 +74,7 @@ public class Superstructure extends SubsystemBase {
     Logger.recordOutput("Superstructure/ElevatorPivotAtSetpoint", elevatorPivot.atSetpoint());
     Logger.recordOutput("Superstructure/ShooterAtSetpoint", RobotContainer.shooter.atSetpoint());
     Logger.recordOutput("Superstructure/WantsShoot", wantsShoot);
+    Logger.recordOutput("Superstructure/hasPiece", hasPiece());
 
     /* Handle state machine logic */
     SuperstructureState nextSystemState = systemState;
