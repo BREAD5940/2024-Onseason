@@ -15,6 +15,7 @@ import frc.robot.commons.BreadUtil;
 import frc.robot.constants.TunerConstants;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.commands.AmpCommand;
+import frc.robot.subsystems.commands.FenderShotCommand;
 import frc.robot.subsystems.commands.TeleopShootCommand;
 import frc.robot.subsystems.elevatorpivot.ElevatorIO;
 import frc.robot.subsystems.elevatorpivot.ElevatorIOKrakenX60;
@@ -72,7 +73,7 @@ public class RobotContainer {
   public static final PhotonCamera backRightCamera = new PhotonCamera("back-right");
 
   public static final PhotonAprilTagVision aprilTagVision =
-      new PhotonAprilTagVision(frontLeftCamera, frontRightCamera, backLeftCamera, backRightCamera);
+      new PhotonAprilTagVision(frontLeftCamera, frontRightCamera);
   public static final VisionSupplier visionSupplier = new VisionSupplier();
   public static AutonomousSelector autonomousSelector;
 
@@ -116,6 +117,9 @@ public class RobotContainer {
 
     new JoystickButton(driver, XboxController.Button.kB.value)
         .whileTrue(new TeleopShootCommand(swerve));
+
+    new JoystickButton(driver, XboxController.Button.kX.value)
+        .whileTrue(new FenderShotCommand(swerve, superstructure, shooter));
 
     new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new AmpCommand(swerve));
   }

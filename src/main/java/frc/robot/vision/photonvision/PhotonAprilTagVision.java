@@ -220,9 +220,9 @@ public class PhotonAprilTagVision extends SubsystemBase {
 
       if (shouldUseMultiTag) {
         xyStdDev =
-            stdDevScalar * xyStdDevCoefficient * Math.pow(avgDistance, 4.0) / tagPose3ds.size();
+            stdDevScalar * xyStdDevCoefficient * Math.pow(avgDistance, 2.0) / tagPose3ds.size();
         thetaStdDev =
-            stdDevScalar * thetaStdDevCoefficient * Math.pow(avgDistance, 4.0) / tagPose3ds.size();
+            stdDevScalar * thetaStdDevCoefficient * Math.pow(avgDistance, 2.0) / tagPose3ds.size();
       } else {
         xyStdDev = xyStdDevModel.predict(avgDistance) * stdDevScalar;
         thetaStdDev = thetaStdDevModel.predict(avgDistance) * stdDevScalar;

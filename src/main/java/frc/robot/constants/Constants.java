@@ -65,6 +65,8 @@ public class Constants {
 
     public static final double ELEVATOR_TRAP_HEIGHT = 0.47;
 
+    public static final double ELEVATOR_FENDER_HEIGHT = 0.4;
+
     /* Physical Measurements */
     public static final double ELEVATOR_SPOOL_DIAMETER = Units.inchesToMeters(1.463);
     public static final double ELEVATOR_SETPOINT_TOLERANCE_METERS = 0.01;
@@ -122,6 +124,8 @@ public class Constants {
 
     public static final Rotation2d PIVOT_TRAP_ANGLE = Rotation2d.fromDegrees(5.0);
 
+    public static final Rotation2d PIVOT_FENDER_ANGLE = Rotation2d.fromDegrees(-50.0);
+
     /* Misc. constants */
     public static final double PIVOT_SETPOINT_TOLERANCE_RADS = Units.degreesToRadians(3.0);
     public static final InvertedValue PIVOT_INVERSION = InvertedValue.CounterClockwise_Positive;
@@ -151,8 +155,8 @@ public class Constants {
     public static final double SHOOTER_LEFT_TRAP_RPM = 0.0;
     public static final double SHOOTER_RIGHT_TRAP_RPM = 0.0;
 
-    public static final double SHOOTER_LEFT_FENDER_RPM = 2500.0;
-    public static final double SHOOTER_RIGHT_FENDER_RPM = 4500.0;
+    public static final double SHOOTER_LEFT_FENDER_RPM = 1800.0;
+    public static final double SHOOTER_RIGHT_FENDER_RPM = 1800.0;
 
     /* Physical Measurements */
     public static final double SHOOTER_LEFT_GEAR_RATIO = 1.0;
