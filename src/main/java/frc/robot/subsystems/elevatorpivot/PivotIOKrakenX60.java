@@ -1,6 +1,6 @@
 package frc.robot.subsystems.elevatorpivot;
 
-import static frc.robot.constants.Constants.Pivot.*;
+import static frc.robot.constants.RobotConstants.Pivot.*;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;

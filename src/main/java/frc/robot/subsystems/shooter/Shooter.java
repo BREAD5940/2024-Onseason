@@ -1,6 +1,6 @@
 package frc.robot.subsystems.shooter;
 
-import static frc.robot.constants.Constants.Shooter.*;
+import static frc.robot.constants.RobotConstants.Shooter.*;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
@@ -52,7 +52,7 @@ public class Shooter extends SubsystemBase {
 
     if (systemState == ShooterState.IDLE) {
       // Outputs
-      io.setVelocity(desiredLeftRPM, desiredRightRPM);
+      io.setPercent(0.2, 0.2);
 
       // Transitions
       if (requestFender) {

@@ -19,6 +19,9 @@ public class FiveNote extends SequentialCommandGroup {
   public FiveNote(Superstructure superstructure, Swerve swerve, Shooter shooter, Intake intake) {
     addRequirements(superstructure, swerve, shooter, intake);
     addCommands(
+        new InstantCommand(() -> superstructure.requestIntake(true)),
+        new WaitUntilCommand(() -> superstructure.hasPiece()),
+        new InstantCommand(() -> superstructure.requestIntake(false)),
         new InstantCommand(
             () -> {
               PathPlannerPath path = Robot.fiveNoteA;

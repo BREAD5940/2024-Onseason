@@ -1,11 +1,11 @@
 package frc.robot;
 
 import com.pathplanner.lib.path.PathPlannerPath;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commons.LoggedTunableNumber;
 import frc.robot.subsystems.Superstructure.SuperstructureState;
 import frc.robot.vision.photonvision.PhotonAprilTagVision.StdDevMode;
 import org.littletonrobotics.junction.LogFileUtil;
@@ -38,16 +38,6 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath fiveNoteE;
 
   private boolean requestedHome = false;
-
-  private LoggedTunableNumber testHeight =
-      new LoggedTunableNumber("TestMode/ElevatorSetpoint", 0.0);
-  private LoggedTunableNumber testAngle = new LoggedTunableNumber("TestMode/PivotAngle", 0.0);
-
-  public static LoggedTunableNumber elevatorHeight =
-      new LoggedTunableNumber("Tuning/Elevator Height", 0.2);
-  public static LoggedTunableNumber pivotAngle = new LoggedTunableNumber("Tuning/Pivot Angle", 0.0);
-  public static LoggedTunableNumber leftRPM = new LoggedTunableNumber("Tuning/Left RPM", 0.0);
-  public static LoggedTunableNumber rightRPM = new LoggedTunableNumber("Tuning/Right RPM", 0.0);
 
   @Override
   public void robotInit() {
@@ -159,28 +149,16 @@ public class Robot extends LoggedRobot {
       RobotContainer.intake.requestIdle();
     }
 
-    /* Shooting Requests */
-    // boolean wantsShoot = RobotContainer.driver.getYButton();
-    // boolean wantsShootOverDefense = RobotContainer.operator.getAButton();
-
-    // if (RobotContainer.driver.getAButton()) {
-    //   RobotContainer.superstructure.requestFender(true, wantsShoot);
-    //   RobotContainer.shooter.requestFender();
-    // } else if (RobotContainer.driver.getBButton()) {
-    //   RobotContainer.shooter.requestVisionSpeaker(wantsShootOverDefense);
-    //   RobotContainer.superstructure.requestVisionSpeaker(true, wantsShoot,
-    // wantsShootOverDefense);
-    // } else {
-    //   RobotContainer.shooter.requestIdle();
-    //   RobotContainer.superstructure.requestVisionSpeaker(false, false, false);
-    //   RobotContainer.superstructure.requestFender(false, false);
-    //   RobotContainer.superstructure.requestAmp(false, false);
-    // }
-
     /* Superstructure spit requests */
 
+    // Controller vibrations
+    if (RobotContainer.intake.hasPiece()) {
+      RobotContainer.driver.setRumble(RumbleType.kBothRumble, 1.0);
+    } else {
+      RobotContainer.driver.setRumble(RumbleType.kBothRumble, 0.0);
+    }
+
     /* Climb requests */
-    // TODO figure this out later
   }
 
   @Override
@@ -201,6 +179,4 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void testExit() {}
-
-  private void configureTeleopControls() {}
 }

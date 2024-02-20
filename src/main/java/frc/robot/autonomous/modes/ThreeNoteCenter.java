@@ -20,6 +20,9 @@ public class ThreeNoteCenter extends SequentialCommandGroup {
       Superstructure superstructure, Swerve swerve, Shooter shooter, Intake intake) {
     addRequirements(superstructure, swerve, shooter, intake);
     addCommands(
+        new InstantCommand(() -> superstructure.requestIntake(true)),
+        new WaitUntilCommand(() -> superstructure.hasPiece()),
+        new InstantCommand(() -> superstructure.requestIntake(false)),
         new InstantCommand(
             () -> {
               PathPlannerPath path = Robot.threeNoteCenterA;

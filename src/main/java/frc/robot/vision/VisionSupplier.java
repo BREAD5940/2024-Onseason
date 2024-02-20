@@ -14,7 +14,7 @@ import org.littletonrobotics.junction.Logger;
 public class VisionSupplier extends SubsystemBase {
 
   /* Constants */
-  private static double NOTE_FLIGHT_TIME = 0.5;
+  private static double NOTE_FLIGHT_TIME = 0.1;
 
   /* Speaker Results */
   private Rotation2d yaw;
@@ -47,6 +47,6 @@ public class VisionSupplier extends SubsystemBase {
 
     // Logs
     Logger.recordOutput("Vision/DistanceToTarget", robotToVirtualTarget.getNorm());
-    Logger.recordOutput("Vision/VirtualTarget", virtualTarget);
+    Logger.recordOutput("Vision/VirtualTarget", new Pose2d(virtualTarget, new Rotation2d()));
   }
 }

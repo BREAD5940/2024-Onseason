@@ -1,6 +1,6 @@
 package frc.robot.subsystems.feeder;
 
-import static frc.robot.constants.Constants.Feeder.*;
+import static frc.robot.constants.RobotConstants.Feeder.*;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;

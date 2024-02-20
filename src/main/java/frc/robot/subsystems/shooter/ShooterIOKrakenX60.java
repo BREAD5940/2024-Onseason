@@ -1,7 +1,7 @@
 package frc.robot.subsystems.shooter;
 
-import static frc.robot.constants.Constants.Feeder.*;
-import static frc.robot.constants.Constants.Shooter.*;
+import static frc.robot.constants.RobotConstants.Feeder.*;
+import static frc.robot.constants.RobotConstants.Shooter.*;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;

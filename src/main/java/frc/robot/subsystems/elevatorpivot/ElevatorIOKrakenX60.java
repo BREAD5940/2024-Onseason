@@ -1,6 +1,6 @@
 package frc.robot.subsystems.elevatorpivot;
 
-import static frc.robot.constants.Constants.Elevator.*;
+import static frc.robot.constants.RobotConstants.Elevator.*;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
