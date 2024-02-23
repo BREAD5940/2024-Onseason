@@ -19,7 +19,7 @@ public class StationaryShootCommand extends Command {
   private boolean converged = false;
 
   // Feedback controllers
-  private PIDController turnPID = new PIDController(7, 0, 0);
+  private PIDController turnPID = new PIDController(8, 0, 0);
 
   public StationaryShootCommand(Swerve swerve, Superstructure superstructure, Shooter shooter) {
     this.swerve = swerve;
@@ -46,7 +46,7 @@ public class StationaryShootCommand extends Command {
     swerve.requestVelocity(new ChassisSpeeds(0, 0, thetaOutput), true);
 
     shooter.requestVisionSpeaker(false);
-    superstructure.requestVisionSpeaker(true, swerve.atAngularSetpoint(turnSetpoint), false);
+    superstructure.requestVisionSpeaker(true, swerve.atAngularSetpoint(turnSetpoint), false, false);
 
     Logger.recordOutput(
         "AimAtSpeakerCommand/MeasurementDegrees>", Units.radiansToDegrees(currentRotation));
@@ -62,6 +62,6 @@ public class StationaryShootCommand extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    superstructure.requestVisionSpeaker(false, false, false);
+    superstructure.requestVisionSpeaker(false, false, false, false);
   }
 }

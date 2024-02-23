@@ -37,6 +37,9 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath fiveNoteD;
   public static PathPlannerPath fiveNoteE;
 
+  public static PathPlannerPath sixNoteF;
+  public static PathPlannerPath sixNoteG;
+
   private boolean requestedHome = false;
 
   @Override
@@ -77,6 +80,9 @@ public class Robot extends LoggedRobot {
     fiveNoteC = PathPlannerPath.fromPathFile("Five Note C");
     fiveNoteD = PathPlannerPath.fromPathFile("Five Note D");
     fiveNoteE = PathPlannerPath.fromPathFile("Five Note E");
+
+    sixNoteF = PathPlannerPath.fromPathFile("Six Note F");
+    sixNoteG = PathPlannerPath.fromPathFile("Six Note G");
 
     m_robotContainer.configureAutonomousSelector();
   }
@@ -139,8 +145,6 @@ public class Robot extends LoggedRobot {
     /* Intake requests */
     if (RobotContainer.driver.getRightTriggerAxis() > 0.1) {
       RobotContainer.intake.requestIntake();
-      RobotContainer.superstructure.requestIntake(true);
-
       RobotContainer.superstructure.requestIntake(true);
     } else if (RobotContainer.driver.getLeftTriggerAxis() > 0.1) {
       RobotContainer.intake.requestSpit();

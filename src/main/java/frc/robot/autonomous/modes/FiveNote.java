@@ -36,7 +36,7 @@ public class FiveNote extends SequentialCommandGroup {
                 () -> {
                   intake.requestIntake();
                   superstructure.requestIntake(true);
-                  superstructure.requestVisionSpeaker(false, false, false);
+                  superstructure.requestVisionSpeaker(false, false, false, false);
                 }),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
@@ -45,7 +45,7 @@ public class FiveNote extends SequentialCommandGroup {
                 () -> {
                   intake.requestIntake();
                   superstructure.requestIntake(true);
-                  superstructure.requestVisionSpeaker(false, false, false);
+                  superstructure.requestVisionSpeaker(false, false, false, false);
                 }),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
@@ -54,7 +54,7 @@ public class FiveNote extends SequentialCommandGroup {
                 () -> {
                   intake.requestIntake();
                   superstructure.requestIntake(true);
-                  superstructure.requestVisionSpeaker(false, false, false);
+                  superstructure.requestVisionSpeaker(false, false, false, false);
                 }),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
@@ -63,7 +63,7 @@ public class FiveNote extends SequentialCommandGroup {
                 () -> {
                   intake.requestIntake();
                   superstructure.requestIntake(true);
-                  superstructure.requestVisionSpeaker(false, false, false);
+                  superstructure.requestVisionSpeaker(false, false, false, false);
                 }),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
         new TrajectoryFollowerCommand(Robot.fiveNoteE, swerve, false),

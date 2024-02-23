@@ -1,7 +1,19 @@
 package frc.robot.subsystems;
 
-import static frc.robot.constants.RobotConstants.Elevator.*;
-import static frc.robot.constants.RobotConstants.Pivot.*;
+import static frc.robot.constants.RobotConstants.Elevator.ELEVATOR_AMP_HEIGHT;
+import static frc.robot.constants.RobotConstants.Elevator.ELEVATOR_CLIMBED_HEIGHT;
+import static frc.robot.constants.RobotConstants.Elevator.ELEVATOR_FENDER_HEIGHT;
+import static frc.robot.constants.RobotConstants.Elevator.ELEVATOR_IDLE_HEIGHT;
+import static frc.robot.constants.RobotConstants.Elevator.ELEVATOR_INTAKE_HEIGHT;
+import static frc.robot.constants.RobotConstants.Elevator.ELEVATOR_PRE_CLIMB_HEIGHT;
+import static frc.robot.constants.RobotConstants.Elevator.ELEVATOR_SPIT_HEIGHT;
+import static frc.robot.constants.RobotConstants.Pivot.PIVOT_AMP_ANGLE;
+import static frc.robot.constants.RobotConstants.Pivot.PIVOT_CLIMBED_ANGLE;
+import static frc.robot.constants.RobotConstants.Pivot.PIVOT_FENDER_ANGLE;
+import static frc.robot.constants.RobotConstants.Pivot.PIVOT_IDLE_ANGLE;
+import static frc.robot.constants.RobotConstants.Pivot.PIVOT_INTAKE_ANGLE;
+import static frc.robot.constants.RobotConstants.Pivot.PIVOT_PRE_CLIMB_ANGLE;
+import static frc.robot.constants.RobotConstants.Pivot.PIVOT_SPIT_ANGLE;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -39,6 +51,7 @@ public class Superstructure extends SubsystemBase {
 
   private boolean wantsShoot = false;
   private boolean wantsShootOverDefense = false;
+  private boolean shootImmediately = false;
 
   private boolean shouldShoot = false;
 
@@ -75,6 +88,7 @@ public class Superstructure extends SubsystemBase {
     Logger.recordOutput("Superstructure/ShooterAtSetpoint", RobotContainer.shooter.atSetpoint());
     Logger.recordOutput("Superstructure/WantsShoot", wantsShoot);
     Logger.recordOutput("Superstructure/hasPiece", hasPiece());
+    Logger.recordOutput("Superstructure/requestIntake", requestIntake);
 
     /* Handle state machine logic */
     SuperstructureState nextSystemState = systemState;
@@ -171,7 +185,6 @@ public class Superstructure extends SubsystemBase {
         nextSystemState = SuperstructureState.IDLE;
       }
     } else if (systemState == SuperstructureState.VISION_SPEAKER) {
-
       ShotParameter shot = RobotContainer.visionSupplier.robotToSpeakerShot();
 
       if (shouldShoot) {
@@ -183,9 +196,9 @@ public class Superstructure extends SubsystemBase {
       elevatorPivot.requestPursueSetpoint(
           Rotation2d.fromDegrees(shot.pivotAngleDeg), shot.elevatorHeight);
 
-      if (wantsShoot
+      if ((wantsShoot || shootImmediately)
           && elevatorPivot.atSetpoint()
-          && RobotContainer.shooter.atSetpoint()
+          && (shootImmediately || RobotContainer.shooter.atSetpoint())
           && feeder.hasPiece()) {
         shouldShoot = true;
       }
@@ -283,10 +296,12 @@ public class Superstructure extends SubsystemBase {
     this.wantsShoot = wantsShoot;
   }
 
-  public void requestVisionSpeaker(boolean set, boolean wantsShoot, boolean wantsShootOverDefense) {
+  public void requestVisionSpeaker(
+      boolean set, boolean wantsShoot, boolean wantsShootOverDefense, boolean shootImmediately) {
     requestVisionSpeaker = set;
     this.wantsShoot = wantsShoot;
     this.wantsShootOverDefense = wantsShootOverDefense;
+    this.shootImmediately = shootImmediately;
   }
 
   public void requestAmp(boolean set, boolean wantsShoot) {

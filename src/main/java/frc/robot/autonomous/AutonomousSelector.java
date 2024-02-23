@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.autonomous.modes.FiveNote;
 import frc.robot.autonomous.modes.FourNote;
+import frc.robot.autonomous.modes.SixNote;
 import frc.robot.autonomous.modes.ThreeNoteCenter;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.intake.Intake;
@@ -25,6 +26,7 @@ public class AutonomousSelector {
         "FOUR_NOTE", new FourNote(superstructure, swerve, shooter, intake));
     autonomousSelector.addOption(
         "FIVE_NOTE", new FiveNote(superstructure, swerve, shooter, intake));
+    autonomousSelector.addOption("SIX_NOTE", new SixNote(superstructure, swerve, shooter, intake));
 
     SmartDashboard.putData("Autonomus Selector", autonomousSelector);
   }

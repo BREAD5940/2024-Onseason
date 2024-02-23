@@ -72,11 +72,11 @@ public class RobotConstants {
       if (robot == RobotType.BETA) {
         SWERVE_COAST_TRESHOLD_MPS = 0.05;
         SWERVE_COAST_TRESHOLD_SEC = 5.0;
-        SWERVE_ANGULAR_ERROR_TOLERANCE_RAD = Units.degreesToRadians(2);
+        SWERVE_ANGULAR_ERROR_TOLERANCE_RAD = Units.degreesToRadians(7);
       } else {
         SWERVE_COAST_TRESHOLD_MPS = 0.05;
         SWERVE_COAST_TRESHOLD_SEC = 5.0;
-        SWERVE_ANGULAR_ERROR_TOLERANCE_RAD = Units.degreesToRadians(2);
+        SWERVE_ANGULAR_ERROR_TOLERANCE_RAD = Units.degreesToRadians(7);
       }
     }
   }
