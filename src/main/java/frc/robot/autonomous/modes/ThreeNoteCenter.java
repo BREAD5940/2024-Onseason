@@ -31,23 +31,17 @@ public class ThreeNoteCenter extends SequentialCommandGroup {
               }
               swerve.resetPose(path.getPreviewStartingHolonomicPose());
             }),
+        new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(3),
         new TrajectoryFollowerCommand(Robot.threeNoteCenterA, swerve, false)
             .beforeStarting(
                 () -> {
-                  shooter.requestAutoDriveBy();
-                  superstructure.requestVisionSpeaker(true, true, false, true);
-
                   intake.requestIntake();
                   superstructure.requestIntake(true);
+                  superstructure.requestVisionSpeaker(false, false, false, false);
                 }),
-        new InstantCommand(
-            () -> {
-              shooter.requestIdle();
-              superstructure.requestVisionSpeaker(false, false, false, false);
-            }),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
         new TrajectoryFollowerCommand(Robot.threeNoteCenterB, swerve, false),
-        new StationaryShootCommand(swerve, superstructure, shooter),
+        new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
         new TrajectoryFollowerCommand(Robot.threeNoteCenterC, swerve, false)
             .beforeStarting(
                 () -> {

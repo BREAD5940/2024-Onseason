@@ -19,7 +19,7 @@ public class StationaryShootCommand extends Command {
   private boolean converged = false;
 
   // Feedback controllers
-  private PIDController turnPID = new PIDController(8, 0, 0);
+  private PIDController turnPID = new PIDController(10, 0, 0);
 
   public StationaryShootCommand(Swerve swerve, Superstructure superstructure, Shooter shooter) {
     this.swerve = swerve;
