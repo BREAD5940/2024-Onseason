@@ -37,6 +37,13 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath fiveNoteD;
   public static PathPlannerPath fiveNoteE;
 
+  public static PathPlannerPath fiveNoteTwoMidlineA;
+  public static PathPlannerPath fiveNoteTwoMidlineB;
+  public static PathPlannerPath fiveNoteTwoMidlineC;
+  public static PathPlannerPath fiveNoteTwoMidlineD;
+  public static PathPlannerPath fiveNoteTwoMidlineE;
+  public static PathPlannerPath fiveNoteTwoMidlineF;
+
   public static PathPlannerPath sixNoteF;
   public static PathPlannerPath sixNoteG;
 
@@ -80,6 +87,13 @@ public class Robot extends LoggedRobot {
     fiveNoteC = PathPlannerPath.fromPathFile("Five Note C");
     fiveNoteD = PathPlannerPath.fromPathFile("Five Note D");
     fiveNoteE = PathPlannerPath.fromPathFile("Five Note E");
+
+    fiveNoteTwoMidlineA = PathPlannerPath.fromPathFile("Five Note Two Midline A");
+    fiveNoteTwoMidlineB = PathPlannerPath.fromPathFile("Five Note Two Midline B");
+    fiveNoteTwoMidlineC = PathPlannerPath.fromPathFile("Five Note Two Midline C");
+    fiveNoteTwoMidlineD = PathPlannerPath.fromPathFile("Five Note Two Midline D");
+    fiveNoteTwoMidlineE = PathPlannerPath.fromPathFile("Five Note Two Midline E");
+    fiveNoteTwoMidlineF = PathPlannerPath.fromPathFile("Five Note Two Midline F");
 
     sixNoteF = PathPlannerPath.fromPathFile("Six Note F");
     sixNoteG = PathPlannerPath.fromPathFile("Six Note G");

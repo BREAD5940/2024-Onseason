@@ -26,6 +26,8 @@ public class AutonomousSelector {
         "FOUR_NOTE", new FourNote(superstructure, swerve, shooter, intake));
     autonomousSelector.addOption(
         "FIVE_NOTE", new FiveNote(superstructure, swerve, shooter, intake));
+    autonomousSelector.addOption(
+        "FIVE_NOTE_TWO_MIDLINE", new FiveNote(superstructure, swerve, shooter, intake));
     autonomousSelector.addOption("SIX_NOTE", new SixNote(superstructure, swerve, shooter, intake));
 
     SmartDashboard.putData("Autonomus Selector", autonomousSelector);
