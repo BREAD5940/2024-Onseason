@@ -42,8 +42,7 @@ public class ShooterIOKrakenX60 implements ShooterIO {
 
   /* Gains */
   LoggedTunableNumber shooterkS = new LoggedTunableNumber("Shooter/kS", SHOOTER_KS);
-  LoggedTunableNumber shooterkV =
-      new LoggedTunableNumber("Shooter/kV", SHOOTER_KV);
+  LoggedTunableNumber shooterkV = new LoggedTunableNumber("Shooter/kV", SHOOTER_KV);
   LoggedTunableNumber shooterkP = new LoggedTunableNumber("Shooter/kP", SHOOTER_KP);
   LoggedTunableNumber shooterkI = new LoggedTunableNumber("Shooter/kI", 0.0);
   LoggedTunableNumber shooterkD = new LoggedTunableNumber("Shooter/kD", SHOOTER_KD);

@@ -28,25 +28,22 @@ public interface IntakeIO {
   public default void setVectorPercent(double percent) {}
 
   /** Run closed loop at the specified velocity on the intake. */
-  public default void setIntakeVelocity(double velocityRpm) {
-  }
-  
+  public default void setIntakeVelocity(double velocityRpm) {}
+
   /** Run closed loop at the specified velocity on the vectoring motor */
   public default void setVectorVelocity(double velocityRPM) {}
 
   /** Sets current limit for the intake motor. */
   public default void setIntakeCurrentLimit(
-      double currentLimit, double supplyCurrentThreshold, double supplyTimeThreshold) {
-  }
-      
+      double currentLimit, double supplyCurrentThreshold, double supplyTimeThreshold) {}
+
   /** Sets current limit for the vector motor. */
   public default void setVectorCurrentLimit(
       double currentLimit, double supplyCurrentThreshold, double supplyTimeThreshold) {}
 
   /** Enables or disables brake mode for the intake motor. */
-  public default void enableIntakeBrakeMode(boolean enable) {
-  }
-  
+  public default void enableIntakeBrakeMode(boolean enable) {}
+
   /** Enables or disables brake mode for the intake motor. */
   public default void enableVectorBrakeMode(boolean enable) {}
 

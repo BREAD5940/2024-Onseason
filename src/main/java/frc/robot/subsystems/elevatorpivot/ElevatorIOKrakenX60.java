@@ -35,8 +35,7 @@ public class ElevatorIOKrakenX60 implements ElevatorIO {
   /* Gains */
   LoggedTunableNumber kA = new LoggedTunableNumber("Elevator/kA", ELEVATOR_KA);
   LoggedTunableNumber kS = new LoggedTunableNumber("Elevator/kS", ELEVATOR_KS);
-  LoggedTunableNumber kV =
-      new LoggedTunableNumber("Elevator/kV", ELEVATOR_KV);
+  LoggedTunableNumber kV = new LoggedTunableNumber("Elevator/kV", ELEVATOR_KV);
   LoggedTunableNumber kP = new LoggedTunableNumber("Elevator/kP", ELEVATOR_KP);
   LoggedTunableNumber kI = new LoggedTunableNumber("Elevator/kI", 0.0);
   LoggedTunableNumber kD = new LoggedTunableNumber("Elevator/kD", ELEVATOR_KD);

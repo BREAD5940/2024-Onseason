@@ -1,5 +1,7 @@
 package frc.robot;
 
+import static frc.robot.constants.Constants.*;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -35,8 +37,6 @@ import frc.robot.vision.VisionSupplier;
 import frc.robot.vision.photonvision.PhotonAprilTagVision;
 import org.photonvision.PhotonCamera;
 
-import static frc.robot.constants.Constants.*;
-
 public class RobotContainer {
 
   public static XboxController driver = new XboxController(0);
@@ -59,16 +59,6 @@ public class RobotContainer {
           isComp ? GammaTunerConstants.FrontRight : BetaTunerConstants.FrontRight,
           isComp ? GammaTunerConstants.BackLeft : BetaTunerConstants.BackLeft,
           isComp ? GammaTunerConstants.BackRight : BetaTunerConstants.BackRight);
-  // public static final AprilTagVisionIO frontLeft =
-  //     new AprilTagVisionIONorthstar("front-left-camera");
-  // public static final AprilTagVisionIO frontRight =
-  //     new AprilTagVisionIONorthstar("front-right-camera");
-  // public static final AprilTagVisionIO backLeft = new
-  // AprilTagVisionIONorthstar("back-left-camera");
-  // public static final AprilTagVisionIO backRight =
-  //     new AprilTagVisionIONorthstar("back-right-camera");
-  // public static final AprilTagVision northstarVision =
-  //     new AprilTagVision(frontLeft, frontRight, backLeft, backRight);
 
   public static final PhotonCamera frontLeftCamera = new PhotonCamera("front-left");
   public static final PhotonCamera frontRightCamera = new PhotonCamera("front-right");
@@ -82,7 +72,6 @@ public class RobotContainer {
 
   public RobotContainer() {
     configureBindings();
-    // configureNorthstar();
     configureAprilTagVision();
   }
 
@@ -127,9 +116,6 @@ public class RobotContainer {
     new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new AmpCommand(swerve));
   }
 
-  // private void configureNorthstar() {
-  //   northstarVision.setDataInterfaces(swerve::getPose, swerve::addVisionData);
-  // }
 
   private void configureAprilTagVision() {
     aprilTagVision.setDataInterfaces(swerve::getPose, swerve::addVisionData);

@@ -151,7 +151,8 @@ public class IntakeIOFalcon500 implements IntakeIO {
   }
 
   @Override
-  public void setVectorCurrentLimit(double currentLimit, double supplyCurrentThreshold, double supplyTimeThreshold) {
+  public void setVectorCurrentLimit(
+      double currentLimit, double supplyCurrentThreshold, double supplyTimeThreshold) {
     vectorCurrentLimitConfigs.StatorCurrentLimitEnable = true;
     vectorCurrentLimitConfigs.SupplyCurrentThreshold = supplyCurrentThreshold;
     vectorCurrentLimitConfigs.SupplyTimeThreshold = supplyTimeThreshold;
@@ -206,5 +207,4 @@ public class IntakeIOFalcon500 implements IntakeIO {
       vectorConfigurator.apply(vectorSlot0Configs);
     }
   }
-  
 }
