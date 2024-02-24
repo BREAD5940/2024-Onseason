@@ -7,7 +7,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants.SteerFeedbackTy
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
 import edu.wpi.first.math.util.Units;
 
-public class TunerConstants {
+public class GammaTunerConstants {
   static class CustomSlotGains extends Slot0Configs {
     public CustomSlotGains(double kP, double kI, double kD, double kV, double kS) {
       this.kP = kP;

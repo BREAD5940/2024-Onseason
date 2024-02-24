@@ -5,10 +5,9 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 
-// By default these constants are the **Beta** constants
 public class Constants {
 
-  public static final boolean isComp = true;
+  public static final boolean isComp = false;
   public static final boolean tuningMode = true;
 
   public static final double FALCON_FREE_SPEED = 6380.0;

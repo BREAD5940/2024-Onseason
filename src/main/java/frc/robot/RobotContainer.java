@@ -12,7 +12,8 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.commons.BreadUtil;
-import frc.robot.constants.TunerConstants;
+import frc.robot.constants.BetaTunerConstants;
+import frc.robot.constants.GammaTunerConstants;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.commands.AmpCommand;
 import frc.robot.subsystems.commands.FenderShotCommand;
@@ -34,6 +35,8 @@ import frc.robot.vision.VisionSupplier;
 import frc.robot.vision.photonvision.PhotonAprilTagVision;
 import org.photonvision.PhotonCamera;
 
+import static frc.robot.constants.Constants.*;
+
 public class RobotContainer {
 
   public static XboxController driver = new XboxController(0);
@@ -51,11 +54,11 @@ public class RobotContainer {
   public static Superstructure superstructure = new Superstructure(elevatorIO, pivotIO, feederIO);
   public static final Swerve swerve =
       new Swerve(
-          TunerConstants.DrivetrainConstants,
-          TunerConstants.FrontLeft,
-          TunerConstants.FrontRight,
-          TunerConstants.BackLeft,
-          TunerConstants.BackRight);
+          isComp ? GammaTunerConstants.DrivetrainConstants : BetaTunerConstants.DrivetrainConstants,
+          isComp ? GammaTunerConstants.FrontLeft : BetaTunerConstants.FrontLeft,
+          isComp ? GammaTunerConstants.FrontRight : BetaTunerConstants.FrontRight,
+          isComp ? GammaTunerConstants.BackLeft : BetaTunerConstants.BackLeft,
+          isComp ? GammaTunerConstants.BackRight : BetaTunerConstants.BackRight);
   // public static final AprilTagVisionIO frontLeft =
   //     new AprilTagVisionIONorthstar("front-left-camera");
   // public static final AprilTagVisionIO frontRight =
