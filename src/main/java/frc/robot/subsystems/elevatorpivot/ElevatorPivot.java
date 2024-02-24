@@ -1,7 +1,7 @@
 package frc.robot.subsystems.elevatorpivot;
 
-import static frc.robot.constants.RobotConstants.Elevator.*;
-import static frc.robot.constants.RobotConstants.Pivot.*;
+import static frc.robot.constants.Constants.Elevator.*;
+import static frc.robot.constants.Constants.Pivot.*;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;

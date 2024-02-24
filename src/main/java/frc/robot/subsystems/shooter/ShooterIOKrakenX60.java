@@ -1,7 +1,6 @@
 package frc.robot.subsystems.shooter;
 
-import static frc.robot.constants.RobotConstants.Feeder.*;
-import static frc.robot.constants.RobotConstants.Shooter.*;
+import static frc.robot.constants.Constants.Shooter.*;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
@@ -42,12 +41,12 @@ public class ShooterIOKrakenX60 implements ShooterIO {
   private StatusSignal<Double> positionLeft;
 
   /* Gains */
-  LoggedTunableNumber shooterkS = new LoggedTunableNumber("Shooter/kS", 0.0);
+  LoggedTunableNumber shooterkS = new LoggedTunableNumber("Shooter/kS", SHOOTER_KS);
   LoggedTunableNumber shooterkV =
-      new LoggedTunableNumber("Shooter/kV", 12.0 / SHOOTER_MAX_VELOCITY * (3000.0 / 2400.0));
-  LoggedTunableNumber shooterkP = new LoggedTunableNumber("Shooter/kP", 1);
+      new LoggedTunableNumber("Shooter/kV", SHOOTER_KV);
+  LoggedTunableNumber shooterkP = new LoggedTunableNumber("Shooter/kP", SHOOTER_KP);
   LoggedTunableNumber shooterkI = new LoggedTunableNumber("Shooter/kI", 0.0);
-  LoggedTunableNumber shooterkD = new LoggedTunableNumber("Shooter/kD", 0.0);
+  LoggedTunableNumber shooterkD = new LoggedTunableNumber("Shooter/kD", SHOOTER_KD);
 
   public ShooterIOKrakenX60() {
     /* Instantiate configuators */

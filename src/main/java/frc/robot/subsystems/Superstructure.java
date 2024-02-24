@@ -1,19 +1,7 @@
 package frc.robot.subsystems;
 
-import static frc.robot.constants.RobotConstants.Elevator.ELEVATOR_AMP_HEIGHT;
-import static frc.robot.constants.RobotConstants.Elevator.ELEVATOR_CLIMBED_HEIGHT;
-import static frc.robot.constants.RobotConstants.Elevator.ELEVATOR_FENDER_HEIGHT;
-import static frc.robot.constants.RobotConstants.Elevator.ELEVATOR_IDLE_HEIGHT;
-import static frc.robot.constants.RobotConstants.Elevator.ELEVATOR_INTAKE_HEIGHT;
-import static frc.robot.constants.RobotConstants.Elevator.ELEVATOR_PRE_CLIMB_HEIGHT;
-import static frc.robot.constants.RobotConstants.Elevator.ELEVATOR_SPIT_HEIGHT;
-import static frc.robot.constants.RobotConstants.Pivot.PIVOT_AMP_ANGLE;
-import static frc.robot.constants.RobotConstants.Pivot.PIVOT_CLIMBED_ANGLE;
-import static frc.robot.constants.RobotConstants.Pivot.PIVOT_FENDER_ANGLE;
-import static frc.robot.constants.RobotConstants.Pivot.PIVOT_IDLE_ANGLE;
-import static frc.robot.constants.RobotConstants.Pivot.PIVOT_INTAKE_ANGLE;
-import static frc.robot.constants.RobotConstants.Pivot.PIVOT_PRE_CLIMB_ANGLE;
-import static frc.robot.constants.RobotConstants.Pivot.PIVOT_SPIT_ANGLE;
+import static frc.robot.constants.Constants.Elevator.*;
+import static frc.robot.constants.Constants.Pivot.*;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;

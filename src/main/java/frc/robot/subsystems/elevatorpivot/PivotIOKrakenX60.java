@@ -1,6 +1,6 @@
 package frc.robot.subsystems.elevatorpivot;
 
-import static frc.robot.constants.RobotConstants.Pivot.*;
+import static frc.robot.constants.Constants.Pivot.*;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;
@@ -49,17 +49,17 @@ public class PivotIOKrakenX60 implements PivotIO {
   private final StatusSignal<Double> motionMagicVelocityTarget;
 
   /* Gains */
-  LoggedTunableNumber kS = new LoggedTunableNumber("Pivot/kS", 0.3);
-  LoggedTunableNumber kG = new LoggedTunableNumber("Pivot/kG", 0.0);
-  LoggedTunableNumber kV = new LoggedTunableNumber("Pivot/kV", 12.0 / PIVOT_MAX_SPEED);
-  LoggedTunableNumber kP = new LoggedTunableNumber("Pivot/kP", 75);
+  LoggedTunableNumber kS = new LoggedTunableNumber("Pivot/kS", PIVOT_KS);
+  LoggedTunableNumber kG = new LoggedTunableNumber("Pivot/kG", PIVOT_KG);
+  LoggedTunableNumber kV = new LoggedTunableNumber("Pivot/kV", PIVOT_KV);
+  LoggedTunableNumber kP = new LoggedTunableNumber("Pivot/kP", PIVOT_KP);
   LoggedTunableNumber kI = new LoggedTunableNumber("Pivot/kI", 0.0);
-  LoggedTunableNumber kD = new LoggedTunableNumber("Pivot/kD", 0);
+  LoggedTunableNumber kD = new LoggedTunableNumber("Pivot/kD", PIVOT_KD);
 
   LoggedTunableNumber motionAcceleration =
-      new LoggedTunableNumber("ShooterPivot/MotionAcceleration", 1.0);
+      new LoggedTunableNumber("ShooterPivot/MotionAcceleration", PIVOT_MM_ACCEL);
   LoggedTunableNumber motionCruiseVelocity =
-      new LoggedTunableNumber("ShooterPivot/MotionCruiseVelocity", 1.0);
+      new LoggedTunableNumber("ShooterPivot/MotionCruiseVelocity", PIVOT_MM_CRUISE_VELOCITY);
 
   StatusCode pivotStatusCode;
 

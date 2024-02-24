@@ -1,6 +1,6 @@
 package frc.robot.subsystems.intake;
 
-import static frc.robot.constants.RobotConstants.Intake.*;
+import static frc.robot.constants.Constants.Intake.*;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
@@ -34,7 +34,7 @@ public class Intake extends SubsystemBase {
 
   public Intake(IntakeIO io) {
     this.io = io;
-    io.enableBrakeMode(false);
+    io.enableIntakeBrakeMode(false);
   }
 
   @Override

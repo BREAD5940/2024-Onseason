@@ -1,6 +1,6 @@
 package frc.robot.subsystems.swerve;
 
-import static frc.robot.constants.RobotConstants.Swerve.*;
+import static frc.robot.constants.Constants.Swerve.*;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;

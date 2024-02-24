@@ -1,6 +1,6 @@
 package frc.robot.commons;
 
-import frc.robot.constants.RobotConstants;
+import frc.robot.constants.Constants;
 import java.util.HashMap;
 import java.util.Map;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
@@ -47,7 +47,7 @@ public class LoggedTunableNumber {
     if (!hasDefault) {
       hasDefault = true;
       this.defaultValue = defaultValue;
-      if (RobotConstants.tuningMode) {
+      if (Constants.tuningMode) {
         dashboardNumber = new LoggedDashboardNumber(key, defaultValue);
       }
     }
@@ -62,7 +62,7 @@ public class LoggedTunableNumber {
     if (!hasDefault) {
       return 0.0;
     } else {
-      return RobotConstants.tuningMode ? dashboardNumber.get() : defaultValue;
+      return Constants.tuningMode ? dashboardNumber.get() : defaultValue;
     }
   }
 

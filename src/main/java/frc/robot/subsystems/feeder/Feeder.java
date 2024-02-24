@@ -1,6 +1,6 @@
 package frc.robot.subsystems.feeder;
 
-import static frc.robot.constants.RobotConstants.Feeder.*;
+import static frc.robot.constants.Constants.Feeder.*;
 
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.commons.BreadUtil;
