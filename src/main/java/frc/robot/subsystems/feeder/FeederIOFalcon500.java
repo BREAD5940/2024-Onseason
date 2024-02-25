@@ -13,7 +13,6 @@ import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.ForwardLimitSourceValue;
-import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.ReverseLimitSourceValue;
 import com.ctre.phoenix6.signals.ReverseLimitValue;
@@ -52,13 +51,13 @@ public class FeederIOFalcon500 implements FeederIO {
 
     /* Create configs */
     currentLimitConfigs = new CurrentLimitsConfigs();
-    currentLimitConfigs.SupplyCurrentLimit = 100.0;
-    currentLimitConfigs.SupplyCurrentThreshold = 100.0;
+    currentLimitConfigs.SupplyCurrentLimit = 200.0;
+    currentLimitConfigs.SupplyCurrentThreshold = 200.0;
     currentLimitConfigs.SupplyTimeThreshold = 1.5;
     currentLimitConfigs.SupplyCurrentLimitEnable = true;
 
     motorOutputConfigs = new MotorOutputConfigs();
-    motorOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
+    motorOutputConfigs.Inverted = FEEDER_INVERSION;
     motorOutputConfigs.PeakForwardDutyCycle = 1.0;
     motorOutputConfigs.PeakReverseDutyCycle = -1.0;
     motorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
@@ -104,7 +103,7 @@ public class FeederIOFalcon500 implements FeederIO {
     inputs.appliedVolts = motor.getMotorVoltage().getValue();
     inputs.tempCelcius = temperature.getValue();
     inputs.currentAmps = current.getValue();
-    inputs.beamBreakTriggered = beamBreak.getValue().value == 0;
+    inputs.beamBreakTriggered = beamBreak.getValue().value == 1;
   }
 
   @Override

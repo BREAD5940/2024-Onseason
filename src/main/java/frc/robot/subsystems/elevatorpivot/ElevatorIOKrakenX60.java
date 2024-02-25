@@ -30,21 +30,21 @@ public class ElevatorIOKrakenX60 implements ElevatorIO {
   private final MotorOutputConfigs leaderMotorConfigs;
   private final MotorOutputConfigs followerMotorConfigs;
   private final Slot0Configs slot0Configs;
+  private final MotionMagicConfigs motionMagicConfigs;
   private double posTarget;
 
   /* Gains */
   LoggedTunableNumber kA = new LoggedTunableNumber("Elevator/kA", 0.0);
   LoggedTunableNumber kS = new LoggedTunableNumber("Elevator/kS", 0.3);
-  LoggedTunableNumber kV =
-      new LoggedTunableNumber("Elevator/kV", 12.0 / metersToRotations(ELEVATOR_MAX_SPEED));
-  LoggedTunableNumber kP = new LoggedTunableNumber("Elevator/kP", 10);
+  LoggedTunableNumber kV = new LoggedTunableNumber("Elevator/kV", 0.12);
+  LoggedTunableNumber kP = new LoggedTunableNumber("Elevator/kP", 10.0);
   LoggedTunableNumber kI = new LoggedTunableNumber("Elevator/kI", 0.0);
   LoggedTunableNumber kD = new LoggedTunableNumber("Elevator/kD", 0.0);
 
   LoggedTunableNumber motionAcceleration =
-      new LoggedTunableNumber("Elevator/MotionAcceleration", metersToRotations(3.0));
+      new LoggedTunableNumber("Elevator/MotionAcceleration", 400.0);
   LoggedTunableNumber motionCruiseVelocity =
-      new LoggedTunableNumber("Elevator/MotionCruiseVelocity", metersToRotations(3.0));
+      new LoggedTunableNumber("Elevator/MotionCruiseVelocity", 400.0);
   LoggedTunableNumber motionJerk = new LoggedTunableNumber("Elevator/MotionJerk", 0.0);
 
   /* For tracking */
@@ -68,12 +68,12 @@ public class ElevatorIOKrakenX60 implements ElevatorIO {
     leaderMotorConfigs.Inverted = ELEVATOR_LEFT_INVERSION;
     leaderMotorConfigs.PeakForwardDutyCycle = 1.0;
     leaderMotorConfigs.PeakReverseDutyCycle = -1.0;
-    leaderMotorConfigs.NeutralMode = NeutralModeValue.Coast;
+    leaderMotorConfigs.NeutralMode = NeutralModeValue.Brake;
 
     followerMotorConfigs = new MotorOutputConfigs();
     followerMotorConfigs.PeakForwardDutyCycle = 1.0;
     followerMotorConfigs.PeakReverseDutyCycle = -1.0;
-    followerMotorConfigs.NeutralMode = NeutralModeValue.Coast;
+    followerMotorConfigs.NeutralMode = NeutralModeValue.Brake;
 
     slot0Configs = new Slot0Configs();
     slot0Configs.kA = kA.get();
@@ -83,7 +83,7 @@ public class ElevatorIOKrakenX60 implements ElevatorIO {
     slot0Configs.kS = kS.get();
     slot0Configs.kV = kV.get();
 
-    MotionMagicConfigs motionMagicConfigs = new MotionMagicConfigs();
+    motionMagicConfigs = new MotionMagicConfigs();
     motionMagicConfigs.MotionMagicAcceleration = motionAcceleration.get();
     motionMagicConfigs.MotionMagicCruiseVelocity = motionCruiseVelocity.get();
     motionMagicConfigs.MotionMagicJerk = motionJerk.get();
@@ -156,7 +156,9 @@ public class ElevatorIOKrakenX60 implements ElevatorIO {
         || kV.hasChanged(0)
         || kP.hasChanged(0)
         || kI.hasChanged(0)
-        || kD.hasChanged(0)) {
+        || kD.hasChanged(0)
+        || motionAcceleration.hasChanged(0)
+        || motionCruiseVelocity.hasChanged(0)) {
       slot0Configs.kA = kA.get();
       slot0Configs.kS = kS.get();
       slot0Configs.kV = kV.get();
@@ -164,8 +166,13 @@ public class ElevatorIOKrakenX60 implements ElevatorIO {
       slot0Configs.kI = kI.get();
       slot0Configs.kD = kD.get();
 
+      motionMagicConfigs.MotionMagicAcceleration = motionAcceleration.get();
+      motionMagicConfigs.MotionMagicCruiseVelocity = motionCruiseVelocity.get();
+
       leaderConfigurator.apply(slot0Configs);
       followerConfigurator.apply(slot0Configs);
+      leaderConfigurator.apply(motionMagicConfigs);
+      followerConfigurator.apply(motionMagicConfigs);
     }
   }
 

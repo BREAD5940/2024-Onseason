@@ -413,15 +413,15 @@ public class Constants {
         ELEVATOR_SETPOINT_TOLERANCE_METERS = 0.01;
         ELEVATOR_HOMING_TRESHOLD_SEC = 0.25;
         ELEVATOR_HOMING_TRESHOLD_MPS = 0.01;
-        ELEVATOR_GEAR_RATIO = 1.0 / ((9.0 / 70.0) * (20.0 / 32.0) * (30.0 / 36.0));
+        ELEVATOR_GEAR_RATIO = 1.0 / ((9.0 / 70.0) * (20.0 / 32.0) * (36.0 / 30.0));
         ELEVATOR_MAX_SPEED =
             ((KRAKEN_FREE_SPEED / 60.0) * (1.0 / ELEVATOR_GEAR_RATIO))
                 * Math.PI
                 * ELEVATOR_SPOOL_DIAMETER;
-        ELEVATOR_LEFT_INVERSION = InvertedValue.Clockwise_Positive;
+        ELEVATOR_LEFT_INVERSION = InvertedValue.CounterClockwise_Positive;
         ELEVATOR_MIN_HEIGHT = 0.0;
-        ELEVATOR_END_OF_DANGER_ZONE = 0.26; // Top gun reference?!?!?!
-        ELEVATOR_MAX_HEIGHT = 0.48495202978632623;
+        ELEVATOR_END_OF_DANGER_ZONE = 0.328643453491348; // Top gun reference?!?!?!
+        ELEVATOR_MAX_HEIGHT = 0.6254553955145598;
       } else {
 
         ELEVATOR_LEFT_ID = 11;
@@ -511,15 +511,15 @@ public class Constants {
       if (robot == RobotType.BETA) {
         PIVOT_ID = 18;
         PIVOT_AZIMUTH_ID = 19;
-        PIVOT_MAGNET_OFFSET = Units.degreesToRotations(-33.0);
+        PIVOT_MAGNET_OFFSET = Units.degreesToRotations(17.22);
 
-        PIVOT_MAX_ANGLE = Rotation2d.fromDegrees(33);
+        PIVOT_MAX_ANGLE = Rotation2d.fromDegrees(38.0);
         PIVOT_MIN_SAFE_ANGLE =
             Rotation2d.fromDegrees(
-                -12.8); // This would be the minimum rotation at the bottom of the elevator's travel
+                -14.5); // This would be the minimum rotation at the bottom of the elevator's travel
         PIVOT_MIN_ANGLE =
             Rotation2d.fromDegrees(
-                -56.42578125); // This would be the minumum rotation at any point in the elevator's
+                -63.5); // This would be the minumum rotation at any point in the elevator's
         // "safe range"
 
         PIVOT_NEUTRAL_ANGLE = Rotation2d.fromDegrees(0.0);
@@ -543,7 +543,7 @@ public class Constants {
         PIVOT_SETPOINT_TOLERANCE_RADS = Units.degreesToRadians(3.0);
         PIVOT_INVERSION = InvertedValue.CounterClockwise_Positive;
         PIVOT_ENCODER_INVERSION = SensorDirectionValue.Clockwise_Positive;
-        PIVOT_GEAR_RATIO = 118.0556;
+        PIVOT_GEAR_RATIO = (25.0 / 1.0) * (48.0 / 20.0);
         PIVOT_MAX_SPEED = ((FALCON_FREE_SPEED / 60.0) * (1.0 / PIVOT_GEAR_RATIO));
       } else {
         PIVOT_ID = 18;
@@ -622,8 +622,8 @@ public class Constants {
 
         SHOOTER_SETPOINT_TOLERANCE_RPM = 50.0;
 
-        SHOOTER_LEFT_IDLE_RPM = 0.0;
-        SHOOTER_RIGHT_IDLE_RPM = 0.0;
+        SHOOTER_LEFT_IDLE_RPM = 1000.0;
+        SHOOTER_RIGHT_IDLE_RPM = 1000.0;
 
         SHOOTER_LEFT_AMP_RPM = 3000.0;
         SHOOTER_RIGHT_AMP_RPM = 3000.0;
@@ -645,11 +645,11 @@ public class Constants {
 
         SHOOTER_SETPOINT_TOLERANCE_RPM = 50.0;
 
-        SHOOTER_LEFT_IDLE_RPM = 0.0;
-        SHOOTER_RIGHT_IDLE_RPM = 0.0;
+        SHOOTER_LEFT_IDLE_RPM = 1000.0;
+        SHOOTER_RIGHT_IDLE_RPM = 1000.0;
 
-        SHOOTER_LEFT_AMP_RPM = 3000.0;
-        SHOOTER_RIGHT_AMP_RPM = 3000.0;
+        SHOOTER_LEFT_AMP_RPM = 1000.0;
+        SHOOTER_RIGHT_AMP_RPM = 1000.0;
 
         SHOOTER_LEFT_TRAP_RPM = 0.0;
         SHOOTER_RIGHT_TRAP_RPM = 0.0;
@@ -688,11 +688,11 @@ public class Constants {
       if (robot == RobotType.BETA) {
         FEEDER_ID = 15;
 
-        FEEDER_INTAKE_SPEED = 0.3;
+        FEEDER_INTAKE_SPEED = 0.6;
 
         FEEDER_SPIT_SPEED = -0.1;
 
-        FEEDER_SHOOT_SPEED = 0.3;
+        FEEDER_SHOOT_SPEED = 0.8;
 
         FEEDER_GEAR_RATIO = 1.0;
         FEEDER_ROLLER_DIAMETER = 1.0;

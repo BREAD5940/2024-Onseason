@@ -42,9 +42,9 @@ public class ShooterIOKrakenX60 implements ShooterIO {
 
   /* Gains */
   LoggedTunableNumber shooterkS = new LoggedTunableNumber("Shooter/kS", 0.0);
-  LoggedTunableNumber shooterkV =
-      new LoggedTunableNumber("Shooter/kV", 12.0 / SHOOTER_MAX_VELOCITY * (3000.0 / 2400.0));
-  LoggedTunableNumber shooterkP = new LoggedTunableNumber("Shooter/kP", 1);
+  LoggedTunableNumber shooterkA = new LoggedTunableNumber("Shooter/kA", 0.0);
+  LoggedTunableNumber shooterkV = new LoggedTunableNumber("Shooter/kV", 0.135);
+  LoggedTunableNumber shooterkP = new LoggedTunableNumber("Shooter/kP", 0.1);
   LoggedTunableNumber shooterkI = new LoggedTunableNumber("Shooter/kI", 0.0);
   LoggedTunableNumber shooterkD = new LoggedTunableNumber("Shooter/kD", 0.0);
 
@@ -76,6 +76,7 @@ public class ShooterIOKrakenX60 implements ShooterIO {
 
     // Slot 0 Configs
     shooterSlot0Configs = new Slot0Configs();
+    shooterSlot0Configs.kA = shooterkA.get();
     shooterSlot0Configs.kS = shooterkS.get();
     shooterSlot0Configs.kV = shooterkV.get();
     shooterSlot0Configs.kP = shooterkP.get();
@@ -176,12 +177,14 @@ public class ShooterIOKrakenX60 implements ShooterIO {
         || shooterkV.hasChanged(0)
         || shooterkP.hasChanged(0)
         || shooterkI.hasChanged(0)
-        || shooterkD.hasChanged(0)) {
+        || shooterkD.hasChanged(0)
+        || shooterkA.hasChanged(0)) {
       shooterSlot0Configs.kS = shooterkS.get();
       shooterSlot0Configs.kV = shooterkV.get();
       shooterSlot0Configs.kP = shooterkP.get();
       shooterSlot0Configs.kI = shooterkI.get();
       shooterSlot0Configs.kD = shooterkD.get();
+      shooterSlot0Configs.kA = shooterkA.get();
 
       leftConfigurator.apply(shooterSlot0Configs);
       rightConfigurator.apply(shooterSlot0Configs);

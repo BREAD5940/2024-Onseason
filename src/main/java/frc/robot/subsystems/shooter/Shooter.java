@@ -26,14 +26,13 @@ public class Shooter extends SubsystemBase {
   private double stateStartTime = 0.0;
 
   /* Setpoints */
-  private double desiredLeftRPM = 0.0;
-  private double desiredRightRPM = 0.0;
+  private double desiredLeftRPM = 1000.0;
+  private double desiredRightRPM = 1000.0;
 
   /* System states */
   public enum ShooterState {
     IDLE,
     FENDER,
-    AUTO_DRIVEBY,
     VISION_SPEAKER,
     AMP
   }
@@ -45,6 +44,7 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     io.updateInputs(inputs);
+    io.updateTunableNumbers();
     Logger.processInputs("Shooter", inputs);
 
     Logger.recordOutput("Shooter/SystemState", systemState);
@@ -54,13 +54,11 @@ public class Shooter extends SubsystemBase {
 
     if (systemState == ShooterState.IDLE) {
       // Outputs
-      io.setPercent(0.2, 0.2);
+      io.setVelocity(desiredLeftRPM, desiredRightRPM);
 
       // Transitions
       if (requestFender) {
         nextSystemState = ShooterState.FENDER;
-      } else if (requestAutoDriveBy) {
-        nextSystemState = ShooterState.AUTO_DRIVEBY;
       } else if (requestVisionSpeaker) {
         nextSystemState = ShooterState.VISION_SPEAKER;
       } else if (requestAmp) {
@@ -72,12 +70,6 @@ public class Shooter extends SubsystemBase {
 
       // Transitions
       if (!requestFender) {
-        nextSystemState = ShooterState.IDLE;
-      }
-    } else if (systemState == ShooterState.AUTO_DRIVEBY) {
-      io.setPercent(1.0, 1.0);
-
-      if (!requestAutoDriveBy) {
         nextSystemState = ShooterState.IDLE;
       }
     } else if (systemState == ShooterState.VISION_SPEAKER) {
@@ -122,11 +114,6 @@ public class Shooter extends SubsystemBase {
     desiredRightRPM = SHOOTER_RIGHT_FENDER_RPM;
     unsetAllRequests();
     requestFender = true;
-  }
-
-  public void requestAutoDriveBy() {
-    unsetAllRequests();
-    requestAutoDriveBy = true;
   }
 
   public void requestVisionSpeaker(boolean wantsShootOverDefense) {

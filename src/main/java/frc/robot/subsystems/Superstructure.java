@@ -20,7 +20,7 @@ import org.littletonrobotics.junction.Logger;
 public class Superstructure extends SubsystemBase {
 
   /* Subsystems */
-  public final ElevatorPivot elevatorPivot;
+  private final ElevatorPivot elevatorPivot;
   private final Feeder feeder;
 
   /* State variables */

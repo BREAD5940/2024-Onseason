@@ -16,9 +16,9 @@ import frc.robot.commons.LoggedTunableNumber;
 public class IntakeIOFalcon500 implements IntakeIO {
 
   /* Hardware */
-  private final TalonFX intake = new TalonFX(INTAKE_ID);
+  private final TalonFX intake = new TalonFX(INTAKE_ID, "dabus");
   private final TalonFX vector = new TalonFX(VECTOR_ID, "dabus");
-  private final DigitalInput beamBreak = new DigitalInput(9);
+  private final DigitalInput beamBreak = new DigitalInput(0);
 
   /* Configurator */
   private final TalonFXConfigurator intakeConfigurator;

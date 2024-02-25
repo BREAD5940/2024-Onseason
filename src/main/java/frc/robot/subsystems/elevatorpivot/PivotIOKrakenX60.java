@@ -39,6 +39,7 @@ public class PivotIOKrakenX60 implements PivotIO {
   private final CurrentLimitsConfigs currentLimitConfigs;
   private final MotorOutputConfigs motorOutputConfigs;
   private final Slot0Configs slot0Configs;
+  private final MotionMagicConfigs pivotMotionMagicConfigs;
 
   /* Status Signals */
   private final StatusSignal<Double> position;
@@ -51,15 +52,14 @@ public class PivotIOKrakenX60 implements PivotIO {
   /* Gains */
   LoggedTunableNumber kS = new LoggedTunableNumber("Pivot/kS", 0.3);
   LoggedTunableNumber kG = new LoggedTunableNumber("Pivot/kG", 0.0);
-  LoggedTunableNumber kV = new LoggedTunableNumber("Pivot/kV", 12.0 / PIVOT_MAX_SPEED);
-  LoggedTunableNumber kP = new LoggedTunableNumber("Pivot/kP", 75);
+  LoggedTunableNumber kV = new LoggedTunableNumber("Pivot/kV", 12.0);
+  LoggedTunableNumber kP = new LoggedTunableNumber("Pivot/kP", 80.0);
   LoggedTunableNumber kI = new LoggedTunableNumber("Pivot/kI", 0.0);
-  LoggedTunableNumber kD = new LoggedTunableNumber("Pivot/kD", 0);
+  LoggedTunableNumber kD = new LoggedTunableNumber("Pivot/kD", 3.0);
 
-  LoggedTunableNumber motionAcceleration =
-      new LoggedTunableNumber("ShooterPivot/MotionAcceleration", 1.0);
+  LoggedTunableNumber motionAcceleration = new LoggedTunableNumber("Pivot/MotionAcceleration", 5.0);
   LoggedTunableNumber motionCruiseVelocity =
-      new LoggedTunableNumber("ShooterPivot/MotionCruiseVelocity", 1.0);
+      new LoggedTunableNumber("Pivot/MotionCruiseVelocity", 5.0);
 
   StatusCode pivotStatusCode;
 
@@ -103,7 +103,7 @@ public class PivotIOKrakenX60 implements PivotIO {
     pivotFeedbackConfigs.RotorToSensorRatio = PIVOT_GEAR_RATIO;
     pivotFeedbackConfigs.SensorToMechanismRatio = 1.0;
 
-    MotionMagicConfigs pivotMotionMagicConfigs = new MotionMagicConfigs();
+    pivotMotionMagicConfigs = new MotionMagicConfigs();
     pivotMotionMagicConfigs.MotionMagicAcceleration = motionAcceleration.get();
     pivotMotionMagicConfigs.MotionMagicCruiseVelocity = motionCruiseVelocity.get();
 
@@ -148,8 +148,10 @@ public class PivotIOKrakenX60 implements PivotIO {
     inputs.currentAmps = supplyCurrent.getValue();
     inputs.appliedVoltage = appliedVoltage.getValue();
     inputs.tempCelcius = pivot.getDeviceTemp().getValue();
-    inputs.motionMagicPositionTargetDeg = motionMagicPositionTarget.getValue();
-    inputs.motionMagicVelocityTargetDeg = motionMagicVelocityTarget.getValue();
+    inputs.motionMagicPositionTargetDeg =
+        Units.rotationsToDegrees(pivot.getClosedLoopReference().getValue());
+    inputs.motionMagicVelocityTargetDeg =
+        Units.rotationsToDegrees(pivot.getClosedLoopReferenceSlope().getValue());
     inputs.setpointDeg = setpointDeg;
   }
 
@@ -192,7 +194,9 @@ public class PivotIOKrakenX60 implements PivotIO {
         || kV.hasChanged(0)
         || kP.hasChanged(0)
         || kI.hasChanged(0)
-        || kD.hasChanged(0)) {
+        || kD.hasChanged(0)
+        || motionAcceleration.hasChanged(0)
+        || motionCruiseVelocity.hasChanged(0)) {
       slot0Configs.kS = kS.get();
       slot0Configs.kG = kG.get();
       slot0Configs.kV = kV.get();
@@ -200,7 +204,11 @@ public class PivotIOKrakenX60 implements PivotIO {
       slot0Configs.kI = kI.get();
       slot0Configs.kD = kD.get();
 
+      pivotMotionMagicConfigs.MotionMagicAcceleration = motionAcceleration.get();
+      pivotMotionMagicConfigs.MotionMagicCruiseVelocity = motionCruiseVelocity.get();
+
       pivotConfigurator.apply(slot0Configs);
+      pivotConfigurator.apply(pivotMotionMagicConfigs);
     }
   }
 }

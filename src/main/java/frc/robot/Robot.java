@@ -126,6 +126,7 @@ public class Robot extends LoggedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+    RobotContainer.shooter.requestIdle();
   }
 
   @Override
@@ -146,6 +147,7 @@ public class Robot extends LoggedRobot {
       RobotContainer.superstructure.requestHome();
       requestedHome = true;
     }
+    RobotContainer.shooter.requestIdle();
   }
 
   @Override

@@ -48,6 +48,7 @@ public class ElevatorPivot {
 
     /* Update loggable inputs */
     elevatorIO.updateInputs(elevatorInputs);
+    elevatorIO.updateTunableNumbers();
     pivotIO.updateInputs(pivotInputs);
     pivotIO.updateTunableNumbers();
     Logger.processInputs("Elevator", elevatorInputs);
@@ -77,7 +78,7 @@ public class ElevatorPivot {
     ElevatorPivotState nextSystemState = systemState;
     if (systemState == ElevatorPivotState.STARTING_CONFIG) {
       elevatorIO.setVoltage(0.0);
-      pivotIO.setVoltage(0.0);
+      pivotIO.setAngle(Rotation2d.fromDegrees(0.0));
 
       if (requestHome) {
         nextSystemState = ElevatorPivotState.NEUTRALIZING_PIVOT;
@@ -90,7 +91,7 @@ public class ElevatorPivot {
         nextSystemState = ElevatorPivotState.HOMING;
       }
     } else if (systemState == ElevatorPivotState.HOMING) {
-      elevatorIO.setVoltage(-3.0);
+      elevatorIO.setVoltage(-2.0);
       pivotIO.setAngle(PIVOT_NEUTRAL_ANGLE);
 
       if (BreadUtil.getFPGATimeSeconds() - mStateStartTime > ELEVATOR_HOMING_TRESHOLD_SEC
@@ -100,7 +101,7 @@ public class ElevatorPivot {
         requestHome = false;
       }
     } else if (systemState == ElevatorPivotState.IDLE) {
-      elevatorIO.setVoltage(0.0);
+      elevatorIO.setHeight(0.4);
       pivotIO.setAngle(PIVOT_NEUTRAL_ANGLE);
 
       if (requestHome) {

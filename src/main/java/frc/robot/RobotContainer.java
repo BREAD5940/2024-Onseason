@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.commons.BreadUtil;
-import frc.robot.constants.BetaTunerConstants;
+import frc.robot.constants.GammaTunerConstants;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.commands.AmpCommand;
 import frc.robot.subsystems.commands.FenderShotCommand;
@@ -53,11 +53,11 @@ public class RobotContainer {
   public static Superstructure superstructure = new Superstructure(elevatorIO, pivotIO, feederIO);
   public static final Swerve swerve =
       new Swerve(
-          BetaTunerConstants.DrivetrainConstants,
-          BetaTunerConstants.FrontLeft,
-          BetaTunerConstants.FrontRight,
-          BetaTunerConstants.BackLeft,
-          BetaTunerConstants.BackRight);
+          GammaTunerConstants.DrivetrainConstants,
+          GammaTunerConstants.FrontLeft,
+          GammaTunerConstants.FrontRight,
+          GammaTunerConstants.BackLeft,
+          GammaTunerConstants.BackRight);
 
   public static final PhotonCamera frontLeftCamera = new PhotonCamera("front-left");
   public static final PhotonCamera frontRightCamera = new PhotonCamera("front-right");
@@ -86,12 +86,12 @@ public class RobotContainer {
               double dy;
 
               if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-                dx = Math.pow(-x, 1) * 8.0;
-                dy = Math.pow(-y, 1) * 8.0;
+                dx = Math.pow(-x, 1) * 4.0;
+                dy = Math.pow(-y, 1) * 4.0;
 
               } else {
-                dx = Math.pow(-x, 1) * -1 * 8.0;
-                dy = Math.pow(-y, 1) * -1 * 8.0;
+                dx = Math.pow(-x, 1) * -1 * 4.0;
+                dy = Math.pow(-y, 1) * -1 * 4.0;
               }
               double rot = Math.pow(-omega, 3) * 9.0;
               swerve.requestPercent(new ChassisSpeeds(dx, dy, rot), true);
