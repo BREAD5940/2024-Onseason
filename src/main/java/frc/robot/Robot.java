@@ -168,6 +168,11 @@ public class Robot extends LoggedRobot {
     }
 
     /* Superstructure spit requests */
+    if (RobotContainer.operator.getBButton()) {
+      RobotContainer.superstructure.requestSpit(true);
+    } else {
+      RobotContainer.superstructure.requestSpit(false);
+    }
 
     // Controller vibrations
     if (RobotContainer.intake.hasPiece()) {

@@ -116,7 +116,6 @@ public class RobotContainer {
     new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new AmpCommand(swerve));
   }
 
-
   private void configureAprilTagVision() {
     aprilTagVision.setDataInterfaces(swerve::getPose, swerve::addVisionData);
   }
