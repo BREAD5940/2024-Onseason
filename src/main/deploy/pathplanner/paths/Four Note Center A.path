@@ -20,12 +20,12 @@
         "y": 4.413036851681342
       },
       "prevControl": {
-        "x": 3.654785767181488,
-        "y": 4.7376972775863955
+        "x": 3.879466989703212,
+        "y": 5.199878861296185
       },
       "nextControl": {
-        "x": 6.021666976397799,
-        "y": 4.213724275209269
+        "x": 5.900275734606729,
+        "y": 3.9195043895493367
       },
       "isLocked": false,
       "linkedName": null
@@ -44,7 +44,13 @@
       "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.25,
+      "rotationDegrees": 180.0,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -59,7 +65,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "FourNoteCenter",
   "previewStartingState": {
     "rotation": 180.0,
     "velocity": 0.0

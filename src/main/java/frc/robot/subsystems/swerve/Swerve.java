@@ -42,8 +42,8 @@ public class Swerve extends SubsystemBase {
         new SwerveDrivetrain(
             drivetrainConstants,
             251,
-            VecBuilder.fill(0.001, 0.001, 0.0002),
-            VecBuilder.fill(0.001, 0.001, 0.0002),
+            VecBuilder.fill(0.01, 0.01, 0.002),
+            VecBuilder.fill(0.01, 0.01, 0.002),
             moduleConstants);
 
     drivetrain.configNeutralMode(NeutralModeValue.Brake);

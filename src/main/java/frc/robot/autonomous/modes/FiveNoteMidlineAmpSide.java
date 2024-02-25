@@ -14,9 +14,9 @@ import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.TrajectoryFollowerCommand;
 
-public class FiveNoteTwoMidline extends SequentialCommandGroup {
+public class FiveNoteMidlineAmpSide extends SequentialCommandGroup {
 
-  public FiveNoteTwoMidline(
+  public FiveNoteMidlineAmpSide(
       Superstructure superstructure, Swerve swerve, Shooter shooter, Intake intake) {
     addRequirements(superstructure, swerve, shooter, intake);
     addCommands(
@@ -25,14 +25,14 @@ public class FiveNoteTwoMidline extends SequentialCommandGroup {
         new InstantCommand(() -> superstructure.requestIntake(false)),
         new InstantCommand(
             () -> {
-              PathPlannerPath path = Robot.fiveNoteTwoMidlineA;
+              PathPlannerPath path = Robot.fiveNoteMidlineAmpSideA;
               if (DriverStation.getAlliance().get() == Alliance.Red) {
                 path = path.flipPath();
               }
               swerve.resetPose(path.getPreviewStartingHolonomicPose());
             }),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.fiveNoteTwoMidlineA, swerve, false)
+        new TrajectoryFollowerCommand(Robot.fiveNoteMidlineAmpSideA, swerve, false)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
@@ -41,7 +41,7 @@ public class FiveNoteTwoMidline extends SequentialCommandGroup {
                 }),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.fiveNoteTwoMidlineB, swerve, false)
+        new TrajectoryFollowerCommand(Robot.fiveNoteMidlineAmpSideB, swerve, false)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
@@ -50,7 +50,7 @@ public class FiveNoteTwoMidline extends SequentialCommandGroup {
                 }),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.fiveNoteTwoMidlineC, swerve, false)
+        new TrajectoryFollowerCommand(Robot.fiveNoteMidlineAmpSideC, swerve, false)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
@@ -58,9 +58,9 @@ public class FiveNoteTwoMidline extends SequentialCommandGroup {
                   superstructure.requestVisionSpeaker(false, false, false, false);
                 }),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.fiveNoteTwoMidlineD, swerve, false),
+        new TrajectoryFollowerCommand(Robot.fiveNoteMidlineAmpSideD, swerve, false),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.fiveNoteE, swerve, false)
+        new TrajectoryFollowerCommand(Robot.fiveNoteMidlineAmpSideE, swerve, false)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
@@ -68,7 +68,7 @@ public class FiveNoteTwoMidline extends SequentialCommandGroup {
                   superstructure.requestVisionSpeaker(false, false, false, false);
                 }),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.fiveNoteTwoMidlineF, swerve, false),
+        new TrajectoryFollowerCommand(Robot.fiveNoteMidlineAmpSideF, swerve, false),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2));
   }
 }

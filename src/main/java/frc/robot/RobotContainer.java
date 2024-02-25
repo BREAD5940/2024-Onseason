@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.commons.BreadUtil;
 import frc.robot.constants.BetaTunerConstants;
-import frc.robot.constants.GammaTunerConstants;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.commands.AmpCommand;
 import frc.robot.subsystems.commands.FenderShotCommand;
@@ -54,11 +53,11 @@ public class RobotContainer {
   public static Superstructure superstructure = new Superstructure(elevatorIO, pivotIO, feederIO);
   public static final Swerve swerve =
       new Swerve(
-          isComp ? GammaTunerConstants.DrivetrainConstants : BetaTunerConstants.DrivetrainConstants,
-          isComp ? GammaTunerConstants.FrontLeft : BetaTunerConstants.FrontLeft,
-          isComp ? GammaTunerConstants.FrontRight : BetaTunerConstants.FrontRight,
-          isComp ? GammaTunerConstants.BackLeft : BetaTunerConstants.BackLeft,
-          isComp ? GammaTunerConstants.BackRight : BetaTunerConstants.BackRight);
+          BetaTunerConstants.DrivetrainConstants,
+          BetaTunerConstants.FrontLeft,
+          BetaTunerConstants.FrontRight,
+          BetaTunerConstants.BackLeft,
+          BetaTunerConstants.BackRight);
 
   public static final PhotonCamera frontLeftCamera = new PhotonCamera("front-left");
   public static final PhotonCamera frontRightCamera = new PhotonCamera("front-right");
@@ -94,7 +93,7 @@ public class RobotContainer {
                 dx = Math.pow(-x, 1) * -1 * 8.0;
                 dy = Math.pow(-y, 1) * -1 * 8.0;
               }
-              double rot = Math.pow(-omega, 3) * 6.0;
+              double rot = Math.pow(-omega, 3) * 9.0;
               swerve.requestPercent(new ChassisSpeeds(dx, dy, rot), true);
 
               if (driver.getRawButtonPressed(XboxController.Button.kStart.value)) {

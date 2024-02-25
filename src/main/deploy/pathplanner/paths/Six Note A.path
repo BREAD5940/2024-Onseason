@@ -3,105 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.7516461186744829,
-        "y": 4.519059807352167
+        "x": 1.3559232416858933,
+        "y": 4.1218307079264624
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.708739571322927,
-        "y": 4.676930892325106
+        "x": 1.8486743971824173,
+        "y": 4.104116533536887
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.616498309917327,
-        "y": 4.213184580217097
+        "x": 2.500173449420973,
+        "y": 4.1218307079264624
       },
       "prevControl": {
-        "x": 2.095284585780284,
-        "y": 4.473791442285615
-      },
-      "nextControl": {
-        "x": 2.7743693948902663,
-        "y": 4.134249037730628
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 1.9948809128363791,
-        "y": 4.972939176649367
-      },
-      "prevControl": {
-        "x": 2.251421425917404,
-        "y": 4.676930892325107
-      },
-      "nextControl": {
-        "x": 1.9121248584329487,
-        "y": 5.068426931730248
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 2.616498309917327,
-        "y": 5.545221859676271
-      },
-      "prevControl": {
-        "x": 1.7923893892974245,
-        "y": 5.360881706379713
-      },
-      "nextControl": {
-        "x": 3.366385963538788,
-        "y": 5.71295988746002
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 1.9948809128363791,
-        "y": 6.1372384283247925
-      },
-      "prevControl": {
-        "x": 2.4191594537011527,
-        "y": 5.5057540884330365
-      },
-      "nextControl": {
-        "x": 1.7024606364114412,
-        "y": 6.572468607189816
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 2.8434379945659276,
-        "y": 7.035130224108384
-      },
-      "prevControl": {
-        "x": 2.1330181121877008,
-        "y": 6.581250854811184
-      },
-      "nextControl": {
-        "x": 3.5538578769441544,
-        "y": 7.489009593405584
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 7.924913542132407,
-        "y": 7.439674879351541
-      },
-      "prevControl": {
-        "x": 5.665383638457216,
-        "y": 7.375539751081283
+        "x": 1.78142019724433,
+        "y": 4.1269623532808986
       },
       "nextControl": null,
       "isLocked": false,
@@ -110,27 +30,40 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 3,
+      "waypointRelativePos": 0.15,
       "rotationDegrees": 180.0,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 1.0,
+      "rotationDegrees": 0,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 1.0,
+      "rotationDegrees": 0,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 1.0,
+      "rotationDegrees": 0,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 1.0,
+      "rotationDegrees": 0,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 1.0,
+      "rotationDegrees": 0,
       "rotateFast": false
     }
   ],
-  "constraintZones": [
-    {
-      "name": "New Constraints Zone",
-      "minWaypointRelativePos": 5.1499999999999995,
-      "maxWaypointRelativePos": 5.75,
-      "constraints": {
-        "maxVelocity": 1.0,
-        "maxAcceleration": 1.0,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0
-      }
-    }
-  ],
+  "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 4.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
@@ -141,9 +74,9 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "SixNoteAmpSide",
   "previewStartingState": {
-    "rotation": 119.93151184050772,
+    "rotation": 180.0,
     "velocity": 0.0
   },
   "useDefaultConstraints": false

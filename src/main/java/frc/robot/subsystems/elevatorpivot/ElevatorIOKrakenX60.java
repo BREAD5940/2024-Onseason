@@ -33,17 +33,18 @@ public class ElevatorIOKrakenX60 implements ElevatorIO {
   private double posTarget;
 
   /* Gains */
-  LoggedTunableNumber kA = new LoggedTunableNumber("Elevator/kA", ELEVATOR_KA);
-  LoggedTunableNumber kS = new LoggedTunableNumber("Elevator/kS", ELEVATOR_KS);
-  LoggedTunableNumber kV = new LoggedTunableNumber("Elevator/kV", ELEVATOR_KV);
-  LoggedTunableNumber kP = new LoggedTunableNumber("Elevator/kP", ELEVATOR_KP);
+  LoggedTunableNumber kA = new LoggedTunableNumber("Elevator/kA", 0.0);
+  LoggedTunableNumber kS = new LoggedTunableNumber("Elevator/kS", 0.3);
+  LoggedTunableNumber kV =
+      new LoggedTunableNumber("Elevator/kV", 12.0 / metersToRotations(ELEVATOR_MAX_SPEED));
+  LoggedTunableNumber kP = new LoggedTunableNumber("Elevator/kP", 10);
   LoggedTunableNumber kI = new LoggedTunableNumber("Elevator/kI", 0.0);
-  LoggedTunableNumber kD = new LoggedTunableNumber("Elevator/kD", ELEVATOR_KD);
+  LoggedTunableNumber kD = new LoggedTunableNumber("Elevator/kD", 0.0);
 
   LoggedTunableNumber motionAcceleration =
-      new LoggedTunableNumber("Elevator/MotionAcceleration", ELEVATOR_MM_ACCEL);
+      new LoggedTunableNumber("Elevator/MotionAcceleration", metersToRotations(3.0));
   LoggedTunableNumber motionCruiseVelocity =
-      new LoggedTunableNumber("Elevator/MotionCruiseVelocity", ELEVATOR_MM_CRUISE_VELOCITY);
+      new LoggedTunableNumber("Elevator/MotionCruiseVelocity", metersToRotations(3.0));
   LoggedTunableNumber motionJerk = new LoggedTunableNumber("Elevator/MotionJerk", 0.0);
 
   /* For tracking */

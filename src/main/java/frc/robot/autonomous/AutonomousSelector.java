@@ -3,9 +3,10 @@ package frc.robot.autonomous;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.autonomous.modes.FiveNote;
-import frc.robot.autonomous.modes.FourNote;
-import frc.robot.autonomous.modes.SixNote;
+import frc.robot.autonomous.modes.FiveNoteMidlineAmpSide;
+import frc.robot.autonomous.modes.FourNoteCenter;
+import frc.robot.autonomous.modes.FourNoteSourceSide;
+import frc.robot.autonomous.modes.SixNoteAmpSide;
 import frc.robot.autonomous.modes.ThreeNoteCenter;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.intake.Intake;
@@ -23,12 +24,14 @@ public class AutonomousSelector {
     autonomousSelector.addOption(
         "THREE_NOTE_CENTER", new ThreeNoteCenter(superstructure, swerve, shooter, intake));
     autonomousSelector.addOption(
-        "FOUR_NOTE", new FourNote(superstructure, swerve, shooter, intake));
+        "FOUR_NOTE_SOURCE_SIDE", new FourNoteSourceSide(superstructure, swerve, shooter, intake));
     autonomousSelector.addOption(
-        "FIVE_NOTE", new FiveNote(superstructure, swerve, shooter, intake));
+        "FIVE_NOTE_MIDLINE_AMP_SIDE",
+        new FiveNoteMidlineAmpSide(superstructure, swerve, shooter, intake));
     autonomousSelector.addOption(
-        "FIVE_NOTE_TWO_MIDLINE", new FiveNote(superstructure, swerve, shooter, intake));
-    autonomousSelector.addOption("SIX_NOTE", new SixNote(superstructure, swerve, shooter, intake));
+        "SIX_NOTE_AMP_SIDE", new SixNoteAmpSide(superstructure, swerve, shooter, intake));
+    autonomousSelector.addOption(
+        "FOUR_NOTE_CENTER", new FourNoteCenter(superstructure, swerve, shooter, intake));
 
     SmartDashboard.putData("Autonomus Selector", autonomousSelector);
   }

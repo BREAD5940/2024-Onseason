@@ -40,11 +40,11 @@ public class FeederIOFalcon500 implements FeederIO {
   private StatusSignal<ReverseLimitValue> beamBreak;
 
   /* Gains */
-  LoggedTunableNumber kS = new LoggedTunableNumber("Feeder/kS", FEEDER_KS);
-  LoggedTunableNumber kV = new LoggedTunableNumber("Feeder/kV", FEEDER_KV);
-  LoggedTunableNumber kP = new LoggedTunableNumber("Feeder/kP", FEEDER_KP);
+  LoggedTunableNumber kS = new LoggedTunableNumber("Feeder/kS", 0.0);
+  LoggedTunableNumber kV = new LoggedTunableNumber("Feeder/kV", 0.0);
+  LoggedTunableNumber kP = new LoggedTunableNumber("Feeder/kP", 0.0);
   LoggedTunableNumber kI = new LoggedTunableNumber("Feeder/kI", 0.0);
-  LoggedTunableNumber kD = new LoggedTunableNumber("Feeder/kD", FEEDER_KD);
+  LoggedTunableNumber kD = new LoggedTunableNumber("Feeder/kD", 0.0);
 
   public FeederIOFalcon500() {
     /* Instantiate configurator */

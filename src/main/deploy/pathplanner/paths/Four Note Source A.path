@@ -3,25 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.0,
-        "y": 2.51
+        "x": 0.8233599640665719,
+        "y": 4.483872207978791
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.575904250260468,
-        "y": 3.4632115615504384
+        "x": 1.6545129977557411,
+        "y": 3.066252975098543
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.686617171845455,
-        "y": 4.41054177992326
+        "x": 3.6582657845220203,
+        "y": 1.738939751461679
       },
       "prevControl": {
-        "x": 5.273888771663539,
-        "y": 4.1446491551837275
+        "x": 2.9876310443448433,
+        "y": 1.8210377262045039
+      },
+      "nextControl": {
+        "x": 4.152915125868321,
+        "y": 1.678385612674185
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.0,
+        "y": 1.6136201562044328
+      },
+      "prevControl": {
+        "x": 5.97787387132934,
+        "y": 1.6370806970491263
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,32 +46,32 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.15,
+      "waypointRelativePos": 0.25,
       "rotationDegrees": 180.0,
       "rotateFast": false
     },
     {
-      "waypointRelativePos": 1.0,
+      "waypointRelativePos": 2,
       "rotationDegrees": 0,
       "rotateFast": false
     },
     {
-      "waypointRelativePos": 1.0,
+      "waypointRelativePos": 2,
       "rotationDegrees": 0,
       "rotateFast": false
     },
     {
-      "waypointRelativePos": 1.0,
+      "waypointRelativePos": 2,
       "rotationDegrees": 0,
       "rotateFast": false
     },
     {
-      "waypointRelativePos": 1.0,
+      "waypointRelativePos": 2,
       "rotationDegrees": 0,
       "rotateFast": false
     },
     {
-      "waypointRelativePos": 1.0,
+      "waypointRelativePos": 2,
       "rotationDegrees": 0,
       "rotateFast": false
     }
@@ -74,9 +90,9 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "FourNoteSourceSide",
   "previewStartingState": {
-    "rotation": 180.0,
+    "rotation": 121.41,
     "velocity": 0.0
   },
   "useDefaultConstraints": false

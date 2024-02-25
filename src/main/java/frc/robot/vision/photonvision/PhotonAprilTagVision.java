@@ -28,8 +28,8 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 public class PhotonAprilTagVision extends SubsystemBase {
   private PhotonCamera[] cameras;
   private static final double fieldBorderMargin = 0.5;
-  private double xyStdDevCoefficient = 0.006;
-  private double thetaStdDevCoefficient = 0.002;
+  private double xyStdDevCoefficient = 0.0006;
+  private double thetaStdDevCoefficient = 0.0002;
   private Consumer<List<TimestampedVisionUpdate>> visionConsumer = x -> {};
   private List<TimestampedVisionUpdate> visionUpdates;
   private Supplier<Pose2d> poseSupplier = () -> new Pose2d();
@@ -40,8 +40,8 @@ public class PhotonAprilTagVision extends SubsystemBase {
   private boolean seesTag4 = false;
 
   public enum StdDevMode {
-    DEFAULT,
-    SHOOTING
+    AUTONOMOUS,
+    TELEOP
   }
 
   private PolynomialRegression xyStdDevModel =
@@ -250,12 +250,14 @@ public class PhotonAprilTagVision extends SubsystemBase {
   }
 
   public void setStdDevMode(StdDevMode mode) {
-    if (mode == StdDevMode.DEFAULT) {
+    if (mode == StdDevMode.AUTONOMOUS) {
+      stdDevScalar = 5.0;
+      xyStdDevCoefficient = 0.006;
+      thetaStdDevCoefficient = 0.002;
+    } else if (mode == StdDevMode.TELEOP) {
       stdDevScalar = 1.0;
-    } else if (mode == StdDevMode.SHOOTING) {
-      stdDevScalar = 1.0;
-    } else {
-      stdDevScalar = 1.0;
+      xyStdDevCoefficient = 0.0006;
+      thetaStdDevCoefficient = 0.0002;
     }
   }
 

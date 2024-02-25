@@ -3,41 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.1103565174320065,
-        "y": 5.398695647605275
+        "x": 2.1,
+        "y": 4.43
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.6490549985416036,
-        "y": 5.621201541973056
+        "x": 2.719320017812645,
+        "y": 4.145636137206654
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.9066934025487976,
-        "y": 7.75257379330529
+        "x": 2.7076091812668635,
+        "y": 4.157346973752435
       },
       "prevControl": {
-        "x": 2.063513171252529,
-        "y": 7.787706302942634
-      },
-      "nextControl": {
-        "x": 5.451881334117683,
-        "y": 7.6465242961565885
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 11.70153164843071,
-        "y": 4.0987927910214585
-      },
-      "prevControl": {
-        "x": 10.132279551295989,
-        "y": 4.672623781764753
+        "x": 2.6841875081753006,
+        "y": 4.180768646843998
       },
       "nextControl": null,
       "isLocked": false,
@@ -55,11 +39,14 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
+    "rotation": 154.72,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
-  "previewStartingState": null,
+  "folder": "FourNoteCenter",
+  "previewStartingState": {
+    "rotation": 154.72,
+    "velocity": 0.0
+  },
   "useDefaultConstraints": false
 }

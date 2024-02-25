@@ -25,14 +25,14 @@ public class ThreeNoteCenter extends SequentialCommandGroup {
         new InstantCommand(() -> superstructure.requestIntake(false)),
         new InstantCommand(
             () -> {
-              PathPlannerPath path = Robot.threeNoteCenterA;
+              PathPlannerPath path = Robot.fourNoteCenterA;
               if (DriverStation.getAlliance().get() == Alliance.Red) {
                 path = path.flipPath();
               }
               swerve.resetPose(path.getPreviewStartingHolonomicPose());
             }),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(3),
-        new TrajectoryFollowerCommand(Robot.threeNoteCenterA, swerve, false)
+        new TrajectoryFollowerCommand(Robot.fourNoteCenterA, swerve, false)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
@@ -40,9 +40,9 @@ public class ThreeNoteCenter extends SequentialCommandGroup {
                   superstructure.requestVisionSpeaker(false, false, false, false);
                 }),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.threeNoteCenterB, swerve, false),
+        new TrajectoryFollowerCommand(Robot.fourNoteCenterB, swerve, false),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.threeNoteCenterC, swerve, false)
+        new TrajectoryFollowerCommand(Robot.fourNoteCenterC, swerve, false)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();

@@ -36,16 +36,16 @@ public class IntakeIOFalcon500 implements IntakeIO {
 
   /* Gains */
   LoggedTunableNumber intakeKs = new LoggedTunableNumber("Intake/kS", 0.0);
-  LoggedTunableNumber intakeKv = new LoggedTunableNumber("Intake/kV", INTAKE_KV);
-  LoggedTunableNumber intakekP = new LoggedTunableNumber("Intake/kP", INTAKE_KP);
+  LoggedTunableNumber intakeKv = new LoggedTunableNumber("Intake/kV", 0.0);
+  LoggedTunableNumber intakekP = new LoggedTunableNumber("Intake/kP", 0.0);
   LoggedTunableNumber intakekI = new LoggedTunableNumber("Intake/kI", 0.0);
-  LoggedTunableNumber intakeKd = new LoggedTunableNumber("Intake/kD", INTAKE_KD);
+  LoggedTunableNumber intakeKd = new LoggedTunableNumber("Intake/kD", 0.0);
 
   LoggedTunableNumber vectorKs = new LoggedTunableNumber("Vector/kS", 0.0);
-  LoggedTunableNumber vectorKv = new LoggedTunableNumber("Vector/kV", VECTOR_KV);
-  LoggedTunableNumber vectorKp = new LoggedTunableNumber("Vector/kP", VECTOR_KP);
+  LoggedTunableNumber vectorKv = new LoggedTunableNumber("Vector/kV", 0.0);
+  LoggedTunableNumber vectorKp = new LoggedTunableNumber("Vector/kP", 0.0);
   LoggedTunableNumber vectorKi = new LoggedTunableNumber("Vector/kI", 0.0);
-  LoggedTunableNumber vectorKd = new LoggedTunableNumber("Vector/kD", VECTOR_KD);
+  LoggedTunableNumber vectorKd = new LoggedTunableNumber("Vector/kD", 0.0);
 
   public IntakeIOFalcon500() {
     /* Instantiate configuator */

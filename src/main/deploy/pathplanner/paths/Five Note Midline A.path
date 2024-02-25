@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.91,
-        "y": 5.78
+        "x": 1.3242476432420531,
+        "y": 5.524397712756901
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.031806661067525,
-        "y": 6.261613475274365
+        "x": 1.8169987987385772,
+        "y": 5.506683538367326
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.231920460069368,
-        "y": 6.0570181830355585
+        "x": 2.52751819572874,
+        "y": 5.524397712756901
       },
       "prevControl": {
-        "x": 5.9209636397451675,
-        "y": 6.196900405182816
+        "x": 1.808764943552097,
+        "y": 5.529529358111337
       },
       "nextControl": null,
       "isLocked": false,
@@ -74,7 +74,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "FiveNoteMidlineAmpSide",
   "previewStartingState": {
     "rotation": 180.0,
     "velocity": 0.0

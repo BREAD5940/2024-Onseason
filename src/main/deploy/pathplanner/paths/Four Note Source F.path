@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.19,
-        "y": 6.05
+        "x": 8.0,
+        "y": 4.16
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.063389583406322,
-        "y": 6.308503648930789
+        "x": 6.387601026938165,
+        "y": 4.379477718988714
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.910536566493391,
-        "y": 5.776596751065269
+        "x": 4.741291626391123,
+        "y": 4.508404451270708
       },
       "prevControl": {
-        "x": 6.342576949768662,
-        "y": 6.201490248077479
+        "x": 5.912865607125891,
+        "y": 4.375512419933984
       },
       "nextControl": null,
       "isLocked": false,
@@ -63,7 +63,7 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 4.0,
+    "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
@@ -74,7 +74,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "FourNoteSourceSide",
   "previewStartingState": {
     "rotation": 180.0,
     "velocity": 0.0

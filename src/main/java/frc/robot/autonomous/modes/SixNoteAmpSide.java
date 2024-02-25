@@ -15,9 +15,10 @@ import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.TrajectoryFollowerCommand;
 
-public class SixNote extends SequentialCommandGroup {
+public class SixNoteAmpSide extends SequentialCommandGroup {
 
-  public SixNote(Superstructure superstructure, Swerve swerve, Shooter shooter, Intake intake) {
+  public SixNoteAmpSide(
+      Superstructure superstructure, Swerve swerve, Shooter shooter, Intake intake) {
     addRequirements(superstructure, swerve, shooter, intake);
     addCommands(
         new InstantCommand(() -> superstructure.requestIntake(true)),
@@ -25,14 +26,14 @@ public class SixNote extends SequentialCommandGroup {
         new InstantCommand(() -> superstructure.requestIntake(false)),
         new InstantCommand(
             () -> {
-              PathPlannerPath path = Robot.fiveNoteA;
+              PathPlannerPath path = Robot.sixNoteAmpSideA;
               if (DriverStation.getAlliance().get() == Alliance.Red) {
                 path = path.flipPath();
               }
               swerve.resetPose(path.getPreviewStartingHolonomicPose());
             }),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.fiveNoteA, swerve, false)
+        new TrajectoryFollowerCommand(Robot.sixNoteAmpSideA, swerve, false)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
@@ -41,7 +42,7 @@ public class SixNote extends SequentialCommandGroup {
                 }),
         new WaitUntilCommand(() -> RobotContainer.intake.hasPiece()).withTimeout(2),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.fiveNoteB, swerve, false)
+        new TrajectoryFollowerCommand(Robot.sixNoteAmpSideB, swerve, false)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
@@ -50,7 +51,7 @@ public class SixNote extends SequentialCommandGroup {
                 }),
         new WaitUntilCommand(() -> RobotContainer.intake.hasPiece()).withTimeout(2),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.fiveNoteC, swerve, false)
+        new TrajectoryFollowerCommand(Robot.sixNoteAmpSideC, swerve, false)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
@@ -59,7 +60,7 @@ public class SixNote extends SequentialCommandGroup {
                 }),
         new WaitUntilCommand(() -> RobotContainer.intake.hasPiece()).withTimeout(2),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.fiveNoteD, swerve, false)
+        new TrajectoryFollowerCommand(Robot.sixNoteAmpSideD, swerve, false)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
@@ -67,9 +68,9 @@ public class SixNote extends SequentialCommandGroup {
                   superstructure.requestVisionSpeaker(false, false, false, false);
                 }),
         new WaitUntilCommand(() -> RobotContainer.intake.hasPiece()).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.fiveNoteE, swerve, false),
+        new TrajectoryFollowerCommand(Robot.sixNoteAmpSideE, swerve, false),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.sixNoteF, swerve, false)
+        new TrajectoryFollowerCommand(Robot.sixNoteAmpSideF, swerve, false)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
@@ -77,7 +78,7 @@ public class SixNote extends SequentialCommandGroup {
                   superstructure.requestVisionSpeaker(false, false, false, false);
                 }),
         new WaitUntilCommand(() -> RobotContainer.intake.hasPiece()).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.sixNoteG, swerve, false),
+        new TrajectoryFollowerCommand(Robot.sixNoteAmpSideG, swerve, false),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2));
   }
 }

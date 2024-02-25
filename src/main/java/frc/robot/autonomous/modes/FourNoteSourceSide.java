@@ -14,9 +14,10 @@ import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.TrajectoryFollowerCommand;
 
-public class FiveNote extends SequentialCommandGroup {
+public class FourNoteSourceSide extends SequentialCommandGroup {
 
-  public FiveNote(Superstructure superstructure, Swerve swerve, Shooter shooter, Intake intake) {
+  public FourNoteSourceSide(
+      Superstructure superstructure, Swerve swerve, Shooter shooter, Intake intake) {
     addRequirements(superstructure, swerve, shooter, intake);
     addCommands(
         new InstantCommand(() -> superstructure.requestIntake(true)),
@@ -24,49 +25,45 @@ public class FiveNote extends SequentialCommandGroup {
         new InstantCommand(() -> superstructure.requestIntake(false)),
         new InstantCommand(
             () -> {
-              PathPlannerPath path = Robot.fiveNoteA;
+              PathPlannerPath path = Robot.fourNoteSourceSideA;
               if (DriverStation.getAlliance().get() == Alliance.Red) {
                 path = path.flipPath();
               }
               swerve.resetPose(path.getPreviewStartingHolonomicPose());
             }),
-        new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.fiveNoteA, swerve, false)
+        new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(3),
+        new TrajectoryFollowerCommand(Robot.fourNoteSourceSideA, swerve, false)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
                   superstructure.requestIntake(true);
                   superstructure.requestVisionSpeaker(false, false, false, false);
+                  ;
                 }),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
+        new TrajectoryFollowerCommand(Robot.fourNoteSourceSideB, swerve, false),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.fiveNoteB, swerve, false)
+        new TrajectoryFollowerCommand(Robot.fourNoteSourceSideC, swerve, false)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
                   superstructure.requestIntake(true);
                   superstructure.requestVisionSpeaker(false, false, false, false);
+                  ;
                 }),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
+        new TrajectoryFollowerCommand(Robot.fourNoteSourceSideD, swerve, false),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.fiveNoteC, swerve, false)
+        new TrajectoryFollowerCommand(Robot.fourNoteSourceSideE, swerve, false)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
                   superstructure.requestIntake(true);
                   superstructure.requestVisionSpeaker(false, false, false, false);
+                  ;
                 }),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
-        new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.fiveNoteD, swerve, false)
-            .beforeStarting(
-                () -> {
-                  intake.requestIntake();
-                  superstructure.requestIntake(true);
-                  superstructure.requestVisionSpeaker(false, false, false, false);
-                }),
-        new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.fiveNoteE, swerve, false),
+        new TrajectoryFollowerCommand(Robot.fourNoteSourceSideF, swerve, false),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2));
   }
 }

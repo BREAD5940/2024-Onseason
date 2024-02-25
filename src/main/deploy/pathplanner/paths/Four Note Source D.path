@@ -4,24 +4,24 @@
     {
       "anchor": {
         "x": 8.0,
-        "y": 1.61
+        "y": 2.51
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.233642387496002,
-        "y": 3.4251461752344805
+        "x": 6.575904250260468,
+        "y": 3.4632115615504384
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.6499797942448895,
-        "y": 4.405506170242664
+        "x": 4.686617171845455,
+        "y": 4.41054177992326
       },
       "prevControl": {
-        "x": 5.874189675173333,
-        "y": 4.179616347152255
+        "x": 5.273888771663539,
+        "y": 4.1446491551837275
       },
       "nextControl": null,
       "isLocked": false,
@@ -74,7 +74,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "FourNoteSourceSide",
   "previewStartingState": {
     "rotation": 180.0,
     "velocity": 0.0

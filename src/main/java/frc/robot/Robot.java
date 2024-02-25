@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.Superstructure.SuperstructureState;
 import frc.robot.vision.photonvision.PhotonAprilTagVision.StdDevMode;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -20,32 +19,32 @@ public class Robot extends LoggedRobot {
 
   private RobotContainer m_robotContainer;
 
-  public static PathPlannerPath threeNoteCenterA;
-  public static PathPlannerPath threeNoteCenterB;
-  public static PathPlannerPath threeNoteCenterC;
+  public static PathPlannerPath fourNoteCenterA;
+  public static PathPlannerPath fourNoteCenterB;
+  public static PathPlannerPath fourNoteCenterC;
+  public static PathPlannerPath fourNoteCenterD;
 
-  public static PathPlannerPath fourNoteA;
-  public static PathPlannerPath fourNoteB;
-  public static PathPlannerPath fourNoteC;
-  public static PathPlannerPath fourNoteD;
-  public static PathPlannerPath fourNoteE;
-  public static PathPlannerPath fourNoteF;
+  public static PathPlannerPath fourNoteSourceSideA;
+  public static PathPlannerPath fourNoteSourceSideB;
+  public static PathPlannerPath fourNoteSourceSideC;
+  public static PathPlannerPath fourNoteSourceSideD;
+  public static PathPlannerPath fourNoteSourceSideE;
+  public static PathPlannerPath fourNoteSourceSideF;
 
-  public static PathPlannerPath fiveNoteA;
-  public static PathPlannerPath fiveNoteB;
-  public static PathPlannerPath fiveNoteC;
-  public static PathPlannerPath fiveNoteD;
-  public static PathPlannerPath fiveNoteE;
+  public static PathPlannerPath sixNoteAmpSideA;
+  public static PathPlannerPath sixNoteAmpSideB;
+  public static PathPlannerPath sixNoteAmpSideC;
+  public static PathPlannerPath sixNoteAmpSideD;
+  public static PathPlannerPath sixNoteAmpSideE;
+  public static PathPlannerPath sixNoteAmpSideF;
+  public static PathPlannerPath sixNoteAmpSideG;
 
-  public static PathPlannerPath fiveNoteTwoMidlineA;
-  public static PathPlannerPath fiveNoteTwoMidlineB;
-  public static PathPlannerPath fiveNoteTwoMidlineC;
-  public static PathPlannerPath fiveNoteTwoMidlineD;
-  public static PathPlannerPath fiveNoteTwoMidlineE;
-  public static PathPlannerPath fiveNoteTwoMidlineF;
-
-  public static PathPlannerPath sixNoteF;
-  public static PathPlannerPath sixNoteG;
+  public static PathPlannerPath fiveNoteMidlineAmpSideA;
+  public static PathPlannerPath fiveNoteMidlineAmpSideB;
+  public static PathPlannerPath fiveNoteMidlineAmpSideC;
+  public static PathPlannerPath fiveNoteMidlineAmpSideD;
+  public static PathPlannerPath fiveNoteMidlineAmpSideE;
+  public static PathPlannerPath fiveNoteMidlineAmpSideF;
 
   private boolean requestedHome = false;
 
@@ -71,32 +70,32 @@ public class Robot extends LoggedRobot {
 
     Logger.start();
 
-    threeNoteCenterA = PathPlannerPath.fromPathFile("Three Note Center A");
-    threeNoteCenterB = PathPlannerPath.fromPathFile("Three Note Center B");
-    threeNoteCenterC = PathPlannerPath.fromPathFile("Three Note Center C");
+    fourNoteCenterA = PathPlannerPath.fromPathFile("Four Note Center A");
+    fourNoteCenterB = PathPlannerPath.fromPathFile("Four Note Center B");
+    fourNoteCenterC = PathPlannerPath.fromPathFile("Four Note Center C");
+    fourNoteCenterD = PathPlannerPath.fromPathFile("Four Note Center D");
 
-    fourNoteA = PathPlannerPath.fromPathFile("Four Note A");
-    fourNoteB = PathPlannerPath.fromPathFile("Four Note B");
-    fourNoteC = PathPlannerPath.fromPathFile("Four Note C");
-    fourNoteD = PathPlannerPath.fromPathFile("Four Note D");
-    fourNoteE = PathPlannerPath.fromPathFile("Four Note E");
-    fourNoteF = PathPlannerPath.fromPathFile("Four Note F");
+    fourNoteSourceSideA = PathPlannerPath.fromPathFile("Four Note Source A");
+    fourNoteSourceSideB = PathPlannerPath.fromPathFile("Four Note Source B");
+    fourNoteSourceSideC = PathPlannerPath.fromPathFile("Four Note Source C");
+    fourNoteSourceSideD = PathPlannerPath.fromPathFile("Four Note Source D");
+    fourNoteSourceSideE = PathPlannerPath.fromPathFile("Four Note Source E");
+    fourNoteSourceSideF = PathPlannerPath.fromPathFile("Four Note Source F");
 
-    fiveNoteA = PathPlannerPath.fromPathFile("Five Note A");
-    fiveNoteB = PathPlannerPath.fromPathFile("Five Note B");
-    fiveNoteC = PathPlannerPath.fromPathFile("Five Note C");
-    fiveNoteD = PathPlannerPath.fromPathFile("Five Note D");
-    fiveNoteE = PathPlannerPath.fromPathFile("Five Note E");
+    sixNoteAmpSideA = PathPlannerPath.fromPathFile("Six Note A");
+    sixNoteAmpSideB = PathPlannerPath.fromPathFile("Six Note B");
+    sixNoteAmpSideC = PathPlannerPath.fromPathFile("Six Note C");
+    sixNoteAmpSideD = PathPlannerPath.fromPathFile("Six Note D");
+    sixNoteAmpSideE = PathPlannerPath.fromPathFile("Six Note E");
+    sixNoteAmpSideF = PathPlannerPath.fromPathFile("Six Note F");
+    sixNoteAmpSideG = PathPlannerPath.fromPathFile("Six Note G");
 
-    fiveNoteTwoMidlineA = PathPlannerPath.fromPathFile("Five Note Two Midline A");
-    fiveNoteTwoMidlineB = PathPlannerPath.fromPathFile("Five Note Two Midline B");
-    fiveNoteTwoMidlineC = PathPlannerPath.fromPathFile("Five Note Two Midline C");
-    fiveNoteTwoMidlineD = PathPlannerPath.fromPathFile("Five Note Two Midline D");
-    fiveNoteTwoMidlineE = PathPlannerPath.fromPathFile("Five Note Two Midline E");
-    fiveNoteTwoMidlineF = PathPlannerPath.fromPathFile("Five Note Two Midline F");
-
-    sixNoteF = PathPlannerPath.fromPathFile("Six Note F");
-    sixNoteG = PathPlannerPath.fromPathFile("Six Note G");
+    fiveNoteMidlineAmpSideA = PathPlannerPath.fromPathFile("Five Note Midline A");
+    fiveNoteMidlineAmpSideB = PathPlannerPath.fromPathFile("Five Note Midline B");
+    fiveNoteMidlineAmpSideC = PathPlannerPath.fromPathFile("Five Note Midline C");
+    fiveNoteMidlineAmpSideD = PathPlannerPath.fromPathFile("Five Note Midline D");
+    fiveNoteMidlineAmpSideE = PathPlannerPath.fromPathFile("Five Note Midline E");
+    fiveNoteMidlineAmpSideF = PathPlannerPath.fromPathFile("Five Note Midline F");
 
     m_robotContainer.configureAutonomousSelector();
   }
@@ -104,13 +103,6 @@ public class Robot extends LoggedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-
-    // Set std dev scalar based on superstructure state
-    if (RobotContainer.superstructure.getSystemState() == SuperstructureState.VISION_SPEAKER) {
-      RobotContainer.aprilTagVision.setStdDevMode(StdDevMode.SHOOTING);
-    } else {
-      RobotContainer.aprilTagVision.setStdDevMode(StdDevMode.DEFAULT);
-    }
   }
 
   @Override
@@ -137,7 +129,9 @@ public class Robot extends LoggedRobot {
   }
 
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    RobotContainer.aprilTagVision.setStdDevMode(StdDevMode.AUTONOMOUS);
+  }
 
   @Override
   public void autonomousExit() {}
@@ -156,6 +150,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void teleopPeriodic() {
+    RobotContainer.aprilTagVision.setStdDevMode(StdDevMode.TELEOP);
     /* Intake requests */
     if (RobotContainer.driver.getRightTriggerAxis() > 0.1) {
       RobotContainer.intake.requestIntake();
@@ -168,11 +163,11 @@ public class Robot extends LoggedRobot {
     }
 
     /* Superstructure spit requests */
-    if (RobotContainer.operator.getBButton()) {
-      RobotContainer.superstructure.requestSpit(true);
-    } else {
-      RobotContainer.superstructure.requestSpit(false);
-    }
+    // if (RobotContainer.operator.getBButton()) {
+    //   RobotContainer.superstructure.requestSpit(true);
+    // } else {
+    //   RobotContainer.superstructure.requestSpit(false);
+    // }
 
     // Controller vibrations
     if (RobotContainer.intake.hasPiece()) {
