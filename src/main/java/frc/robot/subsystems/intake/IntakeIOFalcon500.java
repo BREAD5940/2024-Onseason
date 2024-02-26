@@ -2,8 +2,10 @@ package frc.robot.subsystems.intake;
 
 import static frc.robot.constants.Constants.Intake.*;
 
+import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.DutyCycleOut;
@@ -54,14 +56,14 @@ public class IntakeIOFalcon500 implements IntakeIO {
 
     /* Create configs */
     intakeCurrentLimitConfigs = new CurrentLimitsConfigs();
-    intakeCurrentLimitConfigs.SupplyCurrentLimit = 50.0;
-    intakeCurrentLimitConfigs.SupplyCurrentThreshold = 50.0;
+    intakeCurrentLimitConfigs.SupplyCurrentLimit = 100.0;
+    intakeCurrentLimitConfigs.SupplyCurrentThreshold = 100.0;
     intakeCurrentLimitConfigs.SupplyTimeThreshold = 1;
     intakeCurrentLimitConfigs.SupplyCurrentLimitEnable = true;
 
     vectorCurrentLimitConfigs = new CurrentLimitsConfigs();
-    vectorCurrentLimitConfigs.SupplyCurrentLimit = 50.0;
-    vectorCurrentLimitConfigs.SupplyCurrentThreshold = 50.0;
+    vectorCurrentLimitConfigs.SupplyCurrentLimit = 100.0;
+    vectorCurrentLimitConfigs.SupplyCurrentThreshold = 100.0;
     vectorCurrentLimitConfigs.SupplyTimeThreshold = 1;
     vectorCurrentLimitConfigs.SupplyCurrentLimitEnable = true;
 
@@ -91,6 +93,17 @@ public class IntakeIOFalcon500 implements IntakeIO {
     vectorSlot0Configs.kI = vectorKi.get();
     vectorSlot0Configs.kD = vectorKd.get();
 
+    /* Ramp Configs */
+    OpenLoopRampsConfigs openLoopRampsConfigs = new OpenLoopRampsConfigs();
+    openLoopRampsConfigs.DutyCycleOpenLoopRampPeriod = 0.02;
+    openLoopRampsConfigs.TorqueOpenLoopRampPeriod = 0.02;
+    openLoopRampsConfigs.VoltageOpenLoopRampPeriod = 0.02;
+
+    ClosedLoopRampsConfigs closedLoopRampsConfigs = new ClosedLoopRampsConfigs();
+    closedLoopRampsConfigs.DutyCycleClosedLoopRampPeriod = 0.02;
+    closedLoopRampsConfigs.TorqueClosedLoopRampPeriod = 0.02;
+    closedLoopRampsConfigs.VoltageClosedLoopRampPeriod = 0.02;
+
     /* Apply configs */
     intakeConfigurator.apply(intakeCurrentLimitConfigs);
     intakeConfigurator.apply(intakeOutputConfigs);
@@ -99,6 +112,8 @@ public class IntakeIOFalcon500 implements IntakeIO {
     vectorConfigurator.apply(vectorCurrentLimitConfigs);
     vectorConfigurator.apply(vectorOutputConfigs);
     vectorConfigurator.apply(vectorSlot0Configs);
+    vectorConfigurator.apply(openLoopRampsConfigs);
+    vectorConfigurator.apply(closedLoopRampsConfigs);
 
     intake.optimizeBusUtilization();
     vector.optimizeBusUtilization();

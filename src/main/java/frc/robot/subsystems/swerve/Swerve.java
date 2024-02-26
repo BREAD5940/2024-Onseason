@@ -2,12 +2,8 @@ package frc.robot.subsystems.swerve;
 
 import static frc.robot.constants.Constants.Swerve.*;
 
-import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.FieldCentric;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.RobotCentric;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -17,13 +13,16 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commons.TimestampedVisionUpdate;
+import frc.robot.subsystems.swerve.BreadSwerveModule.DriveRequestType;
+import frc.robot.subsystems.swerve.BreadSwerveRequest.FieldCentric;
+import frc.robot.subsystems.swerve.BreadSwerveRequest.RobotCentric;
 import java.util.List;
 import org.littletonrobotics.junction.Logger;
 
 public class Swerve extends SubsystemBase {
 
   /*IStores the swerve drivetrain object */
-  private final SwerveDrivetrain drivetrain;
+  private final BreadSwerveDrivetrain drivetrain;
 
   /* Stores requests and parameters */
   private ChassisSpeeds desired = new ChassisSpeeds();
@@ -39,7 +38,7 @@ public class Swerve extends SubsystemBase {
   public Swerve(
       SwerveDrivetrainConstants drivetrainConstants, SwerveModuleConstants... moduleConstants) {
     this.drivetrain =
-        new SwerveDrivetrain(
+        new BreadSwerveDrivetrain(
             drivetrainConstants,
             251,
             VecBuilder.fill(0.01, 0.01, 0.002),

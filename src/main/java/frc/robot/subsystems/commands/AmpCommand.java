@@ -1,7 +1,6 @@
 package frc.robot.subsystems.commands;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -49,16 +48,19 @@ public class AmpCommand extends Command {
     }
 
     // Apply swerve Requests
-    swerve.requestVelocity(new ChassisSpeeds(dx, dy, output), true);
+    // swerve.requestVelocity(new ChassisSpeeds(dx, dy, output), true);
+
+    RobotContainer.superstructure.requestAmp(true, RobotContainer.driver.getYButton());
+    RobotContainer.shooter.requestAmp();
 
     // Apply superstructure requests
-    if (Math.abs(setpoint - measurement) < Units.degreesToRadians(15.0)) {
-      RobotContainer.superstructure.requestAmp(true, RobotContainer.driver.getYButton());
-      RobotContainer.shooter.requestAmp();
-    } else {
-      RobotContainer.superstructure.requestAmp(false, false);
-      RobotContainer.shooter.requestIdle();
-    }
+    // if (Math.abs(setpoint - measurement) < Units.degreesToRadians(15.0)) {
+    //   RobotContainer.superstructure.requestAmp(true, RobotContainer.driver.getYButton());
+    //   RobotContainer.shooter.requestAmp();
+    // } else {
+    //   RobotContainer.superstructure.requestAmp(false, false);
+    //   RobotContainer.shooter.requestIdle();
+    // }
 
     Logger.recordOutput(
         "AimAtSpeakerCommand/measurementDegrees", Units.radiansToDegrees(measurement));

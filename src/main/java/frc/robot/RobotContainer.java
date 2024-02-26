@@ -18,7 +18,6 @@ import frc.robot.constants.GammaTunerConstants;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.commands.AmpCommand;
 import frc.robot.subsystems.commands.FenderShotCommand;
-import frc.robot.subsystems.commands.TeleopShootCommand;
 import frc.robot.subsystems.elevatorpivot.ElevatorIO;
 import frc.robot.subsystems.elevatorpivot.ElevatorIOKrakenX60;
 import frc.robot.subsystems.elevatorpivot.PivotIO;
@@ -106,8 +105,8 @@ public class RobotContainer {
             },
             swerve));
 
-    new JoystickButton(driver, XboxController.Button.kB.value)
-        .whileTrue(new TeleopShootCommand(swerve));
+    // new JoystickButton(driver, XboxController.Button.kB.value)
+    //     .whileTrue(new TeleopShootCommand(swerve));
 
     new JoystickButton(driver, XboxController.Button.kX.value)
         .whileTrue(new FenderShotCommand(swerve, superstructure, shooter));

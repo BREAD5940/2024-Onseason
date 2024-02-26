@@ -6,11 +6,13 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfigurator;
+import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
@@ -107,6 +109,16 @@ public class PivotIOKrakenX60 implements PivotIO {
     pivotMotionMagicConfigs.MotionMagicAcceleration = motionAcceleration.get();
     pivotMotionMagicConfigs.MotionMagicCruiseVelocity = motionCruiseVelocity.get();
 
+    OpenLoopRampsConfigs openLoopRampsConfigs = new OpenLoopRampsConfigs();
+    openLoopRampsConfigs.DutyCycleOpenLoopRampPeriod = 0.02;
+    openLoopRampsConfigs.TorqueOpenLoopRampPeriod = 0.02;
+    openLoopRampsConfigs.VoltageOpenLoopRampPeriod = 0.02;
+
+    ClosedLoopRampsConfigs closedLoopRampsConfigs = new ClosedLoopRampsConfigs();
+    closedLoopRampsConfigs.DutyCycleClosedLoopRampPeriod = 0.02;
+    closedLoopRampsConfigs.TorqueClosedLoopRampPeriod = 0.02;
+    closedLoopRampsConfigs.VoltageClosedLoopRampPeriod = 0.02;
+
     position = azimuth.getAbsolutePosition().clone();
     velocity = pivot.getVelocity().clone();
     supplyCurrent = pivot.getSupplyCurrent().clone();
@@ -121,6 +133,8 @@ public class PivotIOKrakenX60 implements PivotIO {
     pivotConfigurator.apply(slot0Configs);
     pivotConfigurator.apply(pivotFeedbackConfigs);
     pivotConfigurator.apply(pivotMotionMagicConfigs);
+    pivotConfigurator.apply(openLoopRampsConfigs);
+    pivotConfigurator.apply(closedLoopRampsConfigs);
 
     pivotStatusCode =
         BaseStatusSignal.setUpdateFrequencyForAll(
@@ -153,6 +167,7 @@ public class PivotIOKrakenX60 implements PivotIO {
     inputs.motionMagicVelocityTargetDeg =
         Units.rotationsToDegrees(pivot.getClosedLoopReferenceSlope().getValue());
     inputs.setpointDeg = setpointDeg;
+    inputs.shaftPosition = Units.rotationsToDegrees(pivot.getPosition().getValue());
   }
 
   @Override

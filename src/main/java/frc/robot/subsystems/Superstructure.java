@@ -27,7 +27,7 @@ public class Superstructure extends SubsystemBase {
   private SuperstructureState systemState = SuperstructureState.STARTING_CONFIG;
   private double stateStartTime = 0.0;
 
-  private boolean requestHome = true;
+  private boolean requestHome = false;
   private boolean requestIntake = false;
   private boolean requestSpit = false;
   private boolean requestFender = false;
@@ -276,7 +276,7 @@ public class Superstructure extends SubsystemBase {
   }
 
   public void requestSpit(boolean set) {
-    requestSpit = true;
+    requestSpit = set;
   }
 
   public void requestFender(boolean set, boolean wantsShoot) {

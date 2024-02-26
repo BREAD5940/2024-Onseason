@@ -164,12 +164,20 @@ public class Robot extends LoggedRobot {
       RobotContainer.intake.requestIdle();
     }
 
+    if (RobotContainer.driver.getBButton()) {
+      RobotContainer.superstructure.requestFender(true, RobotContainer.driver.getYButton());
+      RobotContainer.shooter.requestFender();
+    } else {
+      RobotContainer.superstructure.requestFender(false, false);
+      RobotContainer.shooter.requestIdle();
+    }
+
     /* Superstructure spit requests */
-    // if (RobotContainer.operator.getBButton()) {
-    //   RobotContainer.superstructure.requestSpit(true);
-    // } else {
-    //   RobotContainer.superstructure.requestSpit(false);
-    // }
+    if (RobotContainer.driver.getXButton()) {
+      RobotContainer.superstructure.requestSpit(true);
+    } else {
+      RobotContainer.superstructure.requestSpit(false);
+    }
 
     // Controller vibrations
     if (RobotContainer.intake.hasPiece()) {

@@ -407,7 +407,7 @@ public class Constants {
 
         ELEVATOR_TRAP_HEIGHT = 0.47;
 
-        ELEVATOR_FENDER_HEIGHT = 0.4;
+        ELEVATOR_FENDER_HEIGHT = 0.16; // 0.4
 
         ELEVATOR_SPOOL_DIAMETER = Units.inchesToMeters(1.463);
         ELEVATOR_SETPOINT_TOLERANCE_METERS = 0.01;
@@ -460,8 +460,8 @@ public class Constants {
                 * ELEVATOR_SPOOL_DIAMETER;
         ELEVATOR_LEFT_INVERSION = InvertedValue.Clockwise_Positive;
         ELEVATOR_MIN_HEIGHT = 0.0;
-        ELEVATOR_END_OF_DANGER_ZONE = 0.26; // Top gun reference?!?!?!
-        ELEVATOR_MAX_HEIGHT = 0.48495202978632623;
+        ELEVATOR_END_OF_DANGER_ZONE = 0.34461142807517386; // Top gun reference?!?!?!
+        ELEVATOR_MAX_HEIGHT = 0.6342116721107851;
       }
     }
   }
@@ -524,9 +524,9 @@ public class Constants {
 
         PIVOT_NEUTRAL_ANGLE = Rotation2d.fromDegrees(0.0);
 
-        PIVOT_IDLE_ANGLE = Rotation2d.fromDegrees(-20.0);
+        PIVOT_IDLE_ANGLE = Rotation2d.fromDegrees(-24.0);
 
-        PIVOT_INTAKE_ANGLE = Rotation2d.fromDegrees(-20.0);
+        PIVOT_INTAKE_ANGLE = Rotation2d.fromDegrees(-24.0);
 
         PIVOT_SPIT_ANGLE = Rotation2d.fromDegrees(0.0);
 
@@ -538,7 +538,7 @@ public class Constants {
 
         PIVOT_TRAP_ANGLE = Rotation2d.fromDegrees(5.0);
 
-        PIVOT_FENDER_ANGLE = Rotation2d.fromDegrees(-50.0);
+        PIVOT_FENDER_ANGLE = Rotation2d.fromDegrees(-24.0); // -50.0
 
         PIVOT_SETPOINT_TOLERANCE_RADS = Units.degreesToRadians(3.0);
         PIVOT_INVERSION = InvertedValue.CounterClockwise_Positive;
@@ -620,19 +620,19 @@ public class Constants {
         SHOOTER_LEFT_ID = 13;
         SHOOTER_RIGHT_ID = 14;
 
-        SHOOTER_SETPOINT_TOLERANCE_RPM = 50.0;
+        SHOOTER_SETPOINT_TOLERANCE_RPM = 100.0;
 
         SHOOTER_LEFT_IDLE_RPM = 1000.0;
         SHOOTER_RIGHT_IDLE_RPM = 1000.0;
 
-        SHOOTER_LEFT_AMP_RPM = 3000.0;
-        SHOOTER_RIGHT_AMP_RPM = 3000.0;
+        SHOOTER_LEFT_AMP_RPM = 1500.0;
+        SHOOTER_RIGHT_AMP_RPM = 1500.0;
 
         SHOOTER_LEFT_TRAP_RPM = 0.0;
         SHOOTER_RIGHT_TRAP_RPM = 0.0;
 
-        SHOOTER_LEFT_FENDER_RPM = 1800.0;
-        SHOOTER_RIGHT_FENDER_RPM = 1800.0;
+        SHOOTER_LEFT_FENDER_RPM = 3000.0; // 1800
+        SHOOTER_RIGHT_FENDER_RPM = 1500.0; // 1800
 
         SHOOTER_LEFT_GEAR_RATIO = 1.0;
         SHOOTER_RIGHT_GEAR_RATIO = 1.0;
@@ -645,8 +645,8 @@ public class Constants {
 
         SHOOTER_SETPOINT_TOLERANCE_RPM = 50.0;
 
-        SHOOTER_LEFT_IDLE_RPM = 1000.0;
-        SHOOTER_RIGHT_IDLE_RPM = 1000.0;
+        SHOOTER_LEFT_IDLE_RPM = 3000.0;
+        SHOOTER_RIGHT_IDLE_RPM = 3000.0;
 
         SHOOTER_LEFT_AMP_RPM = 1000.0;
         SHOOTER_RIGHT_AMP_RPM = 1000.0;
@@ -654,8 +654,8 @@ public class Constants {
         SHOOTER_LEFT_TRAP_RPM = 0.0;
         SHOOTER_RIGHT_TRAP_RPM = 0.0;
 
-        SHOOTER_LEFT_FENDER_RPM = 1800.0;
-        SHOOTER_RIGHT_FENDER_RPM = 1800.0;
+        SHOOTER_LEFT_FENDER_RPM = 3000.0; // 1800
+        SHOOTER_RIGHT_FENDER_RPM = 1500.0; // 1800
 
         SHOOTER_LEFT_GEAR_RATIO = 1.0;
         SHOOTER_RIGHT_GEAR_RATIO = 1.0;
@@ -688,9 +688,9 @@ public class Constants {
       if (robot == RobotType.BETA) {
         FEEDER_ID = 15;
 
-        FEEDER_INTAKE_SPEED = 0.6;
+        FEEDER_INTAKE_SPEED = 0.2;
 
-        FEEDER_SPIT_SPEED = -0.1;
+        FEEDER_SPIT_SPEED = -0.4;
 
         FEEDER_SHOOT_SPEED = 0.8;
 

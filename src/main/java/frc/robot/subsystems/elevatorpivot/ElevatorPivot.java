@@ -101,7 +101,36 @@ public class ElevatorPivot {
         requestHome = false;
       }
     } else if (systemState == ElevatorPivotState.IDLE) {
-      elevatorIO.setHeight(0.4);
+      // if (RobotContainer.driver.getLeftBumper()) {
+      //   elevatorIO.setVoltage(4.0);
+      // } else if (RobotContainer.driver.getRightBumper()) {
+      //   elevatorIO.setVoltage(-4.0);
+      // } else {
+      //   elevatorIO.setVoltage(0.0);
+      // }
+      // if (RobotContainer.driver.getXButtonPressed()) {
+      //   pivotIO.setAngle(Rotation2d.fromDegrees(6.9));
+      // }
+      // if (RobotContainer.driver.getYButtonPressed()) {
+      //   pivotIO.setAngle(Rotation2d.fromDegrees(17.139));
+      // }
+      // if (RobotContainer.driver.getXButton()) {
+      //   pivotIO.setVoltage(1.0);
+      // } else if (RobotContainer.driver.getYButton()) {
+      //   pivotIO.setVoltage(-1.0);
+      // } else {
+      //   pivotIO.setVoltage(0.0);
+      // }
+
+      // if (RobotContainer.driver.getAButton()) {
+      //   RobotContainer.feederIO.setPercent(0.5);
+      // } else if (RobotContainer.driver.getBButton()) {
+      //   RobotContainer.feederIO.setPercent(-0.5);
+      // } else {
+      //   RobotContainer.feederIO.setPercent(0.0);
+      // }
+
+      elevatorIO.setVoltage(0.0);
       pivotIO.setAngle(PIVOT_NEUTRAL_ANGLE);
 
       if (requestHome) {

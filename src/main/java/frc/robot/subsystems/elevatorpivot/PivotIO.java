@@ -16,6 +16,7 @@ public interface PivotIO {
     public double motionMagicPositionTargetDeg = 0.0;
     public double motionMagicVelocityTargetDeg = 0.0;
     public double setpointDeg = 0.0;
+    public double shaftPosition = 0.0;
   }
 
   /** Updates the set of loggable inputs */

@@ -4,8 +4,10 @@ import static frc.robot.constants.Constants.Shooter.*;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.DutyCycleOut;
@@ -58,8 +60,8 @@ public class ShooterIOKrakenX60 implements ShooterIO {
     // Current Limit configs
     shooterCurrentLimitConfigs = new CurrentLimitsConfigs();
     shooterCurrentLimitConfigs.StatorCurrentLimitEnable = true;
-    shooterCurrentLimitConfigs.StatorCurrentLimit = 250.0;
-    shooterCurrentLimitConfigs.SupplyCurrentLimit = 250.0;
+    shooterCurrentLimitConfigs.StatorCurrentLimit = 100.0;
+    shooterCurrentLimitConfigs.SupplyCurrentLimit = 100.0;
 
     // Motor output configs
     leftMotorOutputConfigs = new MotorOutputConfigs();
@@ -83,14 +85,29 @@ public class ShooterIOKrakenX60 implements ShooterIO {
     shooterSlot0Configs.kI = shooterkI.get();
     shooterSlot0Configs.kD = shooterkD.get();
 
+    /* Ramp Configs */
+    OpenLoopRampsConfigs openLoopRampsConfigs = new OpenLoopRampsConfigs();
+    openLoopRampsConfigs.DutyCycleOpenLoopRampPeriod = 0.02;
+    openLoopRampsConfigs.TorqueOpenLoopRampPeriod = 0.02;
+    openLoopRampsConfigs.VoltageOpenLoopRampPeriod = 0.02;
+
+    ClosedLoopRampsConfigs closedLoopRampsConfigs = new ClosedLoopRampsConfigs();
+    closedLoopRampsConfigs.DutyCycleClosedLoopRampPeriod = 0.02;
+    closedLoopRampsConfigs.TorqueClosedLoopRampPeriod = 0.02;
+    closedLoopRampsConfigs.VoltageClosedLoopRampPeriod = 0.02;
+
     /* Apply Configurations */
     leftConfigurator.apply(shooterCurrentLimitConfigs);
     leftConfigurator.apply(leftMotorOutputConfigs);
     leftConfigurator.apply(shooterSlot0Configs);
+    leftConfigurator.apply(openLoopRampsConfigs);
+    leftConfigurator.apply(closedLoopRampsConfigs);
 
     rightConfigurator.apply(shooterCurrentLimitConfigs);
     rightConfigurator.apply(rightMotorOutputConfigs);
     rightConfigurator.apply(shooterSlot0Configs);
+    leftConfigurator.apply(openLoopRampsConfigs);
+    rightConfigurator.apply(closedLoopRampsConfigs);
 
     /* Status Signals */
     velocityLeft = left.getVelocity();
