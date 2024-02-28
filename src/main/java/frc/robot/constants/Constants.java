@@ -401,11 +401,11 @@ public class Constants {
 
         ELEVATOR_AMP_HEIGHT = 0.48;
 
-        ELEVATOR_PRE_CLIMB_HEIGHT = 0.4;
+        ELEVATOR_PRE_CLIMB_HEIGHT = 0.55;
 
-        ELEVATOR_CLIMBED_HEIGHT = 0.0;
+        ELEVATOR_CLIMBED_HEIGHT = 0.05;
 
-        ELEVATOR_TRAP_HEIGHT = 0.47;
+        ELEVATOR_TRAP_HEIGHT = 0.55;
 
         ELEVATOR_FENDER_HEIGHT = 0.16; // 0.4
 
@@ -532,11 +532,11 @@ public class Constants {
 
         PIVOT_AMP_ANGLE = Rotation2d.fromDegrees(25.0);
 
-        PIVOT_PRE_CLIMB_ANGLE = Rotation2d.fromDegrees(5.0);
+        PIVOT_PRE_CLIMB_ANGLE = Rotation2d.fromDegrees(25.0);
 
-        PIVOT_CLIMBED_ANGLE = Rotation2d.fromDegrees(5.0);
+        PIVOT_CLIMBED_ANGLE = Rotation2d.fromDegrees(25.0);
 
-        PIVOT_TRAP_ANGLE = Rotation2d.fromDegrees(5.0);
+        PIVOT_TRAP_ANGLE = Rotation2d.fromDegrees(6.9);
 
         PIVOT_FENDER_ANGLE = Rotation2d.fromDegrees(-24.0); // -50.0
 
@@ -622,8 +622,8 @@ public class Constants {
 
         SHOOTER_SETPOINT_TOLERANCE_RPM = 100.0;
 
-        SHOOTER_LEFT_IDLE_RPM = 1000.0;
-        SHOOTER_RIGHT_IDLE_RPM = 1000.0;
+        SHOOTER_LEFT_IDLE_RPM = 0.0;
+        SHOOTER_RIGHT_IDLE_RPM = 0.0;
 
         SHOOTER_LEFT_AMP_RPM = 1500.0;
         SHOOTER_RIGHT_AMP_RPM = 1500.0;
@@ -688,7 +688,7 @@ public class Constants {
       if (robot == RobotType.BETA) {
         FEEDER_ID = 15;
 
-        FEEDER_INTAKE_SPEED = 0.2;
+        FEEDER_INTAKE_SPEED = 0.45;
 
         FEEDER_SPIT_SPEED = -0.4;
 

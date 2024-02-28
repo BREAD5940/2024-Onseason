@@ -187,6 +187,11 @@ public class Robot extends LoggedRobot {
     }
 
     /* Climb requests */
+    if (RobotContainer.driver.getLeftBumperPressed()) {
+      RobotContainer.superstructure.requestNextClimbState();
+    } else if (RobotContainer.driver.getRightBumperPressed()) {
+      RobotContainer.superstructure.requestPrevClimbState();
+    }
   }
 
   @Override

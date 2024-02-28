@@ -33,9 +33,8 @@ public class Superstructure extends SubsystemBase {
   private boolean requestFender = false;
   private boolean requestVisionSpeaker = false;
   private boolean requestAmp = false;
-  private boolean requestPreClimb = false;
-  private boolean requestClimb = false;
-  private boolean requestTrap = false;
+  private boolean requestNextClimbState = false;
+  private boolean requestPrevClimbState = false;
 
   private boolean wantsShoot = false;
   private boolean wantsShootOverDefense = false;
@@ -55,7 +54,8 @@ public class Superstructure extends SubsystemBase {
     AMP,
     PRE_CLIMB,
     CLIMB,
-    TRAP
+    TRAP,
+    TRAP_SCORED
   }
 
   /* Take in io objects and construct subsystems */
@@ -110,12 +110,9 @@ public class Superstructure extends SubsystemBase {
         nextSystemState = SuperstructureState.VISION_SPEAKER;
       } else if (requestAmp) {
         nextSystemState = SuperstructureState.AMP;
-      } else if (requestPreClimb) {
+      } else if (requestNextClimbState) {
+        requestNextClimbState = false;
         nextSystemState = SuperstructureState.PRE_CLIMB;
-      } else if (requestClimb) {
-        nextSystemState = SuperstructureState.CLIMB;
-      } else if (requestTrap) {
-        nextSystemState = SuperstructureState.TRAP;
       }
     } else if (systemState == SuperstructureState.INTAKE) {
       feeder.requestIntake();
@@ -126,8 +123,6 @@ public class Superstructure extends SubsystemBase {
       }
       if (requestSpit) {
         nextSystemState = SuperstructureState.SPIT;
-      } else if (requestPreClimb) {
-        nextSystemState = SuperstructureState.PRE_CLIMB;
       } else if (!requestIntake) {
         nextSystemState = SuperstructureState.IDLE;
       } else if (feeder.hasPiece()) {
@@ -235,33 +230,46 @@ public class Superstructure extends SubsystemBase {
       feeder.requestIdle();
       elevatorPivot.requestPursueSetpoint(PIVOT_PRE_CLIMB_ANGLE, ELEVATOR_PRE_CLIMB_HEIGHT);
 
-      if (requestClimb && elevatorPivot.atSetpoint()) {
+      if (requestNextClimbState && elevatorPivot.atSetpoint()) {
         nextSystemState = SuperstructureState.CLIMB;
-      } else if (!requestPreClimb) {
+        requestNextClimbState = false;
+      } else if (requestPrevClimbState) {
         nextSystemState = SuperstructureState.IDLE;
+        requestPrevClimbState = false;
       }
     } else if (systemState == SuperstructureState.CLIMB) {
       elevatorPivot.requestPursueSetpoint(PIVOT_CLIMBED_ANGLE, ELEVATOR_CLIMBED_HEIGHT);
       feeder.requestIdle();
 
-      if (requestTrap && elevatorPivot.atSetpoint()) {
+      if (requestNextClimbState && elevatorPivot.atSetpoint()) {
         nextSystemState = SuperstructureState.TRAP;
-      } else {
+        requestNextClimbState = false;
+      } else if (requestPrevClimbState) {
         nextSystemState = SuperstructureState.IDLE;
+        requestPrevClimbState = false;
       }
     } else if (systemState == SuperstructureState.TRAP) {
-      if (shouldShoot) {
-        feeder.requestSpit();
+      if (elevatorPivot.getHeight() > 0.4) {
+        elevatorPivot.requestPursueSetpoint(PIVOT_TRAP_ANGLE, ELEVATOR_TRAP_HEIGHT);
       } else {
-        feeder.requestIdle();
+        elevatorPivot.requestPursueSetpoint(PIVOT_CLIMBED_ANGLE, ELEVATOR_TRAP_HEIGHT);
       }
+      feeder.requestIdle();
 
-      if (wantsShoot && elevatorPivot.atSetpoint()) {
-        shouldShoot = true;
+      if (requestNextClimbState && elevatorPivot.atSetpoint()) {
+        nextSystemState = SuperstructureState.TRAP_SCORED;
+        requestNextClimbState = false;
+      } else if (requestPrevClimbState) {
+        nextSystemState = SuperstructureState.CLIMB;
+        requestPrevClimbState = false;
       }
+    } else if (systemState == SuperstructureState.TRAP_SCORED) {
+      elevatorPivot.requestPursueSetpoint(PIVOT_TRAP_ANGLE, ELEVATOR_TRAP_HEIGHT);
+      feeder.requestSpit();
 
-      if (!requestTrap) {
-        nextSystemState = SuperstructureState.IDLE;
+      if (requestPrevClimbState) {
+        nextSystemState = SuperstructureState.TRAP;
+        requestPrevClimbState = false;
       }
     }
 
@@ -273,6 +281,14 @@ public class Superstructure extends SubsystemBase {
 
   public void requestHome() {
     requestHome = true;
+  }
+
+  public void requestNextClimbState() {
+    requestNextClimbState = true;
+  }
+
+  public void requestPrevClimbState() {
+    requestPrevClimbState = true;
   }
 
   public void requestSpit(boolean set) {
@@ -299,19 +315,6 @@ public class Superstructure extends SubsystemBase {
 
   public void requestIntake(boolean set) {
     requestIntake = set;
-  }
-
-  public void requestPreClimb() {
-    requestPreClimb = true;
-  }
-
-  public void requestClimb() {
-    requestClimb = true;
-  }
-
-  public void requestTrap(boolean wantsShoot) {
-    requestTrap = true;
-    this.wantsShoot = wantsShoot;
   }
 
   public boolean atElevatorPivotSetpoint() {

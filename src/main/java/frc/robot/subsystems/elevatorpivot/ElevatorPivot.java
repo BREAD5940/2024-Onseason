@@ -266,4 +266,9 @@ public class ElevatorPivot {
 
     return height;
   }
+
+  /* Returns the height of the elevator */
+  public double getHeight() {
+    return elevatorInputs.posMeters;
+  }
 }
