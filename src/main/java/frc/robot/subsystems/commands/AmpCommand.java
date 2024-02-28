@@ -27,7 +27,7 @@ public class AmpCommand extends Command {
   @Override
   public void execute() {
     // Calculate swerve outputs
-    double setpoint = -Math.PI / 2.0;
+    double setpoint = Math.PI / 2.0;
     double measurement = swerve.getPose().getRotation().getRadians();
 
     double output = turnPID.calculate(measurement, setpoint);

@@ -2,9 +2,11 @@ package frc.robot.subsystems.elevatorpivot;
 
 import static frc.robot.constants.Constants.Elevator.*;
 
+import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.Follower;
@@ -75,6 +77,16 @@ public class ElevatorIOKrakenX60 implements ElevatorIO {
     followerMotorConfigs.PeakReverseDutyCycle = -1.0;
     followerMotorConfigs.NeutralMode = NeutralModeValue.Coast;
 
+    OpenLoopRampsConfigs openLoopRampsConfigs = new OpenLoopRampsConfigs();
+    openLoopRampsConfigs.DutyCycleOpenLoopRampPeriod = 0.02;
+    openLoopRampsConfigs.TorqueOpenLoopRampPeriod = 0.02;
+    openLoopRampsConfigs.VoltageOpenLoopRampPeriod = 0.02;
+
+    ClosedLoopRampsConfigs closedLoopRampsConfigs = new ClosedLoopRampsConfigs();
+    closedLoopRampsConfigs.DutyCycleClosedLoopRampPeriod = 0.02;
+    closedLoopRampsConfigs.TorqueClosedLoopRampPeriod = 0.02;
+    closedLoopRampsConfigs.VoltageClosedLoopRampPeriod = 0.02;
+
     slot0Configs = new Slot0Configs();
     slot0Configs.kA = kA.get();
     slot0Configs.kP = kP.get();
@@ -93,11 +105,15 @@ public class ElevatorIOKrakenX60 implements ElevatorIO {
     leaderConfigurator.apply(leaderMotorConfigs);
     leaderConfigurator.apply(slot0Configs);
     leaderConfigurator.apply(motionMagicConfigs);
+    leaderConfigurator.apply(openLoopRampsConfigs);
+    leaderConfigurator.apply(closedLoopRampsConfigs);
 
     followerConfigurator.apply(currentLimitsConfigs);
     followerConfigurator.apply(leaderMotorConfigs);
     followerConfigurator.apply(slot0Configs);
     followerConfigurator.apply(motionMagicConfigs);
+    followerConfigurator.apply(openLoopRampsConfigs);
+    followerConfigurator.apply(closedLoopRampsConfigs);
 
     follower.setControl(new Follower(ELEVATOR_LEFT_ID, false));
   }
