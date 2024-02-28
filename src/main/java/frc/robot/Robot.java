@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commons.LoggedTunableNumber;
 import frc.robot.vision.photonvision.PhotonAprilTagVision.StdDevMode;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -47,6 +48,14 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath fiveNoteMidlineAmpSideF;
 
   private boolean requestedHome = false;
+
+  public static LoggedTunableNumber leftSpeed = new LoggedTunableNumber("Tuning/LeftSpeed", 0.0);
+  public static LoggedTunableNumber rightSpeed = new LoggedTunableNumber("Tuning/RightSpeed", 0.0);
+
+  public static LoggedTunableNumber elevatorHeight =
+      new LoggedTunableNumber("Tuning/ElevatorHeight", 0.0);
+  public static LoggedTunableNumber pivotAngle =
+      new LoggedTunableNumber("Tuning/PivotAngleDegrees", 0.0);
 
   @Override
   public void robotInit() {
@@ -164,14 +173,6 @@ public class Robot extends LoggedRobot {
       RobotContainer.intake.requestIdle();
     }
 
-    if (RobotContainer.driver.getBButton()) {
-      RobotContainer.superstructure.requestFender(true, RobotContainer.driver.getYButton());
-      RobotContainer.shooter.requestFender();
-    } else {
-      RobotContainer.superstructure.requestFender(false, false);
-      RobotContainer.shooter.requestIdle();
-    }
-
     /* Superstructure spit requests */
     if (RobotContainer.driver.getXButton()) {
       RobotContainer.superstructure.requestSpit(true);
@@ -187,9 +188,9 @@ public class Robot extends LoggedRobot {
     }
 
     /* Climb requests */
-    if (RobotContainer.driver.getLeftBumperPressed()) {
+    if (RobotContainer.operator.getRightBumperPressed()) {
       RobotContainer.superstructure.requestNextClimbState();
-    } else if (RobotContainer.driver.getRightBumperPressed()) {
+    } else if (RobotContainer.operator.getLeftBumperPressed()) {
       RobotContainer.superstructure.requestPrevClimbState();
     }
   }

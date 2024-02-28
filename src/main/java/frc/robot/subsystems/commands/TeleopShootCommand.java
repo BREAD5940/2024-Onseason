@@ -53,8 +53,12 @@ public class TeleopShootCommand extends Command {
 
     // Subsystem Requests
     swerve.requestVelocity(new ChassisSpeeds(dx, dy, output), true);
+    // RobotContainer.superstructure.requestFender(true, RobotContainer.driver.getYButton());
+    // RobotContainer.shooter.requestFender();
     RobotContainer.superstructure.requestVisionSpeaker(
-        true, RobotContainer.swerve.atAngularSetpoint(setpoint), false, false);
+        true,
+        RobotContainer.swerve.atAngularSetpoint(setpoint) && RobotContainer.driver.getYButton(),
+        false);
     RobotContainer.shooter.requestVisionSpeaker(false);
 
     // Logs
@@ -68,6 +72,6 @@ public class TeleopShootCommand extends Command {
   @Override
   public void end(boolean interrupted) {
     RobotContainer.shooter.requestIdle();
-    RobotContainer.superstructure.requestVisionSpeaker(false, false, false, false);
+    RobotContainer.superstructure.requestVisionSpeaker(false, false, false);
   }
 }

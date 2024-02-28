@@ -110,14 +110,14 @@ public class PivotIOKrakenX60 implements PivotIO {
     pivotMotionMagicConfigs.MotionMagicCruiseVelocity = motionCruiseVelocity.get();
 
     OpenLoopRampsConfigs openLoopRampsConfigs = new OpenLoopRampsConfigs();
-    openLoopRampsConfigs.DutyCycleOpenLoopRampPeriod = 0.02;
-    openLoopRampsConfigs.TorqueOpenLoopRampPeriod = 0.02;
-    openLoopRampsConfigs.VoltageOpenLoopRampPeriod = 0.02;
+    openLoopRampsConfigs.DutyCycleOpenLoopRampPeriod = 0.01;
+    openLoopRampsConfigs.TorqueOpenLoopRampPeriod = 0.01;
+    openLoopRampsConfigs.VoltageOpenLoopRampPeriod = 0.01;
 
     ClosedLoopRampsConfigs closedLoopRampsConfigs = new ClosedLoopRampsConfigs();
-    closedLoopRampsConfigs.DutyCycleClosedLoopRampPeriod = 0.02;
-    closedLoopRampsConfigs.TorqueClosedLoopRampPeriod = 0.02;
-    closedLoopRampsConfigs.VoltageClosedLoopRampPeriod = 0.02;
+    closedLoopRampsConfigs.DutyCycleClosedLoopRampPeriod = 0.01;
+    closedLoopRampsConfigs.TorqueClosedLoopRampPeriod = 0.01;
+    closedLoopRampsConfigs.VoltageClosedLoopRampPeriod = 0.01;
 
     position = azimuth.getAbsolutePosition().clone();
     velocity = pivot.getVelocity().clone();

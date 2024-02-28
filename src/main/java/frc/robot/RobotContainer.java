@@ -18,6 +18,7 @@ import frc.robot.constants.GammaTunerConstants;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.commands.AmpCommand;
 import frc.robot.subsystems.commands.FenderShotCommand;
+import frc.robot.subsystems.commands.TeleopShootCommand;
 import frc.robot.subsystems.elevatorpivot.ElevatorIO;
 import frc.robot.subsystems.elevatorpivot.ElevatorIOKrakenX60;
 import frc.robot.subsystems.elevatorpivot.PivotIO;
@@ -64,7 +65,7 @@ public class RobotContainer {
   public static final PhotonCamera backRightCamera = new PhotonCamera("back-right");
 
   public static final PhotonAprilTagVision aprilTagVision =
-      new PhotonAprilTagVision(frontLeftCamera, frontRightCamera);
+      new PhotonAprilTagVision(frontLeftCamera, frontRightCamera, backLeftCamera, backRightCamera);
   public static final VisionSupplier visionSupplier = new VisionSupplier();
   public static AutonomousSelector autonomousSelector;
 
@@ -85,14 +86,14 @@ public class RobotContainer {
               double dy;
 
               if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-                dx = Math.pow(-x, 1) * 4.0;
-                dy = Math.pow(-y, 1) * 4.0;
+                dx = Math.pow(-x, 1) * 8.0;
+                dy = Math.pow(-y, 1) * 8.0;
 
               } else {
-                dx = Math.pow(-x, 1) * -1 * 4.0;
-                dy = Math.pow(-y, 1) * -1 * 4.0;
+                dx = Math.pow(-x, 1) * -1 * 8.0;
+                dy = Math.pow(-y, 1) * -1 * 8.0;
               }
-              double rot = Math.pow(-omega, 3) * 9.0;
+              double rot = Math.pow(-omega, 3) * 12.0;
               swerve.requestPercent(new ChassisSpeeds(dx, dy, rot), true);
 
               if (driver.getRawButtonPressed(XboxController.Button.kStart.value)) {
@@ -105,8 +106,8 @@ public class RobotContainer {
             },
             swerve));
 
-    // new JoystickButton(driver, XboxController.Button.kB.value)
-    //     .whileTrue(new TeleopShootCommand(swerve));
+    new JoystickButton(driver, XboxController.Button.kB.value)
+        .whileTrue(new TeleopShootCommand(swerve));
 
     new JoystickButton(driver, XboxController.Button.kX.value)
         .whileTrue(new FenderShotCommand(swerve, superstructure, shooter));

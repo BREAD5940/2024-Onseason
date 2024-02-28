@@ -37,7 +37,7 @@ public class FourNoteSourceSide extends SequentialCommandGroup {
                 () -> {
                   intake.requestIntake();
                   superstructure.requestIntake(true);
-                  superstructure.requestVisionSpeaker(false, false, false, false);
+                  superstructure.requestVisionSpeaker(false, false, false);
                   ;
                 }),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
@@ -48,7 +48,7 @@ public class FourNoteSourceSide extends SequentialCommandGroup {
                 () -> {
                   intake.requestIntake();
                   superstructure.requestIntake(true);
-                  superstructure.requestVisionSpeaker(false, false, false, false);
+                  superstructure.requestVisionSpeaker(false, false, false);
                   ;
                 }),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
@@ -59,7 +59,7 @@ public class FourNoteSourceSide extends SequentialCommandGroup {
                 () -> {
                   intake.requestIntake();
                   superstructure.requestIntake(true);
-                  superstructure.requestVisionSpeaker(false, false, false, false);
+                  superstructure.requestVisionSpeaker(false, false, false);
                   ;
                 }),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),

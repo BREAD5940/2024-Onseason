@@ -5,6 +5,7 @@ import static frc.robot.constants.Constants.Pivot.*;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.commons.BreadUtil;
 import frc.robot.subsystems.elevatorpivot.ElevatorIO;
@@ -38,7 +39,6 @@ public class Superstructure extends SubsystemBase {
 
   private boolean wantsShoot = false;
   private boolean wantsShootOverDefense = false;
-  private boolean shootImmediately = false;
 
   private boolean shouldShoot = false;
 
@@ -147,7 +147,8 @@ public class Superstructure extends SubsystemBase {
       } else {
         feeder.requestIdle();
       }
-      elevatorPivot.requestPursueSetpoint(PIVOT_FENDER_ANGLE, ELEVATOR_FENDER_HEIGHT);
+      elevatorPivot.requestPursueSetpoint(
+          Rotation2d.fromDegrees(Robot.pivotAngle.get()), Robot.elevatorHeight.get());
       if (wantsShoot
           && elevatorPivot.atSetpoint()
           && RobotContainer.shooter.atSetpoint()
@@ -179,9 +180,9 @@ public class Superstructure extends SubsystemBase {
       elevatorPivot.requestPursueSetpoint(
           Rotation2d.fromDegrees(shot.pivotAngleDeg), shot.elevatorHeight);
 
-      if ((wantsShoot || shootImmediately)
+      if ((wantsShoot)
           && elevatorPivot.atSetpoint()
-          && (shootImmediately || RobotContainer.shooter.atSetpoint())
+          && RobotContainer.shooter.atSetpoint()
           && feeder.hasPiece()) {
         shouldShoot = true;
       }
@@ -300,12 +301,10 @@ public class Superstructure extends SubsystemBase {
     this.wantsShoot = wantsShoot;
   }
 
-  public void requestVisionSpeaker(
-      boolean set, boolean wantsShoot, boolean wantsShootOverDefense, boolean shootImmediately) {
+  public void requestVisionSpeaker(boolean set, boolean wantsShoot, boolean wantsShootOverDefense) {
     requestVisionSpeaker = set;
     this.wantsShoot = wantsShoot;
     this.wantsShootOverDefense = wantsShootOverDefense;
-    this.shootImmediately = shootImmediately;
   }
 
   public void requestAmp(boolean set, boolean wantsShoot) {

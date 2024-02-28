@@ -38,7 +38,7 @@ public class SixNoteAmpSide extends SequentialCommandGroup {
                 () -> {
                   intake.requestIntake();
                   superstructure.requestIntake(true);
-                  superstructure.requestVisionSpeaker(false, false, false, false);
+                  superstructure.requestVisionSpeaker(false, false, false);
                 }),
         new WaitUntilCommand(() -> RobotContainer.intake.hasPiece()).withTimeout(2),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
@@ -47,7 +47,7 @@ public class SixNoteAmpSide extends SequentialCommandGroup {
                 () -> {
                   intake.requestIntake();
                   superstructure.requestIntake(true);
-                  superstructure.requestVisionSpeaker(false, false, false, false);
+                  superstructure.requestVisionSpeaker(false, false, false);
                 }),
         new WaitUntilCommand(() -> RobotContainer.intake.hasPiece()).withTimeout(2),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
@@ -56,7 +56,7 @@ public class SixNoteAmpSide extends SequentialCommandGroup {
                 () -> {
                   intake.requestIntake();
                   superstructure.requestIntake(true);
-                  superstructure.requestVisionSpeaker(false, false, false, false);
+                  superstructure.requestVisionSpeaker(false, false, false);
                 }),
         new WaitUntilCommand(() -> RobotContainer.intake.hasPiece()).withTimeout(2),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
@@ -65,7 +65,7 @@ public class SixNoteAmpSide extends SequentialCommandGroup {
                 () -> {
                   intake.requestIntake();
                   superstructure.requestIntake(true);
-                  superstructure.requestVisionSpeaker(false, false, false, false);
+                  superstructure.requestVisionSpeaker(false, false, false);
                 }),
         new WaitUntilCommand(() -> RobotContainer.intake.hasPiece()).withTimeout(2),
         new TrajectoryFollowerCommand(Robot.sixNoteAmpSideE, swerve, false),
@@ -75,7 +75,7 @@ public class SixNoteAmpSide extends SequentialCommandGroup {
                 () -> {
                   intake.requestIntake();
                   superstructure.requestIntake(true);
-                  superstructure.requestVisionSpeaker(false, false, false, false);
+                  superstructure.requestVisionSpeaker(false, false, false);
                 }),
         new WaitUntilCommand(() -> RobotContainer.intake.hasPiece()).withTimeout(2),
         new TrajectoryFollowerCommand(Robot.sixNoteAmpSideG, swerve, false),

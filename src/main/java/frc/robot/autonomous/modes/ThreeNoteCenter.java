@@ -37,7 +37,7 @@ public class ThreeNoteCenter extends SequentialCommandGroup {
                 () -> {
                   intake.requestIntake();
                   superstructure.requestIntake(true);
-                  superstructure.requestVisionSpeaker(false, false, false, false);
+                  superstructure.requestVisionSpeaker(false, false, false);
                 }),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
         new TrajectoryFollowerCommand(Robot.fourNoteCenterB, swerve, false),
@@ -47,7 +47,7 @@ public class ThreeNoteCenter extends SequentialCommandGroup {
                 () -> {
                   intake.requestIntake();
                   superstructure.requestIntake(true);
-                  superstructure.requestVisionSpeaker(false, false, false, false);
+                  superstructure.requestVisionSpeaker(false, false, false);
                 }),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
         new StationaryShootCommand(swerve, superstructure, shooter));

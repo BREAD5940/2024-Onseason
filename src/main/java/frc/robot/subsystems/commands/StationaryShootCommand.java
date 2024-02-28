@@ -46,7 +46,7 @@ public class StationaryShootCommand extends Command {
     swerve.requestVelocity(new ChassisSpeeds(0, 0, thetaOutput), true);
 
     shooter.requestVisionSpeaker(false);
-    superstructure.requestVisionSpeaker(true, swerve.atAngularSetpoint(turnSetpoint), false, false);
+    superstructure.requestVisionSpeaker(true, swerve.atAngularSetpoint(turnSetpoint), false);
 
     Logger.recordOutput(
         "AimAtSpeakerCommand/MeasurementDegrees>", Units.radiansToDegrees(currentRotation));
@@ -62,6 +62,6 @@ public class StationaryShootCommand extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    superstructure.requestVisionSpeaker(false, false, false, false);
+    superstructure.requestVisionSpeaker(false, false, false);
   }
 }

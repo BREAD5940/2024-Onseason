@@ -70,12 +70,12 @@ public class ElevatorIOKrakenX60 implements ElevatorIO {
     leaderMotorConfigs.Inverted = ELEVATOR_LEFT_INVERSION;
     leaderMotorConfigs.PeakForwardDutyCycle = 1.0;
     leaderMotorConfigs.PeakReverseDutyCycle = -1.0;
-    leaderMotorConfigs.NeutralMode = NeutralModeValue.Coast;
+    leaderMotorConfigs.NeutralMode = NeutralModeValue.Brake;
 
     followerMotorConfigs = new MotorOutputConfigs();
     followerMotorConfigs.PeakForwardDutyCycle = 1.0;
     followerMotorConfigs.PeakReverseDutyCycle = -1.0;
-    followerMotorConfigs.NeutralMode = NeutralModeValue.Coast;
+    followerMotorConfigs.NeutralMode = NeutralModeValue.Brake;
 
     slot0Configs = new Slot0Configs();
     slot0Configs.kA = kA.get();
@@ -91,14 +91,14 @@ public class ElevatorIOKrakenX60 implements ElevatorIO {
     motionMagicConfigs.MotionMagicJerk = motionJerk.get();
 
     OpenLoopRampsConfigs openLoopRampsConfigs = new OpenLoopRampsConfigs();
-    openLoopRampsConfigs.DutyCycleOpenLoopRampPeriod = 0.02;
-    openLoopRampsConfigs.TorqueOpenLoopRampPeriod = 0.02;
-    openLoopRampsConfigs.VoltageOpenLoopRampPeriod = 0.02;
+    openLoopRampsConfigs.DutyCycleOpenLoopRampPeriod = 0.01;
+    openLoopRampsConfigs.TorqueOpenLoopRampPeriod = 0.01;
+    openLoopRampsConfigs.VoltageOpenLoopRampPeriod = 0.01;
 
     ClosedLoopRampsConfigs closedLoopRampsConfigs = new ClosedLoopRampsConfigs();
-    closedLoopRampsConfigs.DutyCycleClosedLoopRampPeriod = 0.02;
-    closedLoopRampsConfigs.TorqueClosedLoopRampPeriod = 0.02;
-    closedLoopRampsConfigs.VoltageClosedLoopRampPeriod = 0.02;
+    closedLoopRampsConfigs.DutyCycleClosedLoopRampPeriod = 0.01;
+    closedLoopRampsConfigs.TorqueClosedLoopRampPeriod = 0.01;
+    closedLoopRampsConfigs.VoltageClosedLoopRampPeriod = 0.01;
 
     /* Apply configs */
     leaderConfigurator.apply(currentLimitsConfigs);

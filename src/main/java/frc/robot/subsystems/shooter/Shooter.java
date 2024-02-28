@@ -3,6 +3,7 @@ package frc.robot.subsystems.shooter;
 import static frc.robot.constants.Constants.Shooter.*;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.commons.BreadUtil;
 import org.littletonrobotics.junction.Logger;
@@ -110,8 +111,8 @@ public class Shooter extends SubsystemBase {
   }
 
   public void requestFender() {
-    desiredLeftRPM = SHOOTER_LEFT_FENDER_RPM;
-    desiredRightRPM = SHOOTER_RIGHT_FENDER_RPM;
+    desiredLeftRPM = Robot.leftSpeed.get();
+    desiredRightRPM = Robot.rightSpeed.get();
     unsetAllRequests();
     requestFender = true;
   }

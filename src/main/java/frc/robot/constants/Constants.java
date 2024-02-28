@@ -403,9 +403,9 @@ public class Constants {
 
         ELEVATOR_PRE_CLIMB_HEIGHT = 0.55;
 
-        ELEVATOR_CLIMBED_HEIGHT = 0.05;
+        ELEVATOR_CLIMBED_HEIGHT = 0.00;
 
-        ELEVATOR_TRAP_HEIGHT = 0.55;
+        ELEVATOR_TRAP_HEIGHT = 0.64;
 
         ELEVATOR_FENDER_HEIGHT = 0.16; // 0.4
 
@@ -421,7 +421,7 @@ public class Constants {
         ELEVATOR_LEFT_INVERSION = InvertedValue.CounterClockwise_Positive;
         ELEVATOR_MIN_HEIGHT = 0.0;
         ELEVATOR_END_OF_DANGER_ZONE = 0.328643453491348; // Top gun reference?!?!?!
-        ELEVATOR_MAX_HEIGHT = 0.6254553955145598;
+        ELEVATOR_MAX_HEIGHT = 0.64;
       } else {
 
         ELEVATOR_LEFT_ID = 11;
