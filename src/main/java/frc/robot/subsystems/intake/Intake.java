@@ -61,11 +61,11 @@ public class Intake extends SubsystemBase {
       }
     } else if (systemState == IntakeState.INTAKE) {
       io.setIntakePercent(INTAKE_SPEED);
-      io.setVectorPercent(0.5);
+      io.setVectorPercent(0.8);
 
       if (!requestIntake) {
         nextSystemState = IntakeState.IDLE;
-      } else if (inputs.beamBreakTriggered) {
+      } else if (inputs.beamBreakTriggered > 1.0) {
         hasPiece = true;
         nextSystemState = IntakeState.IDLE;
       }
@@ -79,7 +79,7 @@ public class Intake extends SubsystemBase {
       }
     } else if (systemState == IntakeState.FEED) {
       io.setIntakePercent(FEED_SPEED);
-      io.setVectorPercent(0.5);
+      io.setVectorPercent(0.8);
 
       if (RobotContainer.superstructure.hasPiece()
           || RobotContainer.superstructure.getSystemState() != SuperstructureState.INTAKE) {

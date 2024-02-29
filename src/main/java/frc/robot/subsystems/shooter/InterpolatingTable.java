@@ -37,8 +37,8 @@ public class InterpolatingTable {
               entry(2.4528234316913737, new ShotParameter(-35.0, 2400, 1800, 0.23)),
               entry(3.0075105927719874, new ShotParameter(-31.0, 2400, 1800, 0.2)),
               entry(3.570768447818622, new ShotParameter(-28.0, 2400, 1800, 0.175)),
-              entry(4.141237376169209, new ShotParameter(-24.0, 2666, 2000, 0.15)),
-              entry(4.779837214305064, new ShotParameter(-22.0, 3000, 2000, 0.125)),
+              entry(4.141237376169209, new ShotParameter(-25.0, 2666, 2000, 0.15)),
+              entry(4.779837214305064, new ShotParameter(-23.0, 3000, 2000, 0.125)),
               entry(5.4, new ShotParameter(-21.0, 3000, 2000, 0.125)),
               entry(5.95, new ShotParameter(-20.0, 3300, 2200, 0.125)),
               entry(6.55, new ShotParameter(-18.0, 2600, 2200, 0.125))));

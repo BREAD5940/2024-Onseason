@@ -63,5 +63,6 @@ public class StationaryShootCommand extends Command {
   @Override
   public void end(boolean interrupted) {
     superstructure.requestVisionSpeaker(false, false, false);
+    shooter.requestIdle();
   }
 }

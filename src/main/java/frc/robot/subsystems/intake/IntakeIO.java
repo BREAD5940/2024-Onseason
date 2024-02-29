@@ -15,7 +15,7 @@ public interface IntakeIO {
     public double vectorAppliedVoltage = 0.0;
     public double vectorTempCelcius = 0.0;
 
-    public boolean beamBreakTriggered = false;
+    public double beamBreakTriggered = 0.0;
   }
 
   /** Updates the set of loggable inputs. */

@@ -4,8 +4,9 @@
   "holonomicMode": true,
   "pathFolders": [
     "FiveNoteMidlineAmpSide",
-    "FourNoteSourceSide",
     "FourNoteCenter",
+    "FourNoteSourceSide",
+    "Bomb",
     "SixNoteAmpSide"
   ],
   "autoFolders": [],

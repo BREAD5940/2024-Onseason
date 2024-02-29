@@ -12,7 +12,7 @@ import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.AnalogInput;
 import frc.robot.commons.LoggedTunableNumber;
 
 public class IntakeIOFalcon500 implements IntakeIO {
@@ -20,7 +20,7 @@ public class IntakeIOFalcon500 implements IntakeIO {
   /* Hardware */
   private final TalonFX intake = new TalonFX(INTAKE_ID, "dabus");
   private final TalonFX vector = new TalonFX(VECTOR_ID, "dabus");
-  private final DigitalInput beamBreak = new DigitalInput(0);
+  private final AnalogInput beamBreak = new AnalogInput(0);
 
   /* Configurator */
   private final TalonFXConfigurator intakeConfigurator;
@@ -95,14 +95,14 @@ public class IntakeIOFalcon500 implements IntakeIO {
 
     /* Ramp Configs */
     OpenLoopRampsConfigs openLoopRampsConfigs = new OpenLoopRampsConfigs();
-    openLoopRampsConfigs.DutyCycleOpenLoopRampPeriod = 0.01;
-    openLoopRampsConfigs.TorqueOpenLoopRampPeriod = 0.01;
-    openLoopRampsConfigs.VoltageOpenLoopRampPeriod = 0.01;
+    openLoopRampsConfigs.DutyCycleOpenLoopRampPeriod = 0.02;
+    openLoopRampsConfigs.TorqueOpenLoopRampPeriod = 0.02;
+    openLoopRampsConfigs.VoltageOpenLoopRampPeriod = 0.02;
 
     ClosedLoopRampsConfigs closedLoopRampsConfigs = new ClosedLoopRampsConfigs();
-    closedLoopRampsConfigs.DutyCycleClosedLoopRampPeriod = 0.01;
-    closedLoopRampsConfigs.TorqueClosedLoopRampPeriod = 0.01;
-    closedLoopRampsConfigs.VoltageClosedLoopRampPeriod = 0.01;
+    closedLoopRampsConfigs.DutyCycleClosedLoopRampPeriod = 0.02;
+    closedLoopRampsConfigs.TorqueClosedLoopRampPeriod = 0.02;
+    closedLoopRampsConfigs.VoltageClosedLoopRampPeriod = 0.02;
 
     /* Apply configs */
     intakeConfigurator.apply(intakeCurrentLimitConfigs);
@@ -131,7 +131,7 @@ public class IntakeIOFalcon500 implements IntakeIO {
     inputs.vectorAppliedVoltage = vector.getMotorVoltage().getValue();
     inputs.vectorTempCelcius = vector.getDeviceTemp().getValue();
 
-    inputs.beamBreakTriggered = !beamBreak.get();
+    inputs.beamBreakTriggered = beamBreak.getVoltage();
   }
 
   @Override

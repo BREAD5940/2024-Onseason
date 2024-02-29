@@ -3,6 +3,7 @@ package frc.robot;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -47,6 +48,10 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath fiveNoteMidlineAmpSideE;
   public static PathPlannerPath fiveNoteMidlineAmpSideF;
 
+  public static PathPlannerPath bombA;
+  public static PathPlannerPath bombB;
+  public static PathPlannerPath bombC;
+
   private boolean requestedHome = false;
 
   public static LoggedTunableNumber leftSpeed = new LoggedTunableNumber("Tuning/LeftSpeed", 0.0);
@@ -75,6 +80,7 @@ public class Robot extends LoggedRobot {
       Logger.addDataReceiver(
           new WPILOGWriter(
               LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
+      RobotController.setBrownoutVoltage(5.0);
     }
 
     Logger.start();
@@ -105,6 +111,10 @@ public class Robot extends LoggedRobot {
     fiveNoteMidlineAmpSideD = PathPlannerPath.fromPathFile("Five Note Midline D");
     fiveNoteMidlineAmpSideE = PathPlannerPath.fromPathFile("Five Note Midline E");
     fiveNoteMidlineAmpSideF = PathPlannerPath.fromPathFile("Five Note Midline F");
+
+    bombA = PathPlannerPath.fromPathFile("Bomb A");
+    bombB = PathPlannerPath.fromPathFile("Bomb B");
+    bombC = PathPlannerPath.fromPathFile("Bomb C");
 
     m_robotContainer.configureAutonomousSelector();
   }

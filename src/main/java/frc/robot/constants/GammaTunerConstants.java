@@ -37,17 +37,17 @@ public class GammaTunerConstants {
 
   // The stator current at which the wheels start to slip;
   // This needs to be tuned to your individual robot
-  private static final double kSlipCurrentA = 100.0;
+  private static final double kSlipCurrentA = 80.0;
 
   // Theoretical free speed (m/s) at 12v applied output;
   // This needs to be tuned to your individual robot
-  public static final double kSpeedAt12VoltsMps = 6.95;
+  public static final double kSpeedAt12VoltsMps = 6.37;
 
   // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
   // This may need to be tuned to your individual robot
   private static final double kCoupleRatio = 3.5;
 
-  private static final double kDriveGearRatio = 4.59375;
+  private static final double kDriveGearRatio = 5.01;
   private static final double kSteerGearRatio = 13.371428571428572;
   private static final double kWheelRadiusInches = 2;
 
@@ -109,7 +109,7 @@ public class GammaTunerConstants {
   private static final int kBackLeftDriveMotorId = 3;
   private static final int kBackLeftSteerMotorId = 7;
   private static final int kBackLeftEncoderId = 23;
-  private static final double kBackLeftEncoderOffset = -0.333740234375;
+  private static final double kBackLeftEncoderOffset = -0.33;
 
   private static final double kBackLeftXPosInches = -10;
   private static final double kBackLeftYPosInches = 10;

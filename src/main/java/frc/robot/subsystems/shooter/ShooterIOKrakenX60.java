@@ -30,7 +30,8 @@ public class ShooterIOKrakenX60 implements ShooterIO {
   private CurrentLimitsConfigs shooterCurrentLimitConfigs;
   private MotorOutputConfigs leftMotorOutputConfigs;
   private MotorOutputConfigs rightMotorOutputConfigs;
-  private Slot0Configs shooterSlot0Configs;
+  private Slot0Configs rightShooterSlot0Configs;
+  private Slot0Configs leftShooterSlot0Configs;
 
   /* Setpoints for logging */
   private double desiredLeft = 0.0;
@@ -43,12 +44,19 @@ public class ShooterIOKrakenX60 implements ShooterIO {
   private StatusSignal<Double> positionLeft;
 
   /* Gains */
-  LoggedTunableNumber shooterkS = new LoggedTunableNumber("Shooter/kS", 0.0);
-  LoggedTunableNumber shooterkA = new LoggedTunableNumber("Shooter/kA", 0.0);
-  LoggedTunableNumber shooterkV = new LoggedTunableNumber("Shooter/kV", 0.135);
-  LoggedTunableNumber shooterkP = new LoggedTunableNumber("Shooter/kP", 0.1);
-  LoggedTunableNumber shooterkI = new LoggedTunableNumber("Shooter/kI", 0.0);
-  LoggedTunableNumber shooterkD = new LoggedTunableNumber("Shooter/kD", 0.0);
+  LoggedTunableNumber rightShooterKs = new LoggedTunableNumber("RightShooter/kS", 0.0);
+  LoggedTunableNumber rightShooterKa = new LoggedTunableNumber("RightShooter/kA", 0.0);
+  LoggedTunableNumber rightShooterKv = new LoggedTunableNumber("RightShooter/kV", 0.128);
+  LoggedTunableNumber rightShooterKp = new LoggedTunableNumber("RightShooter/kP", 0.2);
+  LoggedTunableNumber rightShooterKi = new LoggedTunableNumber("RightShooter/kI", 0.0);
+  LoggedTunableNumber rightShooterKd = new LoggedTunableNumber("RightShooter/kD", 0.0);
+
+  LoggedTunableNumber leftShooterKs = new LoggedTunableNumber("LeftShooter/kS", 0.0);
+  LoggedTunableNumber leftShooterKa = new LoggedTunableNumber("LeftShooter/kA", 0.0);
+  LoggedTunableNumber leftShooterKv = new LoggedTunableNumber("LeftShooter/kV", 0.132);
+  LoggedTunableNumber leftShooterKp = new LoggedTunableNumber("LeftShooter/kP", 0.2);
+  LoggedTunableNumber leftShooterKi = new LoggedTunableNumber("LeftShooter/kI", 0.0);
+  LoggedTunableNumber leftShooterKd = new LoggedTunableNumber("LeftShooter/kD", 0.0);
 
   public ShooterIOKrakenX60() {
     /* Instantiate configuators */
@@ -76,36 +84,45 @@ public class ShooterIOKrakenX60 implements ShooterIO {
     rightMotorOutputConfigs.PeakReverseDutyCycle = -1.0;
     rightMotorOutputConfigs.NeutralMode = NeutralModeValue.Coast;
 
-    // Slot 0 Configs
-    shooterSlot0Configs = new Slot0Configs();
-    shooterSlot0Configs.kA = shooterkA.get();
-    shooterSlot0Configs.kS = shooterkS.get();
-    shooterSlot0Configs.kV = shooterkV.get();
-    shooterSlot0Configs.kP = shooterkP.get();
-    shooterSlot0Configs.kI = shooterkI.get();
-    shooterSlot0Configs.kD = shooterkD.get();
+    // Slot 0 Configs (Right)
+    rightShooterSlot0Configs = new Slot0Configs();
+    rightShooterSlot0Configs.kA = rightShooterKa.get();
+    rightShooterSlot0Configs.kS = rightShooterKs.get();
+    rightShooterSlot0Configs.kV = rightShooterKv.get();
+    rightShooterSlot0Configs.kP = rightShooterKp.get();
+    rightShooterSlot0Configs.kI = rightShooterKi.get();
+    rightShooterSlot0Configs.kD = rightShooterKd.get();
+
+    // Slot 0 Configs (Left)
+    leftShooterSlot0Configs = new Slot0Configs();
+    leftShooterSlot0Configs.kA = leftShooterKa.get();
+    leftShooterSlot0Configs.kS = leftShooterKs.get();
+    leftShooterSlot0Configs.kV = leftShooterKv.get();
+    leftShooterSlot0Configs.kP = leftShooterKp.get();
+    leftShooterSlot0Configs.kI = leftShooterKi.get();
+    leftShooterSlot0Configs.kD = leftShooterKd.get();
 
     /* Ramp Configs */
     OpenLoopRampsConfigs openLoopRampsConfigs = new OpenLoopRampsConfigs();
-    openLoopRampsConfigs.DutyCycleOpenLoopRampPeriod = 0.01;
-    openLoopRampsConfigs.TorqueOpenLoopRampPeriod = 0.01;
-    openLoopRampsConfigs.VoltageOpenLoopRampPeriod = 0.01;
+    openLoopRampsConfigs.DutyCycleOpenLoopRampPeriod = 0.02;
+    openLoopRampsConfigs.TorqueOpenLoopRampPeriod = 0.02;
+    openLoopRampsConfigs.VoltageOpenLoopRampPeriod = 0.02;
 
     ClosedLoopRampsConfigs closedLoopRampsConfigs = new ClosedLoopRampsConfigs();
-    closedLoopRampsConfigs.DutyCycleClosedLoopRampPeriod = 0.01;
-    closedLoopRampsConfigs.TorqueClosedLoopRampPeriod = 0.01;
-    closedLoopRampsConfigs.VoltageClosedLoopRampPeriod = 0.01;
+    closedLoopRampsConfigs.DutyCycleClosedLoopRampPeriod = 0.02;
+    closedLoopRampsConfigs.TorqueClosedLoopRampPeriod = 0.02;
+    closedLoopRampsConfigs.VoltageClosedLoopRampPeriod = 0.02;
 
     /* Apply Configurations */
     leftConfigurator.apply(shooterCurrentLimitConfigs);
     leftConfigurator.apply(leftMotorOutputConfigs);
-    leftConfigurator.apply(shooterSlot0Configs);
+    leftConfigurator.apply(leftShooterSlot0Configs);
     leftConfigurator.apply(openLoopRampsConfigs);
     leftConfigurator.apply(closedLoopRampsConfigs);
 
     rightConfigurator.apply(shooterCurrentLimitConfigs);
     rightConfigurator.apply(rightMotorOutputConfigs);
-    rightConfigurator.apply(shooterSlot0Configs);
+    rightConfigurator.apply(rightShooterSlot0Configs);
     leftConfigurator.apply(openLoopRampsConfigs);
     rightConfigurator.apply(closedLoopRampsConfigs);
 
@@ -190,21 +207,36 @@ public class ShooterIOKrakenX60 implements ShooterIO {
 
   @Override
   public void updateTunableNumbers() {
-    if (shooterkS.hasChanged(0)
-        || shooterkV.hasChanged(0)
-        || shooterkP.hasChanged(0)
-        || shooterkI.hasChanged(0)
-        || shooterkD.hasChanged(0)
-        || shooterkA.hasChanged(0)) {
-      shooterSlot0Configs.kS = shooterkS.get();
-      shooterSlot0Configs.kV = shooterkV.get();
-      shooterSlot0Configs.kP = shooterkP.get();
-      shooterSlot0Configs.kI = shooterkI.get();
-      shooterSlot0Configs.kD = shooterkD.get();
-      shooterSlot0Configs.kA = shooterkA.get();
+    if (leftShooterKs.hasChanged(0)
+        || leftShooterKv.hasChanged(0)
+        || leftShooterKp.hasChanged(0)
+        || leftShooterKi.hasChanged(0)
+        || leftShooterKd.hasChanged(0)
+        || leftShooterKa.hasChanged(0)) {
+      leftShooterSlot0Configs.kS = leftShooterKs.get();
+      leftShooterSlot0Configs.kV = leftShooterKv.get();
+      leftShooterSlot0Configs.kP = leftShooterKp.get();
+      leftShooterSlot0Configs.kI = leftShooterKi.get();
+      leftShooterSlot0Configs.kD = leftShooterKd.get();
+      leftShooterSlot0Configs.kA = leftShooterKa.get();
 
-      leftConfigurator.apply(shooterSlot0Configs);
-      rightConfigurator.apply(shooterSlot0Configs);
+      leftConfigurator.apply(leftShooterSlot0Configs);
+    }
+
+    if (rightShooterKs.hasChanged(0)
+        || rightShooterKv.hasChanged(0)
+        || rightShooterKp.hasChanged(0)
+        || rightShooterKi.hasChanged(0)
+        || rightShooterKd.hasChanged(0)
+        || rightShooterKa.hasChanged(0)) {
+      rightShooterSlot0Configs.kS = rightShooterKs.get();
+      rightShooterSlot0Configs.kV = rightShooterKv.get();
+      rightShooterSlot0Configs.kP = rightShooterKp.get();
+      rightShooterSlot0Configs.kI = rightShooterKi.get();
+      rightShooterSlot0Configs.kD = rightShooterKd.get();
+      rightShooterSlot0Configs.kA = rightShooterKa.get();
+
+      rightConfigurator.apply(rightShooterSlot0Configs);
     }
   }
 }

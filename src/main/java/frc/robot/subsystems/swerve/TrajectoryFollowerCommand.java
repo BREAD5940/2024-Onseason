@@ -24,8 +24,8 @@ public class TrajectoryFollowerCommand extends Command {
 
   public final BreadHolonomicDriveController autonomusController =
       new BreadHolonomicDriveController(
-          new PIDController(3.0, 0, 0.0),
-          new PIDController(3.0, 0, 0.0),
+          new PIDController(8.0, 0, 0.0),
+          new PIDController(8.0, 0, 0.0),
           new PIDController(5.0, 0, 0.0));
 
   public TrajectoryFollowerCommand(PathPlannerPath path, Swerve swerve, boolean isInitialPoint) {

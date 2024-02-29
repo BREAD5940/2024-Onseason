@@ -32,7 +32,7 @@ public class SixNoteAmpSide extends SequentialCommandGroup {
               }
               swerve.resetPose(path.getPreviewStartingHolonomicPose());
             }),
-        new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
+        new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(3),
         new TrajectoryFollowerCommand(Robot.sixNoteAmpSideA, swerve, false)
             .beforeStarting(
                 () -> {
@@ -40,8 +40,8 @@ public class SixNoteAmpSide extends SequentialCommandGroup {
                   superstructure.requestIntake(true);
                   superstructure.requestVisionSpeaker(false, false, false);
                 }),
-        new WaitUntilCommand(() -> RobotContainer.intake.hasPiece()).withTimeout(2),
-        new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
+        new WaitUntilCommand(() -> RobotContainer.superstructure.hasPiece()).withTimeout(3),
+        new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(3),
         new TrajectoryFollowerCommand(Robot.sixNoteAmpSideB, swerve, false)
             .beforeStarting(
                 () -> {
@@ -49,8 +49,8 @@ public class SixNoteAmpSide extends SequentialCommandGroup {
                   superstructure.requestIntake(true);
                   superstructure.requestVisionSpeaker(false, false, false);
                 }),
-        new WaitUntilCommand(() -> RobotContainer.intake.hasPiece()).withTimeout(2),
-        new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
+        new WaitUntilCommand(() -> RobotContainer.superstructure.hasPiece()).withTimeout(3),
+        new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(3),
         new TrajectoryFollowerCommand(Robot.sixNoteAmpSideC, swerve, false)
             .beforeStarting(
                 () -> {
@@ -58,8 +58,8 @@ public class SixNoteAmpSide extends SequentialCommandGroup {
                   superstructure.requestIntake(true);
                   superstructure.requestVisionSpeaker(false, false, false);
                 }),
-        new WaitUntilCommand(() -> RobotContainer.intake.hasPiece()).withTimeout(2),
-        new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
+        new WaitUntilCommand(() -> RobotContainer.superstructure.hasPiece()).withTimeout(3),
+        new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(3),
         new TrajectoryFollowerCommand(Robot.sixNoteAmpSideD, swerve, false)
             .beforeStarting(
                 () -> {
@@ -67,7 +67,7 @@ public class SixNoteAmpSide extends SequentialCommandGroup {
                   superstructure.requestIntake(true);
                   superstructure.requestVisionSpeaker(false, false, false);
                 }),
-        new WaitUntilCommand(() -> RobotContainer.intake.hasPiece()).withTimeout(2),
+        new WaitUntilCommand(() -> RobotContainer.superstructure.hasPiece()).withTimeout(3),
         new TrajectoryFollowerCommand(Robot.sixNoteAmpSideE, swerve, false),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
         new TrajectoryFollowerCommand(Robot.sixNoteAmpSideF, swerve, false)
@@ -77,8 +77,8 @@ public class SixNoteAmpSide extends SequentialCommandGroup {
                   superstructure.requestIntake(true);
                   superstructure.requestVisionSpeaker(false, false, false);
                 }),
-        new WaitUntilCommand(() -> RobotContainer.intake.hasPiece()).withTimeout(2),
+        new WaitUntilCommand(() -> RobotContainer.superstructure.hasPiece()).withTimeout(3),
         new TrajectoryFollowerCommand(Robot.sixNoteAmpSideG, swerve, false),
-        new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2));
+        new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(3));
   }
 }

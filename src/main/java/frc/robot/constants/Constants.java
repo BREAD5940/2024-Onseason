@@ -407,7 +407,7 @@ public class Constants {
 
         ELEVATOR_TRAP_HEIGHT = 0.64;
 
-        ELEVATOR_FENDER_HEIGHT = 0.16; // 0.4
+        ELEVATOR_FENDER_HEIGHT = 0.4; // 0.4
 
         ELEVATOR_SPOOL_DIAMETER = Units.inchesToMeters(1.463);
         ELEVATOR_SETPOINT_TOLERANCE_METERS = 0.01;
@@ -538,7 +538,7 @@ public class Constants {
 
         PIVOT_TRAP_ANGLE = Rotation2d.fromDegrees(6.9);
 
-        PIVOT_FENDER_ANGLE = Rotation2d.fromDegrees(-24.0); // -50.0
+        PIVOT_FENDER_ANGLE = Rotation2d.fromDegrees(-50.0); // -50.0
 
         PIVOT_SETPOINT_TOLERANCE_RADS = Units.degreesToRadians(3.0);
         PIVOT_INVERSION = InvertedValue.CounterClockwise_Positive;
@@ -631,8 +631,8 @@ public class Constants {
         SHOOTER_LEFT_TRAP_RPM = 0.0;
         SHOOTER_RIGHT_TRAP_RPM = 0.0;
 
-        SHOOTER_LEFT_FENDER_RPM = 3000.0; // 1800
-        SHOOTER_RIGHT_FENDER_RPM = 1500.0; // 1800
+        SHOOTER_LEFT_FENDER_RPM = 1400.0; // 1800
+        SHOOTER_RIGHT_FENDER_RPM = 1400.0; // 1800
 
         SHOOTER_LEFT_GEAR_RATIO = 1.0;
         SHOOTER_RIGHT_GEAR_RATIO = 1.0;

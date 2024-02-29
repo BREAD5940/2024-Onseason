@@ -3,6 +3,7 @@ package frc.robot.autonomous;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.autonomous.modes.Bomb;
 import frc.robot.autonomous.modes.FiveNoteMidlineAmpSide;
 import frc.robot.autonomous.modes.FourNoteCenter;
 import frc.robot.autonomous.modes.FourNoteSourceSide;
@@ -32,6 +33,7 @@ public class AutonomousSelector {
         "SIX_NOTE_AMP_SIDE", new SixNoteAmpSide(superstructure, swerve, shooter, intake));
     autonomousSelector.addOption(
         "FOUR_NOTE_CENTER", new FourNoteCenter(superstructure, swerve, shooter, intake));
+    autonomousSelector.addOption("BOMB", new Bomb(superstructure, swerve, shooter, intake));
 
     SmartDashboard.putData("Autonomus Selector", autonomousSelector);
   }

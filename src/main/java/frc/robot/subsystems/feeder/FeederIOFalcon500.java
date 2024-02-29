@@ -103,7 +103,7 @@ public class FeederIOFalcon500 implements FeederIO {
     inputs.appliedVolts = motor.getMotorVoltage().getValue();
     inputs.tempCelcius = temperature.getValue();
     inputs.currentAmps = current.getValue();
-    inputs.beamBreakTriggered = beamBreak.getValue().value == 1;
+    inputs.beamBreakTriggered = beamBreak.getValue().value == 0;
   }
 
   @Override
