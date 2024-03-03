@@ -21,11 +21,11 @@ public class GammaTunerConstants {
   // output type specified by SwerveModuleConstants.DriveMotorClosedLoopOutput
   private static final Slot0Configs driveGains =
       new Slot0Configs()
-          .withKP(0.05)
+          .withKP(0.1)
           .withKI(0)
           .withKD(0)
           .withKS(0)
-          .withKV(0.15 * (.7 / .94))
+          .withKV(0.15 * (.7 / .94) * (2.33 / 2.16))
           .withKA(0);
 
   // The closed-loop output type to use for the steer motors;
@@ -37,17 +37,17 @@ public class GammaTunerConstants {
 
   // The stator current at which the wheels start to slip;
   // This needs to be tuned to your individual robot
-  private static final double kSlipCurrentA = 80.0;
+  private static final double kSlipCurrentA = 100.0;
 
   // Theoretical free speed (m/s) at 12v applied output;
   // This needs to be tuned to your individual robot
-  public static final double kSpeedAt12VoltsMps = 6.37;
+  public static final double kSpeedAt12VoltsMps = 5.7912;
 
   // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
   // This may need to be tuned to your individual robot
   private static final double kCoupleRatio = 3.5;
 
-  private static final double kDriveGearRatio = 5.01;
+  private static final double kDriveGearRatio = 5.51;
   private static final double kSteerGearRatio = 13.371428571428572;
   private static final double kWheelRadiusInches = 2;
 

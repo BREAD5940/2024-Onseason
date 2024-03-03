@@ -26,6 +26,8 @@ public class StationaryShootCommand extends Command {
     this.superstructure = superstructure;
     this.shooter = shooter;
 
+    turnPID.enableContinuousInput(-Math.PI, Math.PI);
+
     addRequirements(swerve, superstructure, shooter);
   }
 
@@ -57,12 +59,11 @@ public class StationaryShootCommand extends Command {
   @Override
   public boolean isFinished() {
     return !superstructure.hasPiece()
-        && superstructure.getSystemState() == SuperstructureState.IDLE;
+        && superstructure.getSystemState() != SuperstructureState.VISION_SPEAKER;
   }
 
   @Override
   public void end(boolean interrupted) {
     superstructure.requestVisionSpeaker(false, false, false);
-    shooter.requestIdle();
   }
 }

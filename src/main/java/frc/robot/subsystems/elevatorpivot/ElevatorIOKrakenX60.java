@@ -2,6 +2,8 @@ package frc.robot.subsystems.elevatorpivot;
 
 import static frc.robot.constants.Constants.Elevator.*;
 
+import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
@@ -49,7 +51,9 @@ public class ElevatorIOKrakenX60 implements ElevatorIO {
       new LoggedTunableNumber("Elevator/MotionCruiseVelocity", 400.0);
   LoggedTunableNumber motionJerk = new LoggedTunableNumber("Elevator/MotionJerk", 0.0);
 
-  /* For tracking */
+  /* Status Signals */
+  private StatusSignal<Double> supplyLeft;
+  private StatusSignal<Double> supplyRight;
 
   public ElevatorIOKrakenX60() {
     /* Instantiate motors and configurators */
@@ -115,11 +119,18 @@ public class ElevatorIOKrakenX60 implements ElevatorIO {
     followerConfigurator.apply(openLoopRampsConfigs);
     followerConfigurator.apply(closedLoopRampsConfigs);
 
+    supplyLeft = leader.getSupplyCurrent();
+    supplyRight = follower.getSupplyCurrent();
+
+    BaseStatusSignal.setUpdateFrequencyForAll(50, supplyLeft, supplyRight);
+
     follower.setControl(new Follower(ELEVATOR_LEFT_ID, false));
   }
 
   @Override
   public void updateInputs(ElevatorIOInputs inputs) {
+    BaseStatusSignal.refreshAll(supplyLeft, supplyRight);
+
     inputs.posMeters = getHeight();
     inputs.velMetersPerSecond = getVelocity();
     inputs.motionMagicVelocityTarget =
@@ -127,8 +138,7 @@ public class ElevatorIOKrakenX60 implements ElevatorIO {
     inputs.motionMagicPositionTarget =
         rotationsToMeters(leader.getClosedLoopReference().getValue());
     inputs.appliedVoltage = leader.getMotorVoltage().getValue();
-    inputs.currentAmps =
-        new double[] {leader.getStatorCurrent().getValue(), follower.getStatorCurrent().getValue()};
+    inputs.currentAmps = new double[] {supplyLeft.getValue(), supplyRight.getValue()};
     inputs.tempCelcius =
         new double[] {leader.getStatorCurrent().getValue(), follower.getStatorCurrent().getValue()};
     inputs.setpointMeters = posTarget;

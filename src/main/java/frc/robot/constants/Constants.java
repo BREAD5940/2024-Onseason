@@ -389,9 +389,9 @@ public class Constants {
 
         ELEVATOR_HOMING_VOLTAGE = -1;
 
-        ELEVATOR_IDLE_HEIGHT = 0.125;
+        ELEVATOR_IDLE_HEIGHT = 0.12;
 
-        ELEVATOR_INTAKE_HEIGHT = 0.125;
+        ELEVATOR_INTAKE_HEIGHT = 0.12;
 
         ELEVATOR_SPIT_HEIGHT = 0.2;
 
@@ -516,7 +516,7 @@ public class Constants {
         PIVOT_MAX_ANGLE = Rotation2d.fromDegrees(38.0);
         PIVOT_MIN_SAFE_ANGLE =
             Rotation2d.fromDegrees(
-                -14.5); // This would be the minimum rotation at the bottom of the elevator's travel
+                -20.3); // This would be the minimum rotation at the bottom of the elevator's travel
         PIVOT_MIN_ANGLE =
             Rotation2d.fromDegrees(
                 -63.5); // This would be the minumum rotation at any point in the elevator's
@@ -524,9 +524,9 @@ public class Constants {
 
         PIVOT_NEUTRAL_ANGLE = Rotation2d.fromDegrees(0.0);
 
-        PIVOT_IDLE_ANGLE = Rotation2d.fromDegrees(-24.0);
+        PIVOT_IDLE_ANGLE = Rotation2d.fromDegrees(-28.0);
 
-        PIVOT_INTAKE_ANGLE = Rotation2d.fromDegrees(-24.0);
+        PIVOT_INTAKE_ANGLE = Rotation2d.fromDegrees(-28.0);
 
         PIVOT_SPIT_ANGLE = Rotation2d.fromDegrees(0.0);
 
@@ -540,7 +540,7 @@ public class Constants {
 
         PIVOT_FENDER_ANGLE = Rotation2d.fromDegrees(-50.0); // -50.0
 
-        PIVOT_SETPOINT_TOLERANCE_RADS = Units.degreesToRadians(3.0);
+        PIVOT_SETPOINT_TOLERANCE_RADS = Units.degreesToRadians(1.5);
         PIVOT_INVERSION = InvertedValue.CounterClockwise_Positive;
         PIVOT_ENCODER_INVERSION = SensorDirectionValue.Clockwise_Positive;
         PIVOT_GEAR_RATIO = (25.0 / 1.0) * (48.0 / 20.0);
@@ -620,7 +620,7 @@ public class Constants {
         SHOOTER_LEFT_ID = 13;
         SHOOTER_RIGHT_ID = 14;
 
-        SHOOTER_SETPOINT_TOLERANCE_RPM = 100.0;
+        SHOOTER_SETPOINT_TOLERANCE_RPM = 30.0;
 
         SHOOTER_LEFT_IDLE_RPM = 0.0;
         SHOOTER_RIGHT_IDLE_RPM = 0.0;
@@ -632,7 +632,7 @@ public class Constants {
         SHOOTER_RIGHT_TRAP_RPM = 0.0;
 
         SHOOTER_LEFT_FENDER_RPM = 1400.0; // 1800
-        SHOOTER_RIGHT_FENDER_RPM = 1400.0; // 1800
+        SHOOTER_RIGHT_FENDER_RPM = 2000.0; // 1800
 
         SHOOTER_LEFT_GEAR_RATIO = 1.0;
         SHOOTER_RIGHT_GEAR_RATIO = 1.0;
@@ -688,7 +688,7 @@ public class Constants {
       if (robot == RobotType.BETA) {
         FEEDER_ID = 15;
 
-        FEEDER_INTAKE_SPEED = 0.45;
+        FEEDER_INTAKE_SPEED = 65;
 
         FEEDER_SPIT_SPEED = -0.4;
 

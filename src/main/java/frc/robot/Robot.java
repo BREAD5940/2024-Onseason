@@ -1,10 +1,10 @@
 package frc.robot;
 
+import com.ctre.phoenix.led.CANdle;
 import com.pathplanner.lib.path.PathPlannerPath;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commons.LoggedTunableNumber;
@@ -54,6 +54,8 @@ public class Robot extends LoggedRobot {
 
   private boolean requestedHome = false;
 
+  private CANdle leds = new CANdle(31, "dabus");
+
   public static LoggedTunableNumber leftSpeed = new LoggedTunableNumber("Tuning/LeftSpeed", 0.0);
   public static LoggedTunableNumber rightSpeed = new LoggedTunableNumber("Tuning/RightSpeed", 0.0);
 
@@ -80,7 +82,7 @@ public class Robot extends LoggedRobot {
       Logger.addDataReceiver(
           new WPILOGWriter(
               LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
-      RobotController.setBrownoutVoltage(5.0);
+      RobotController.setBrownoutVoltage(5.75);
     }
 
     Logger.start();
@@ -122,6 +124,13 @@ public class Robot extends LoggedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+
+    // Controller vibrations
+    if (RobotContainer.superstructure.hasPiece()) {
+      leds.setLEDs(0, 0, 255, 0, 0, 60);
+    } else {
+      leds.setLEDs(255, 0, 0, 0, 0, 60);
+    }
   }
 
   @Override
@@ -146,6 +155,7 @@ public class Robot extends LoggedRobot {
       m_autonomousCommand.schedule();
     }
     RobotContainer.shooter.requestIdle();
+    RobotController.setBrownoutVoltage(5.75);
   }
 
   @Override
@@ -167,6 +177,7 @@ public class Robot extends LoggedRobot {
       requestedHome = true;
     }
     RobotContainer.shooter.requestIdle();
+    RobotController.setBrownoutVoltage(5.75);
   }
 
   @Override
@@ -184,17 +195,10 @@ public class Robot extends LoggedRobot {
     }
 
     /* Superstructure spit requests */
-    if (RobotContainer.driver.getXButton()) {
+    if (RobotContainer.operator.getXButton()) {
       RobotContainer.superstructure.requestSpit(true);
     } else {
       RobotContainer.superstructure.requestSpit(false);
-    }
-
-    // Controller vibrations
-    if (RobotContainer.intake.hasPiece()) {
-      RobotContainer.driver.setRumble(RumbleType.kBothRumble, 1.0);
-    } else {
-      RobotContainer.driver.setRumble(RumbleType.kBothRumble, 0.0);
     }
 
     /* Climb requests */

@@ -11,6 +11,7 @@ public interface FeederIO {
     public double tempCelcius = 0.0;
     public double currentAmps = 0.0;
     public boolean beamBreakTriggered = false;
+    public double setpoint = 0.0;
   }
 
   /** Updates the set of loggable inputs. */

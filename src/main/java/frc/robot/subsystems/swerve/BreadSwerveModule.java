@@ -78,6 +78,8 @@ public class BreadSwerveModule {
   private final StatusSignal<Double> m_driveVelocity;
   private final StatusSignal<Double> m_steerPosition;
   private final StatusSignal<Double> m_steerVelocity;
+  private final StatusSignal<Double> m_statorCurrent;
+  private final StatusSignal<Double> m_supplyCurrent;
   private final BaseStatusSignal[] m_signals;
   private final double m_driveRotationsPerMeter;
   private final double m_couplingRatioDriveRotorToCANcoder;
@@ -204,6 +206,8 @@ public class BreadSwerveModule {
     m_driveVelocity = m_driveMotor.getVelocity().clone();
     m_steerPosition = m_steerMotor.getPosition().clone();
     m_steerVelocity = m_steerMotor.getVelocity().clone();
+    m_statorCurrent = m_driveMotor.getStatorCurrent().clone();
+    m_supplyCurrent = m_driveMotor.getSupplyCurrent().clone();
 
     m_signals = new BaseStatusSignal[4];
     m_signals[0] = m_drivePosition;
@@ -233,6 +237,9 @@ public class BreadSwerveModule {
 
     /* Get the expected speed when applying 12 volts */
     m_speedAt12VoltsMps = constants.SpeedAt12VoltsMps;
+
+    /* Set status frame periods on the current signals */
+    BaseStatusSignal.setUpdateFrequencyForAll(50, m_statorCurrent, m_supplyCurrent);
   }
 
   /**
@@ -301,7 +308,8 @@ public class BreadSwerveModule {
       case MotionMagic:
         switch (m_steerClosedLoopOutput) {
           case Voltage:
-            m_steerMotor.setControl(m_angleVoltageSetter.withPosition(angleToSetDeg));
+            m_steerMotor.setControl(
+                m_angleVoltageSetter.withPosition(angleToSetDeg).withEnableFOC(true));
             break;
 
           case TorqueCurrentFOC:
@@ -313,7 +321,8 @@ public class BreadSwerveModule {
       case MotionMagicExpo:
         switch (m_steerClosedLoopOutput) {
           case Voltage:
-            m_steerMotor.setControl(m_angleVoltageExpoSetter.withPosition(angleToSetDeg));
+            m_steerMotor.setControl(
+                m_angleVoltageExpoSetter.withPosition(angleToSetDeg).withEnableFOC(true));
             break;
 
           case TorqueCurrentFOC:
@@ -350,13 +359,16 @@ public class BreadSwerveModule {
         /* But we do care about the backout due to coupling, so we keep it in */
         velocityToSet /= m_driveRotationsPerMeter;
         m_driveMotor.setControl(
-            m_voltageOpenLoopSetter.withOutput(velocityToSet / m_speedAt12VoltsMps * 12.0));
+            m_voltageOpenLoopSetter
+                .withOutput(velocityToSet / m_speedAt12VoltsMps * 12.0)
+                .withEnableFOC(true));
         break;
 
       case Velocity:
         switch (m_driveClosedLoopOutput) {
           case Voltage:
-            m_driveMotor.setControl(m_velocityVoltageSetter.withVelocity(velocityToSet));
+            m_driveMotor.setControl(
+                m_velocityVoltageSetter.withVelocity(velocityToSet).withEnableFOC(true));
             break;
 
           case TorqueCurrentFOC:
@@ -530,5 +542,17 @@ public class BreadSwerveModule {
    */
   public CANcoder getCANcoder() {
     return m_cancoder;
+  }
+
+  /* Returns stator current */
+  public double getStatorCurrent() {
+    BaseStatusSignal.refreshAll(m_statorCurrent);
+    return m_statorCurrent.getValue();
+  }
+
+  /* Returns supply current */
+  public double getSupplyCurrent() {
+    BaseStatusSignal.refreshAll(m_supplyCurrent);
+    return m_supplyCurrent.getValue();
   }
 }

@@ -37,6 +37,7 @@ import frc.robot.subsystems.swerve.BreadSwerveRequest.SwerveControlRequestParame
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Consumer;
+import org.littletonrobotics.junction.Logger;
 
 /**
  * Swerve Drive class utilizing CTR Electronics' Phoenix 6 API.
@@ -675,5 +676,18 @@ public class BreadSwerveDrivetrain {
    */
   public Pigeon2 getPigeon2() {
     return m_pigeon2;
+  }
+
+  /* Logs current */
+  public void logCurrents() {
+    try {
+      m_stateLock.writeLock().lock();
+      for (int i = 0; i < 4; i++) {
+        Logger.recordOutput("Swerve/Supply Current " + i, Modules[i].getSupplyCurrent());
+        Logger.recordOutput("Swerve/Stator Current " + i, Modules[i].getStatorCurrent());
+      }
+    } finally {
+      m_stateLock.writeLock().unlock();
+    }
   }
 }

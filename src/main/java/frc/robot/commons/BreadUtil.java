@@ -2,6 +2,7 @@ package frc.robot.commons;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.RobotController;
 
 public class BreadUtil {
@@ -73,5 +74,16 @@ public class BreadUtil {
   public static double numericalMap(
       double input, double inputStart, double inputEnd, double outputStart, double outputEnd) {
     return outputStart + (outputEnd - outputStart) / (inputEnd - inputStart) * (input - inputStart);
+  }
+
+  // Find the average of multiple Translation3ds
+  public static Translation3d average(Translation3d... poses) {
+    double x = 0, y = 0, z = 0;
+    for (Translation3d pose : poses) {
+      x += pose.getX();
+      y += pose.getY();
+      z += pose.getZ();
+    }
+    return new Translation3d(x / poses.length, y / poses.length, z / poses.length);
   }
 }

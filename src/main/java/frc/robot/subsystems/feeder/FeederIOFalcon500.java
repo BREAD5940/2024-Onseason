@@ -40,10 +40,12 @@ public class FeederIOFalcon500 implements FeederIO {
 
   /* Gains */
   LoggedTunableNumber kS = new LoggedTunableNumber("Feeder/kS", 0.0);
-  LoggedTunableNumber kV = new LoggedTunableNumber("Feeder/kV", 0.0);
-  LoggedTunableNumber kP = new LoggedTunableNumber("Feeder/kP", 0.0);
+  LoggedTunableNumber kV = new LoggedTunableNumber("Feeder/kV", 0.12);
+  LoggedTunableNumber kP = new LoggedTunableNumber("Feeder/kP", 0.3);
   LoggedTunableNumber kI = new LoggedTunableNumber("Feeder/kI", 0.0);
   LoggedTunableNumber kD = new LoggedTunableNumber("Feeder/kD", 0.0);
+
+  private double setpoint;
 
   public FeederIOFalcon500() {
     /* Instantiate configurator */
@@ -104,6 +106,7 @@ public class FeederIOFalcon500 implements FeederIO {
     inputs.tempCelcius = temperature.getValue();
     inputs.currentAmps = current.getValue();
     inputs.beamBreakTriggered = beamBreak.getValue().value == 0;
+    inputs.setpoint = setpoint;
   }
 
   @Override
@@ -113,6 +116,7 @@ public class FeederIOFalcon500 implements FeederIO {
 
   @Override
   public void setVelocity(double velocityMps) {
+    setpoint = velocityMps;
     if (velocityMps > 0.0) {
       motor.setControl(
           new VelocityVoltage(

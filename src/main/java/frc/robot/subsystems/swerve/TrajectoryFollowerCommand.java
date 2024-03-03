@@ -21,6 +21,7 @@ public class TrajectoryFollowerCommand extends Command {
   private final Swerve swerve;
   private final Timer timer = new Timer();
   private boolean flippedForRed = false;
+  private boolean aimAtSpeaker = false;
 
   public final BreadHolonomicDriveController autonomusController =
       new BreadHolonomicDriveController(
@@ -28,15 +29,17 @@ public class TrajectoryFollowerCommand extends Command {
           new PIDController(8.0, 0, 0.0),
           new PIDController(5.0, 0, 0.0));
 
-  public TrajectoryFollowerCommand(PathPlannerPath path, Swerve swerve, boolean isInitialPoint) {
+  public TrajectoryFollowerCommand(
+      PathPlannerPath path, Swerve swerve, boolean isInitialPoint, boolean aimAtSpeaker) {
     this.path = path;
     this.swerve = swerve;
     this.isInitialPoint = isInitialPoint;
+    this.aimAtSpeaker = aimAtSpeaker;
     addRequirements(swerve);
   }
 
-  public TrajectoryFollowerCommand(PathPlannerPath path, Swerve swerve) {
-    this(path, swerve, false);
+  public TrajectoryFollowerCommand(PathPlannerPath path, Swerve swerve, boolean aimAtSpeaker) {
+    this(path, swerve, false, aimAtSpeaker);
   }
 
   @Override
@@ -70,6 +73,10 @@ public class TrajectoryFollowerCommand extends Command {
   @Override
   public void execute() {
     PathPlannerTrajectory.State goal = trajectory.sample(timer.get());
+    goal.targetHolonomicRotation =
+        aimAtSpeaker
+            ? RobotContainer.visionSupplier.robotToSpeakerAngle()
+            : goal.targetHolonomicRotation;
     ChassisSpeeds adjustedSpeeds =
         autonomusController.calculate(RobotContainer.swerve.getPose(), goal);
     swerve.requestVelocity(adjustedSpeeds, false);

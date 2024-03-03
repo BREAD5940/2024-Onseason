@@ -3,25 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.5,
-        "y": 4.12
+        "x": 2.87,
+        "y": 7.04
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8874449729874576,
-        "y": 4.288090264548585
+        "x": 2.2574449729874577,
+        "y": 7.208090264548585
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.5,
-        "y": 5.562498502528834
+        "x": 7.836955588319164,
+        "y": 7.4598028796628215
       },
       "prevControl": {
-        "x": 2.0690623504366226,
-        "y": 5.598117066893856
+        "x": 7.406017938755786,
+        "y": 7.495421444027843
+      },
+      "nextControl": {
+        "x": 8.267893237882541,
+        "y": 7.4241843152978
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 4.967800634602694,
+        "y": 7.04
+      },
+      "prevControl": {
+        "x": 6.291125164276005,
+        "y": 7.424670370025476
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,33 +46,8 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.15,
+      "waypointRelativePos": 0.5,
       "rotationDegrees": 180.0,
-      "rotateFast": false
-    },
-    {
-      "waypointRelativePos": 1.0,
-      "rotationDegrees": 0,
-      "rotateFast": false
-    },
-    {
-      "waypointRelativePos": 1.0,
-      "rotationDegrees": 0,
-      "rotateFast": false
-    },
-    {
-      "waypointRelativePos": 1.0,
-      "rotationDegrees": 0,
-      "rotateFast": false
-    },
-    {
-      "waypointRelativePos": 1.0,
-      "rotationDegrees": 0,
-      "rotateFast": false
-    },
-    {
-      "waypointRelativePos": 1.0,
-      "rotationDegrees": 0,
       "rotateFast": false
     }
   ],
@@ -64,7 +55,7 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.0,
-    "maxAcceleration": 4.0,
+    "maxAcceleration": 4.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },

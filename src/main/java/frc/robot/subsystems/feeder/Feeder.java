@@ -18,6 +18,7 @@ public class Feeder {
   private boolean requestIntake = false;
   private boolean requestSpit = false;
   private boolean requestShoot = false;
+  private boolean requestPreTrap = false;
 
   private boolean hasPiece = false;
 
@@ -30,7 +31,8 @@ public class Feeder {
     IDLE,
     INTAKE,
     SPIT,
-    SHOOT
+    SHOOT,
+    PRE_TRAP
   }
 
   public Feeder(FeederIO io) {
@@ -43,6 +45,7 @@ public class Feeder {
   public void onLoop() {
     // Log
     io.updateInputs(inputs);
+    io.updateTunableNumbers();
     Logger.processInputs("Feeder", inputs);
 
     Logger.recordOutput("Feeder/SystemState", systemState.toString());
@@ -50,7 +53,7 @@ public class Feeder {
     // Handle statemachine logic
     FeederState nextSystemState = systemState;
     if (systemState == FeederState.IDLE) {
-      io.setPercent(0.0);
+      io.setVelocity(0.0);
 
       if (requestIntake && !hasPiece) {
         nextSystemState = FeederState.INTAKE;
@@ -59,9 +62,11 @@ public class Feeder {
       } else if (requestShoot && hasPiece) {
         shootingTimer.start();
         nextSystemState = FeederState.SHOOT;
+      } else if (requestPreTrap) {
+        nextSystemState = FeederState.PRE_TRAP;
       }
     } else if (systemState == FeederState.INTAKE) {
-      io.setPercent(FEEDER_INTAKE_SPEED);
+      io.setVelocity(FEEDER_INTAKE_SPEED);
 
       if (!requestIntake) {
         nextSystemState = FeederState.IDLE;
@@ -84,6 +89,12 @@ public class Feeder {
       }
       if (!inputs.beamBreakTriggered && shootingTimer.get() > 2.0) {
         hasPiece = false;
+        nextSystemState = FeederState.IDLE;
+      }
+    } else if (systemState == FeederState.PRE_TRAP) {
+      io.setPercent(0.1);
+
+      if (!requestPreTrap) {
         nextSystemState = FeederState.IDLE;
       }
     }
@@ -121,9 +132,15 @@ public class Feeder {
     requestShoot = true;
   }
 
+  public void requestPreTrap() {
+    unsetAllRequests();
+    requestPreTrap = true;
+  }
+
   private void unsetAllRequests() {
     requestIntake = false;
     requestSpit = false;
     requestShoot = false;
+    requestPreTrap = false;
   }
 }

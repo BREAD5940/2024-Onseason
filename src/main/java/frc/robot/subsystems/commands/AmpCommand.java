@@ -1,6 +1,7 @@
 package frc.robot.subsystems.commands;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -39,16 +40,16 @@ public class AmpCommand extends Command {
     double dy;
 
     if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-      dx = Math.pow(-x, 1) * 3.0;
-      dy = Math.pow(-y, 1) * 3.0;
+      dx = Math.pow(-x, 1) * 2.0;
+      dy = Math.pow(-y, 1) * 2.0;
 
     } else {
-      dx = Math.pow(-x, 1) * -1 * 3.0;
-      dy = Math.pow(-y, 1) * -1 * 3.0;
+      dx = Math.pow(-x, 1) * -1 * 2.0;
+      dy = Math.pow(-y, 1) * -1 * 2.0;
     }
 
     // Apply swerve Requests
-    // swerve.requestVelocity(new ChassisSpeeds(dx, dy, output), true);
+    swerve.requestVelocity(new ChassisSpeeds(dx, dy, output), true);
 
     RobotContainer.superstructure.requestAmp(true, RobotContainer.driver.getYButton());
     RobotContainer.shooter.requestAmp();

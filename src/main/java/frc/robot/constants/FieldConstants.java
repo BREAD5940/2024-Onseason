@@ -2,21 +2,18 @@ package frc.robot.constants;
 
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Quaternion;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
+import frc.robot.commons.BreadUtil;
 import java.util.List;
 
 public class FieldConstants {
 
   public static final double fieldLength = 16.451;
   public static final double fieldWidth = 8.211;
-  public static final Pose2d targetPose =
-      new Pose2d(16.579342, 5.547867999999999, Rotation2d.fromDegrees(180.0));
 
   // AprilTag constants
   public static final double aprilTagWidth = Units.inchesToMeters(8.12500);
@@ -43,14 +40,14 @@ public class FieldConstants {
               new AprilTag(
                   3,
                   new Pose3d(
-                      16.579342 - Units.inchesToMeters(2.75),
+                      16.579342,
                       4.982717999999999,
                       1.4511020000000001,
                       new Rotation3d(new Quaternion(6.123233995736766e-17, 0.0, 0.0, 1.0)))),
               new AprilTag(
                   4,
                   new Pose3d(
-                      16.579342 - Units.inchesToMeters(2.75),
+                      16.579342,
                       5.547867999999999,
                       1.4511020000000001,
                       new Rotation3d(new Quaternion(6.123233995736766e-17, 0.0, 0.0, 1.0)))),
@@ -150,24 +147,27 @@ public class FieldConstants {
           fieldWidth);
 
   // Target Rectangle
-  public static final Pose3d tagFourPose = aprilTags.getTagPose(4).get();
+  public static final Pose3d tagSevenPose = aprilTags.getTagPose(7).get();
 
   public static final Translation3d[] targetVerticies = {
     new Translation3d(
-        tagFourPose.getX(),
-        tagFourPose.getY() - Units.inchesToMeters(21.125),
-        tagFourPose.getZ() + Units.inchesToMeters(21.125)),
+        tagSevenPose.getX(),
+        tagSevenPose.getY() - Units.inchesToMeters(21.125),
+        tagSevenPose.getZ() + Units.inchesToMeters(21.125)),
     new Translation3d(
-        tagFourPose.getX(),
-        tagFourPose.getY() + Units.inchesToMeters(21.125),
-        tagFourPose.getZ() + Units.inchesToMeters(21.125)),
+        tagSevenPose.getX(),
+        tagSevenPose.getY() + Units.inchesToMeters(21.125),
+        tagSevenPose.getZ() + Units.inchesToMeters(21.125)),
     new Translation3d(
-        tagFourPose.getX() - Units.inchesToMeters(20.0),
-        tagFourPose.getY() - Units.inchesToMeters(21.25),
-        tagFourPose.getZ() + Units.inchesToMeters(26.35)),
+        tagSevenPose.getX() + Units.inchesToMeters(20.0),
+        tagSevenPose.getY() - Units.inchesToMeters(21.25),
+        tagSevenPose.getZ() + Units.inchesToMeters(26.35)),
     new Translation3d(
-        tagFourPose.getX() - Units.inchesToMeters(20.0),
-        tagFourPose.getY() + Units.inchesToMeters(21.125),
-        tagFourPose.getZ() + Units.inchesToMeters(26.35))
+        tagSevenPose.getX() + Units.inchesToMeters(20.0),
+        tagSevenPose.getY() + Units.inchesToMeters(21.125),
+        tagSevenPose.getZ() + Units.inchesToMeters(26.35))
   };
+
+  public static final Pose3d targetPoseBlue =
+      new Pose3d(BreadUtil.average(targetVerticies), new Rotation3d());
 }

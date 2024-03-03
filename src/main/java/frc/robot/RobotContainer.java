@@ -16,6 +16,7 @@ import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.commons.BreadUtil;
 import frc.robot.constants.GammaTunerConstants;
 import frc.robot.subsystems.Superstructure;
+import frc.robot.subsystems.commands.AimAtTrapCommand;
 import frc.robot.subsystems.commands.AmpCommand;
 import frc.robot.subsystems.commands.FenderShotCommand;
 import frc.robot.subsystems.commands.TeleopShootCommand;
@@ -86,12 +87,12 @@ public class RobotContainer {
               double dy;
 
               if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-                dx = Math.pow(-x, 1) * 5.0;
-                dy = Math.pow(-y, 1) * 5.0;
+                dx = Math.pow(-x, 1) * 6.0;
+                dy = Math.pow(-y, 1) * 6.0;
 
               } else {
-                dx = Math.pow(-x, 1) * -1 * 5.0;
-                dy = Math.pow(-y, 1) * -1 * 5.0;
+                dx = Math.pow(-x, 1) * -1 * 6.0;
+                dy = Math.pow(-y, 1) * -1 * 6.0;
               }
               double rot = Math.pow(-omega, 3) * 12.0;
               swerve.requestPercent(new ChassisSpeeds(dx, dy, rot), true);
@@ -116,6 +117,9 @@ public class RobotContainer {
 
     new JoystickButton(driver, XboxController.Button.kRightBumper.value)
         .whileTrue(new FenderShotCommand(swerve, superstructure, shooter));
+
+    new JoystickButton(driver, XboxController.Button.kRightBumper.value)
+        .whileTrue(new AimAtTrapCommand(swerve));
   }
 
   private void configureAprilTagVision() {

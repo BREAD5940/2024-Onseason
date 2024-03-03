@@ -19,7 +19,6 @@ public class Shooter extends SubsystemBase {
   private boolean requestFender = false;
   private boolean requestVisionSpeaker = false;
   private boolean requestAmp = false;
-  private boolean requestAutoDriveBy = false;
 
   private boolean wantsShootOverDefense = false;
 
@@ -34,7 +33,8 @@ public class Shooter extends SubsystemBase {
     IDLE,
     FENDER,
     VISION_SPEAKER,
-    AMP
+    AMP,
+    TUNING
   }
 
   public Shooter(ShooterIO io) {
@@ -54,7 +54,19 @@ public class Shooter extends SubsystemBase {
 
     if (systemState == ShooterState.IDLE) {
       // Outputs
-      io.setVelocity(desiredLeftRPM, desiredRightRPM);
+      // if (RobotContainer.swerve.getPose().getX() < 6.03
+      //     && RobotContainer.visionSupplier.robotToSpeakerShot() != null) {
+      //   ShotParameter shot = RobotContainer.visionSupplier.robotToSpeakerShot();
+      //   desiredLeftRPM = shot.leftRPM;
+      //   desiredRightRPM = shot.rightRPM;
+      // } else {
+      //   desiredLeftRPM = SHOOTER_LEFT_IDLE_RPM;
+      //   desiredRightRPM = SHOOTER_RIGHT_IDLE_RPM;
+      // }
+      ShotParameter shot = RobotContainer.visionSupplier.robotToSpeakerShot();
+      io.setVelocity(
+          RobotContainer.operator.getAButton() ? shot.leftRPM : 0.0,
+          RobotContainer.operator.getAButton() ? shot.rightRPM : 0.0);
 
       // Transitions
       if (requestFender) {
@@ -138,6 +150,5 @@ public class Shooter extends SubsystemBase {
     requestFender = false;
     requestVisionSpeaker = false;
     requestAmp = false;
-    requestAutoDriveBy = false;
   }
 }

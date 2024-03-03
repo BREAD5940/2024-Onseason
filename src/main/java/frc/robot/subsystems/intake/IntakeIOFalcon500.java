@@ -2,6 +2,8 @@ package frc.robot.subsystems.intake;
 
 import static frc.robot.constants.Constants.Intake.*;
 
+import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
@@ -12,7 +14,7 @@ import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.commons.LoggedTunableNumber;
 
 public class IntakeIOFalcon500 implements IntakeIO {
@@ -20,7 +22,7 @@ public class IntakeIOFalcon500 implements IntakeIO {
   /* Hardware */
   private final TalonFX intake = new TalonFX(INTAKE_ID, "dabus");
   private final TalonFX vector = new TalonFX(VECTOR_ID, "dabus");
-  private final AnalogInput beamBreak = new AnalogInput(0);
+  private final DigitalInput beamBreak = new DigitalInput(4);
 
   /* Configurator */
   private final TalonFXConfigurator intakeConfigurator;
@@ -44,10 +46,16 @@ public class IntakeIOFalcon500 implements IntakeIO {
   LoggedTunableNumber intakeKd = new LoggedTunableNumber("Intake/kD", 0.0);
 
   LoggedTunableNumber vectorKs = new LoggedTunableNumber("Vector/kS", 0.0);
-  LoggedTunableNumber vectorKv = new LoggedTunableNumber("Vector/kV", 0.0);
-  LoggedTunableNumber vectorKp = new LoggedTunableNumber("Vector/kP", 0.0);
+  LoggedTunableNumber vectorKv = new LoggedTunableNumber("Vector/kV", 0.14);
+  LoggedTunableNumber vectorKp = new LoggedTunableNumber("Vector/kP", 0.2);
   LoggedTunableNumber vectorKi = new LoggedTunableNumber("Vector/kI", 0.0);
   LoggedTunableNumber vectorKd = new LoggedTunableNumber("Vector/kD", 0.0);
+
+  private double vectorVelocitySetpoint = 0.0;
+
+  /* Status Signals */
+  private StatusSignal<Double> vectorVelocity;
+  private StatusSignal<Double> supplyVector;
 
   public IntakeIOFalcon500() {
     /* Instantiate configuator */
@@ -56,9 +64,10 @@ public class IntakeIOFalcon500 implements IntakeIO {
 
     /* Create configs */
     intakeCurrentLimitConfigs = new CurrentLimitsConfigs();
-    intakeCurrentLimitConfigs.SupplyCurrentLimit = 100.0;
-    intakeCurrentLimitConfigs.SupplyCurrentThreshold = 100.0;
-    intakeCurrentLimitConfigs.SupplyTimeThreshold = 1;
+    intakeCurrentLimitConfigs.SupplyCurrentLimit = 300.0;
+    intakeCurrentLimitConfigs.SupplyCurrentThreshold = 300.0;
+    intakeCurrentLimitConfigs.StatorCurrentLimit = 300.0;
+    intakeCurrentLimitConfigs.SupplyTimeThreshold = 1.5;
     intakeCurrentLimitConfigs.SupplyCurrentLimitEnable = true;
 
     vectorCurrentLimitConfigs = new CurrentLimitsConfigs();
@@ -115,23 +124,29 @@ public class IntakeIOFalcon500 implements IntakeIO {
     vectorConfigurator.apply(openLoopRampsConfigs);
     vectorConfigurator.apply(closedLoopRampsConfigs);
 
-    intake.optimizeBusUtilization();
-    vector.optimizeBusUtilization();
+    vectorVelocity = vector.getVelocity();
+    supplyVector = vector.getSupplyCurrent();
+
+    BaseStatusSignal.setUpdateFrequencyForAll(50, vectorVelocity, supplyVector);
   }
 
   @Override
   public void updateInputs(IntakeIOInputs inputs) {
+    BaseStatusSignal.refreshAll(vectorVelocity, supplyVector);
+
     inputs.intakeVelocityRPM = intake.getVelocity().getValueAsDouble() * 60;
     inputs.intakeCurrentAmps = intake.getSupplyCurrent().getValue();
     inputs.intakeAppliedVoltage = intake.getMotorVoltage().getValue();
     inputs.intakeTempCelcius = intake.getDeviceTemp().getValue();
 
-    inputs.vectorVelocityRPM = vector.getVelocity().getValueAsDouble() * 60;
+    inputs.vectorVelocityRPM = vectorVelocity.getValue() * 60;
     inputs.vectorAppliedVoltage = vector.getSupplyCurrent().getValue();
     inputs.vectorAppliedVoltage = vector.getMotorVoltage().getValue();
     inputs.vectorTempCelcius = vector.getDeviceTemp().getValue();
+    inputs.vectorVelocitySetpoint = vectorVelocitySetpoint;
+    inputs.vectorSupplyCurrent = supplyVector.getValueAsDouble();
 
-    inputs.beamBreakTriggered = beamBreak.getVoltage();
+    inputs.beamBreakTriggered = false;
   }
 
   @Override
@@ -151,6 +166,7 @@ public class IntakeIOFalcon500 implements IntakeIO {
 
   @Override
   public void setVectorVelocity(double velocityRpm) {
+    vectorVelocitySetpoint = velocityRpm;
     vector.setControl(new VelocityVoltage(velocityRpm / 60.0));
   }
 

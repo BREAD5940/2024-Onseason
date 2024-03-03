@@ -41,6 +41,7 @@ public class Intake extends SubsystemBase {
   public void periodic() {
     // Logs
     io.updateInputs(inputs);
+    io.updateTunableNumbers();
     Logger.processInputs("Intake", inputs);
 
     Logger.recordOutput("Intake/SystemState", systemState);
@@ -61,17 +62,18 @@ public class Intake extends SubsystemBase {
       }
     } else if (systemState == IntakeState.INTAKE) {
       io.setIntakePercent(INTAKE_SPEED);
-      io.setVectorPercent(0.8);
+      // io.setVectorVelocity(3000);
+      io.setVectorPercent(0.5);
 
       if (!requestIntake) {
         nextSystemState = IntakeState.IDLE;
-      } else if (inputs.beamBreakTriggered > 1.0) {
+      } else if (inputs.beamBreakTriggered) {
         hasPiece = true;
         nextSystemState = IntakeState.IDLE;
       }
     } else if (systemState == IntakeState.SPIT) {
       io.setIntakePercent(SPIT_SPEED);
-      io.setVectorPercent(-0.5);
+      io.setVectorVelocity(-2000);
 
       if (!requestSpit) {
         hasPiece = false;
@@ -79,7 +81,8 @@ public class Intake extends SubsystemBase {
       }
     } else if (systemState == IntakeState.FEED) {
       io.setIntakePercent(FEED_SPEED);
-      io.setVectorPercent(0.8);
+      // io.setVectorVelocity(3000);
+      io.setVectorPercent(0.5);
 
       if (RobotContainer.superstructure.hasPiece()
           || RobotContainer.superstructure.getSystemState() != SuperstructureState.INTAKE) {

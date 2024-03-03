@@ -21,6 +21,8 @@ public class TeleopShootCommand extends Command {
   public TeleopShootCommand(Swerve swerve) {
     this.swerve = swerve;
 
+    turnPID.enableContinuousInput(-Math.PI, Math.PI);
+
     addRequirements(swerve);
   }
 
@@ -56,9 +58,7 @@ public class TeleopShootCommand extends Command {
     // RobotContainer.superstructure.requestFender(true, RobotContainer.driver.getYButton());
     // RobotContainer.shooter.requestFender();
     RobotContainer.superstructure.requestVisionSpeaker(
-        true,
-        RobotContainer.swerve.atAngularSetpoint(setpoint) && RobotContainer.driver.getYButton(),
-        false);
+        true, RobotContainer.swerve.atAngularSetpoint(setpoint), false);
     RobotContainer.shooter.requestVisionSpeaker(false);
 
     // Logs
@@ -73,5 +73,6 @@ public class TeleopShootCommand extends Command {
   public void end(boolean interrupted) {
     RobotContainer.shooter.requestIdle();
     RobotContainer.superstructure.requestVisionSpeaker(false, false, false);
+    // RobotContainer.superstructure.requestFender(false, false);
   }
 }

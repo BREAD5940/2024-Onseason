@@ -42,19 +42,23 @@ public class ShooterIOKrakenX60 implements ShooterIO {
   private StatusSignal<Double> velocityLeft;
   private StatusSignal<Double> positionRight;
   private StatusSignal<Double> positionLeft;
+  private StatusSignal<Double> statorLeft;
+  private StatusSignal<Double> statorRight;
+  private StatusSignal<Double> supplyLeft;
+  private StatusSignal<Double> supplyRight;
 
   /* Gains */
   LoggedTunableNumber rightShooterKs = new LoggedTunableNumber("RightShooter/kS", 0.0);
   LoggedTunableNumber rightShooterKa = new LoggedTunableNumber("RightShooter/kA", 0.0);
-  LoggedTunableNumber rightShooterKv = new LoggedTunableNumber("RightShooter/kV", 0.128);
-  LoggedTunableNumber rightShooterKp = new LoggedTunableNumber("RightShooter/kP", 0.2);
+  LoggedTunableNumber rightShooterKv = new LoggedTunableNumber("RightShooter/kV", 0.131);
+  LoggedTunableNumber rightShooterKp = new LoggedTunableNumber("RightShooter/kP", 0.4);
   LoggedTunableNumber rightShooterKi = new LoggedTunableNumber("RightShooter/kI", 0.0);
   LoggedTunableNumber rightShooterKd = new LoggedTunableNumber("RightShooter/kD", 0.0);
 
   LoggedTunableNumber leftShooterKs = new LoggedTunableNumber("LeftShooter/kS", 0.0);
   LoggedTunableNumber leftShooterKa = new LoggedTunableNumber("LeftShooter/kA", 0.0);
-  LoggedTunableNumber leftShooterKv = new LoggedTunableNumber("LeftShooter/kV", 0.132);
-  LoggedTunableNumber leftShooterKp = new LoggedTunableNumber("LeftShooter/kP", 0.2);
+  LoggedTunableNumber leftShooterKv = new LoggedTunableNumber("LeftShooter/kV", 0.129);
+  LoggedTunableNumber leftShooterKp = new LoggedTunableNumber("LeftShooter/kP", 0.4);
   LoggedTunableNumber leftShooterKi = new LoggedTunableNumber("LeftShooter/kI", 0.0);
   LoggedTunableNumber leftShooterKd = new LoggedTunableNumber("LeftShooter/kD", 0.0);
 
@@ -131,14 +135,34 @@ public class ShooterIOKrakenX60 implements ShooterIO {
     velocityRight = right.getVelocity();
     positionLeft = left.getPosition();
     positionRight = right.getPosition();
+    statorLeft = left.getStatorCurrent();
+    statorRight = right.getStatorCurrent();
+    supplyLeft = left.getSupplyCurrent();
+    supplyRight = right.getSupplyCurrent();
 
     BaseStatusSignal.setUpdateFrequencyForAll(
-        50, velocityLeft, velocityRight, positionLeft, positionRight);
+        50,
+        velocityLeft,
+        velocityRight,
+        positionLeft,
+        positionRight,
+        statorLeft,
+        statorRight,
+        supplyLeft,
+        supplyRight);
   }
 
   @Override
   public void updateInputs(ShooterIOInputs inputs) {
-    BaseStatusSignal.refreshAll(velocityLeft, velocityRight, positionLeft, positionRight);
+    BaseStatusSignal.refreshAll(
+        velocityLeft,
+        velocityRight,
+        positionLeft,
+        positionRight,
+        statorLeft,
+        statorRight,
+        supplyLeft,
+        supplyRight);
 
     // Shooter left
     inputs.shooterLeftPosRad =
@@ -156,8 +180,7 @@ public class ShooterIOKrakenX60 implements ShooterIO {
     inputs.shooterRightTempCelcius = right.getDeviceTemp().getValue();
     inputs.shooterRightSetpointRPM = desiredRight;
 
-    inputs.shooterCurrentAmps =
-        new double[] {left.getSupplyCurrent().getValue(), right.getSupplyCurrent().getValue()};
+    inputs.shooterCurrentAmps = new double[] {supplyLeft.getValue(), supplyRight.getValue()};
   }
 
   @Override

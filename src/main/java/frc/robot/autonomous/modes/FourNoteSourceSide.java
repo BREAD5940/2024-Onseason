@@ -5,9 +5,11 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Robot;
 import frc.robot.subsystems.Superstructure;
+import frc.robot.subsystems.commands.FenderShotCommand;
 import frc.robot.subsystems.commands.StationaryShootCommand;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
@@ -21,7 +23,7 @@ public class FourNoteSourceSide extends SequentialCommandGroup {
     addRequirements(superstructure, swerve, shooter, intake);
     addCommands(
         new InstantCommand(() -> superstructure.requestIntake(true)),
-        new WaitUntilCommand(() -> superstructure.hasPiece()),
+        new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
         new InstantCommand(() -> superstructure.requestIntake(false)),
         new InstantCommand(
             () -> {
@@ -31,39 +33,68 @@ public class FourNoteSourceSide extends SequentialCommandGroup {
               }
               swerve.resetPose(path.getPreviewStartingHolonomicPose());
             }),
-        new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(3),
+        new FenderShotCommand(swerve, superstructure, shooter).withTimeout(3),
         new TrajectoryFollowerCommand(Robot.fourNoteSourceSideA, swerve, false)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
                   superstructure.requestIntake(true);
                   superstructure.requestVisionSpeaker(false, false, false);
-                  ;
-                }),
-        new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.fourNoteSourceSideB, swerve, false),
-        new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
+                })
+            .alongWith(
+                new SequentialCommandGroup(
+                    new WaitCommand(4.2),
+                    new InstantCommand(() -> shooter.requestVisionSpeaker(false)))),
+        new StationaryShootCommand(swerve, superstructure, shooter),
+        new TrajectoryFollowerCommand(Robot.fourNoteSourceSideB, swerve, false)
+            .beforeStarting(
+                () -> {
+                  intake.requestIntake();
+                  superstructure.requestIntake(true);
+                  superstructure.requestVisionSpeaker(false, false, false);
+                })
+            .alongWith(
+                new SequentialCommandGroup(
+                    new WaitCommand(2.5),
+                    new InstantCommand(() -> shooter.requestVisionSpeaker(false)))),
+        new StationaryShootCommand(swerve, superstructure, shooter),
         new TrajectoryFollowerCommand(Robot.fourNoteSourceSideC, swerve, false)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
                   superstructure.requestIntake(true);
                   superstructure.requestVisionSpeaker(false, false, false);
-                  ;
-                }),
-        new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.fourNoteSourceSideD, swerve, false),
-        new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.fourNoteSourceSideE, swerve, false)
-            .beforeStarting(
-                () -> {
-                  intake.requestIntake();
-                  superstructure.requestIntake(true);
-                  superstructure.requestVisionSpeaker(false, false, false);
-                  ;
-                }),
-        new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.fourNoteSourceSideF, swerve, false),
-        new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2));
+                })
+            .alongWith(
+                new SequentialCommandGroup(
+                    new WaitCommand(2.2),
+                    new InstantCommand(() -> shooter.requestVisionSpeaker(false)))),
+        new StationaryShootCommand(swerve, superstructure, shooter));
+
+    // new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
+    // new TrajectoryFollowerCommand(Robot.fourNoteSourceSideB, swerve, false),
+    // new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
+    // new TrajectoryFollowerCommand(Robot.fourNoteSourceSideC, swerve, false)
+    //     .beforeStarting(
+    //         () -> {
+    //           intake.requestIntake();
+    //           superstructure.requestIntake(true);
+    //           superstructure.requestVisionSpeaker(false, false, false);
+    //           ;
+    //         }),
+    // new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
+    // new TrajectoryFollowerCommand(Robot.fourNoteSourceSideD, swerve, false),
+    // new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
+    // new TrajectoryFollowerCommand(Robot.fourNoteSourceSideE, swerve, false)
+    //     .beforeStarting(
+    //         () -> {
+    //           intake.requestIntake();
+    //           superstructure.requestIntake(true);
+    //           superstructure.requestVisionSpeaker(false, false, false);
+    //           ;
+    //         }),
+    // new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
+    // new TrajectoryFollowerCommand(Robot.fourNoteSourceSideF, swerve, false),
+    // new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2));
   }
 }
