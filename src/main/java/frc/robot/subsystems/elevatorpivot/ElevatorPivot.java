@@ -5,7 +5,9 @@ import static frc.robot.constants.Constants.Pivot.*;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.RobotContainer;
 import frc.robot.commons.BreadUtil;
+import frc.robot.subsystems.Superstructure.SuperstructureState;
 import org.littletonrobotics.junction.Logger;
 
 public class ElevatorPivot {
@@ -167,9 +169,17 @@ public class ElevatorPivot {
 
   /* Returns whether or not the pivot is at its setpoint */
   public boolean atPivotSetpoint(Rotation2d setpoint) {
-    return BreadUtil.atReference(
-            pivotInputs.angleRads, setpoint.getRadians(), PIVOT_SETPOINT_TOLERANCE_RADS, true)
-        && Math.abs(pivotInputs.deltaError) < PIVOT_DELTA_ERROR_TOLERANCE;
+    Logger.recordOutput("Allowing Jiggle", false);
+    if (RobotContainer.visionSupplier.getDistance() > 4.0
+        && RobotContainer.superstructure.getSystemState() == SuperstructureState.VISION_SPEAKER) {
+      return BreadUtil.atReference(
+              pivotInputs.angleRads, setpoint.getRadians(), PIVOT_SETPOINT_TOLERANCE_RADS, true)
+          && Math.abs(pivotInputs.deltaError) < PIVOT_DELTA_ERROR_TOLERANCE;
+    } else {
+      Logger.recordOutput("Allowing Jiggle", true);
+      return BreadUtil.atReference(
+          pivotInputs.angleRads, setpoint.getRadians(), PIVOT_SETPOINT_TOLERANCE_RADS, true);
+    }
   }
 
   /* Returns whether or not the elevator is at its setpoint */

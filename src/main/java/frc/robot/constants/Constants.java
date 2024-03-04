@@ -531,8 +531,7 @@ public class Constants {
 
         PIVOT_SPIT_ANGLE = Rotation2d.fromDegrees(0.0);
 
-        // PIVOT_AMP_ANGLE = Rotation2d.fromDegrees(25.0);
-        PIVOT_AMP_ANGLE = Rotation2d.fromDegrees(-28.0);
+        PIVOT_AMP_ANGLE = Rotation2d.fromDegrees(25.0);
 
         PIVOT_PRE_CLIMB_ANGLE = Rotation2d.fromDegrees(25.0);
 

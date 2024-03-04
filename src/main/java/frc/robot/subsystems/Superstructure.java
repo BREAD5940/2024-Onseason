@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.commons.BreadUtil;
+import frc.robot.commons.LoggedTunableNumber;
 import frc.robot.subsystems.elevatorpivot.ElevatorIO;
 import frc.robot.subsystems.elevatorpivot.ElevatorPivot;
 import frc.robot.subsystems.elevatorpivot.ElevatorPivot.ElevatorPivotState;
@@ -18,6 +19,13 @@ import org.littletonrobotics.junction.Logger;
 
 /* Superstructure class for handling the interaction between all the subsystems minus swerve */
 public class Superstructure extends SubsystemBase {
+
+  // For on-the-fly adjustments
+  static LoggedTunableNumber angleAddition =
+      new LoggedTunableNumber("On-the-fly/angleAddition", 0.0);
+
+  static LoggedTunableNumber angleMultiplication =
+      new LoggedTunableNumber("On-the-fly/distanceScaledAddition");
 
   /* Subsystems */
   private final ElevatorPivot elevatorPivot;
@@ -186,7 +194,7 @@ public class Superstructure extends SubsystemBase {
       }
 
       elevatorPivot.requestPursueSetpoint(
-          Rotation2d.fromDegrees(shot.pivotAngleDeg), shot.elevatorHeight);
+          Rotation2d.fromDegrees((shot.pivotAngleDeg + angleAddition.get())), shot.elevatorHeight);
 
       if ((wantsShoot)
           && elevatorPivot.atSetpoint()
