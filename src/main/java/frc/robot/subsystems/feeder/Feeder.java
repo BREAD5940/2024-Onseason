@@ -26,6 +26,8 @@ public class Feeder {
 
   private double stateStartTime = 0.0;
 
+  private boolean isTrapping = false;
+
   // System States
   public enum FeederState {
     IDLE,
@@ -75,7 +77,7 @@ public class Feeder {
         nextSystemState = FeederState.IDLE;
       }
     } else if (systemState == FeederState.SPIT) {
-      io.setPercent(FEEDER_SPIT_SPEED);
+      io.setPercent(isTrapping ? -0.3 : FEEDER_SPIT_SPEED);
 
       if (!requestSpit) {
         hasPiece = false;
@@ -122,9 +124,10 @@ public class Feeder {
     requestIntake = true;
   }
 
-  public void requestSpit() {
+  public void requestSpit(boolean isTrapping) {
     unsetAllRequests();
     requestSpit = true;
+    this.isTrapping = isTrapping;
   }
 
   public void requestShoot() {

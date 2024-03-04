@@ -53,8 +53,8 @@ public class FeederIOFalcon500 implements FeederIO {
 
     /* Create configs */
     currentLimitConfigs = new CurrentLimitsConfigs();
-    currentLimitConfigs.SupplyCurrentLimit = 200.0;
-    currentLimitConfigs.SupplyCurrentThreshold = 200.0;
+    currentLimitConfigs.SupplyCurrentLimit = 50.0;
+    currentLimitConfigs.SupplyCurrentThreshold = 50.0;
     currentLimitConfigs.SupplyTimeThreshold = 1.5;
     currentLimitConfigs.SupplyCurrentLimitEnable = true;
 

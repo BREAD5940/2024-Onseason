@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.commons.AllianceFlipUtil;
 import frc.robot.subsystems.shooter.InterpolatingTable;
+import frc.robot.subsystems.shooter.SODInterpolatingTable;
 import frc.robot.subsystems.shooter.ShotParameter;
 import org.littletonrobotics.junction.Logger;
 
@@ -21,6 +22,8 @@ public class VisionSupplier extends SubsystemBase {
   /* Speaker Results */
   private Rotation2d yaw;
   private ShotParameter shot;
+  private ShotParameter shotSOD;
+  private Rotation2d robotToAmpAngle;
 
   public Rotation2d robotToSpeakerAngle() {
     return yaw;
@@ -30,8 +33,19 @@ public class VisionSupplier extends SubsystemBase {
     return shot;
   }
 
+  public ShotParameter robotToSpeakerShotSOD() {
+    return shotSOD;
+  }
+
+  public Rotation2d robotToAmpAngle() {
+    return robotToAmpAngle;
+  }
+
   @Override
   public void periodic() {
+    /* Flip amp position depending on alliance */
+    Translation2d ampCenter2d = AllianceFlipUtil.apply(ampCenter);
+
     /* Flip the target position if you're on the red alliance */
     Pose2d targetPose = AllianceFlipUtil.apply(targetPoseBlue.toPose2d());
 
@@ -67,6 +81,13 @@ public class VisionSupplier extends SubsystemBase {
             robotToTangentialVirtualTarget.getX(), robotToTangentialVirtualTarget.getY());
 
     shot = InterpolatingTable.get(robotToRadialVirtualTarget.getNorm());
+
+    shotSOD = SODInterpolatingTable.get(robotToRadialVirtualTarget.getNorm());
+
+    /* Robot To Amp */
+    Translation2d robotToAmp = ampCenter2d.minus(robotPose.getTranslation());
+
+    robotToAmpAngle = new Rotation2d(robotToAmp.getX(), robotToAmp.getY());
 
     // Logs
     Logger.recordOutput("Vision/DistanceToTarget", robotToRadialVirtualTarget.getNorm());

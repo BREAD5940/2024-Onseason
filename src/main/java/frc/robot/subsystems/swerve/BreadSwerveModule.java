@@ -124,6 +124,7 @@ public class BreadSwerveModule {
     talonConfigs.Slot0 = constants.DriveMotorGains;
     talonConfigs.TorqueCurrent.PeakForwardTorqueCurrent = constants.SlipCurrent;
     talonConfigs.TorqueCurrent.PeakReverseTorqueCurrent = -constants.SlipCurrent;
+    talonConfigs.CurrentLimits.SupplyCurrentLimit = 80.0;
     talonConfigs.CurrentLimits.StatorCurrentLimit = constants.SlipCurrent;
     talonConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
 
@@ -154,6 +155,7 @@ public class BreadSwerveModule {
     talonConfigs.CurrentLimits = new CurrentLimitsConfigs();
 
     talonConfigs.Slot0 = constants.SteerMotorGains;
+    talonConfigs.CurrentLimits.SupplyCurrentLimit = 20.0;
     // Modify configuration to use remote CANcoder fused
     talonConfigs.Feedback.FeedbackRemoteSensorID = constants.CANcoderId;
     switch (constants.FeedbackSource) {

@@ -131,7 +131,12 @@ public class Shooter extends SubsystemBase {
   }
 
   public void requestVisionSpeaker(boolean wantsShootOverDefense) {
-    ShotParameter shot = RobotContainer.visionSupplier.robotToSpeakerShot();
+    ShotParameter shot;
+    if (wantsShootOverDefense) {
+      shot = RobotContainer.visionSupplier.robotToSpeakerShotSOD();
+    } else {
+      shot = RobotContainer.visionSupplier.robotToSpeakerShot();
+    }
     desiredLeftRPM = shot.leftRPM;
     desiredRightRPM = shot.rightRPM;
     unsetAllRequests();

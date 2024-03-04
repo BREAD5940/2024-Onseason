@@ -5,6 +5,7 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Quaternion;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.commons.BreadUtil;
@@ -17,6 +18,9 @@ public class FieldConstants {
 
   // AprilTag constants
   public static final double aprilTagWidth = Units.inchesToMeters(8.12500);
+
+  public static final Translation2d ampCenter =
+      new Translation2d(Units.inchesToMeters(72.455), fieldWidth);
 
   public static final AprilTagFieldLayout aprilTags =
       new AprilTagFieldLayout(

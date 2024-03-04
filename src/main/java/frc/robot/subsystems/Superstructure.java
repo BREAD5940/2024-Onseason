@@ -133,7 +133,7 @@ public class Superstructure extends SubsystemBase {
     } else if (systemState == SuperstructureState.SPIT) {
       elevatorPivot.requestPursueSetpoint(PIVOT_SPIT_ANGLE, ELEVATOR_SPIT_HEIGHT);
       if (elevatorPivot.atSetpoint()) {
-        feeder.requestSpit();
+        feeder.requestSpit(false);
       } else {
         feeder.requestIdle();
       }
@@ -172,7 +172,12 @@ public class Superstructure extends SubsystemBase {
         nextSystemState = SuperstructureState.IDLE;
       }
     } else if (systemState == SuperstructureState.VISION_SPEAKER) {
-      ShotParameter shot = RobotContainer.visionSupplier.robotToSpeakerShot();
+      ShotParameter shot;
+      if (wantsShootOverDefense) {
+        shot = RobotContainer.visionSupplier.robotToSpeakerShotSOD();
+      } else {
+        shot = RobotContainer.visionSupplier.robotToSpeakerShot();
+      }
 
       if (shouldShoot) {
         feeder.requestShoot();
@@ -272,7 +277,7 @@ public class Superstructure extends SubsystemBase {
       }
     } else if (systemState == SuperstructureState.TRAP_SCORED) {
       elevatorPivot.requestPursueSetpoint(PIVOT_TRAP_ANGLE, ELEVATOR_TRAP_HEIGHT);
-      feeder.requestSpit();
+      feeder.requestSpit(true);
 
       if (requestNextClimbState && elevatorPivot.atSetpoint()) {
         nextSystemState = SuperstructureState.POST_TRAP;
@@ -284,7 +289,7 @@ public class Superstructure extends SubsystemBase {
     } else if (systemState == SuperstructureState.POST_TRAP) {
       elevatorPivot.requestPursueSetpoint(
           PIVOT_TRAP_ANGLE.plus(Rotation2d.fromDegrees(10.0)), ELEVATOR_TRAP_HEIGHT - 0.2);
-      feeder.requestSpit();
+      feeder.requestSpit(true);
 
       if (requestPrevClimbState) {
         nextSystemState = SuperstructureState.TRAP;

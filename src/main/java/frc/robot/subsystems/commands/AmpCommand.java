@@ -21,6 +21,8 @@ public class AmpCommand extends Command {
   public AmpCommand(Swerve swerve) {
     this.swerve = swerve;
 
+    turnPID.enableContinuousInput(-Math.PI, Math.PI);
+
     addRequirements(swerve);
   }
 
@@ -28,6 +30,7 @@ public class AmpCommand extends Command {
   public void execute() {
     // Calculate swerve outputs
     double setpoint = Math.PI / 2.0;
+    // double setpoint = RobotContainer.visionSupplier.robotToAmpAngle().getRadians();
     double measurement = swerve.getPose().getRotation().getRadians();
 
     double output = turnPID.calculate(measurement, setpoint);

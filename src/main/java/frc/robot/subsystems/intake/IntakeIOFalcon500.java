@@ -64,8 +64,8 @@ public class IntakeIOFalcon500 implements IntakeIO {
 
     /* Create configs */
     intakeCurrentLimitConfigs = new CurrentLimitsConfigs();
-    intakeCurrentLimitConfigs.SupplyCurrentLimit = 300.0;
-    intakeCurrentLimitConfigs.SupplyCurrentThreshold = 300.0;
+    intakeCurrentLimitConfigs.SupplyCurrentLimit = 40.0;
+    intakeCurrentLimitConfigs.SupplyCurrentThreshold = 40.0;
     intakeCurrentLimitConfigs.StatorCurrentLimit = 300.0;
     intakeCurrentLimitConfigs.SupplyTimeThreshold = 1.5;
     intakeCurrentLimitConfigs.SupplyCurrentLimitEnable = true;
