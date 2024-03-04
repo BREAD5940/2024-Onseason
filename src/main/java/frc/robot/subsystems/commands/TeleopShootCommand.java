@@ -59,7 +59,7 @@ public class TeleopShootCommand extends Command {
     // RobotContainer.shooter.requestFender();
     RobotContainer.superstructure.requestVisionSpeaker(
         true,
-        RobotContainer.swerve.atAngularSetpoint(setpoint) && RobotContainer.driver.getYButton(),
+        RobotContainer.swerve.atAngularSetpoint(setpoint),
         RobotContainer.operator.getYButton());
     RobotContainer.shooter.requestVisionSpeaker(false);
 

@@ -17,13 +17,14 @@ public interface PivotIO {
     public double motionMagicVelocityTargetDeg = 0.0;
     public double setpointDeg = 0.0;
     public double shaftPosition = 0.0;
+    public double deltaError = 0.0;
   }
 
   /** Updates the set of loggable inputs */
   public default void updateInputs(PivotIOInputs inputs) {}
 
   /** Sets the desired angle of the pivot */
-  public default void setAngle(Rotation2d angle) {}
+  public default void setAngle(Rotation2d angle, double elevatorAcceleration) {}
 
   /** Sets the speed of the pivot to the desired percent output */
   public default void setVoltage(double voltage) {}

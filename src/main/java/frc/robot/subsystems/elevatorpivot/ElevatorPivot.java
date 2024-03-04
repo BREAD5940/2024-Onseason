@@ -78,21 +78,21 @@ public class ElevatorPivot {
     ElevatorPivotState nextSystemState = systemState;
     if (systemState == ElevatorPivotState.STARTING_CONFIG) {
       elevatorIO.setVoltage(0.0);
-      pivotIO.setAngle(Rotation2d.fromDegrees(0.0));
+      pivotIO.setAngle(Rotation2d.fromDegrees(0.0), elevatorInputs.acceleration);
 
       if (requestHome) {
         nextSystemState = ElevatorPivotState.NEUTRALIZING_PIVOT;
       }
     } else if (systemState == ElevatorPivotState.NEUTRALIZING_PIVOT) {
       elevatorIO.setVoltage(0.0);
-      pivotIO.setAngle(PIVOT_NEUTRAL_ANGLE);
+      pivotIO.setAngle(PIVOT_NEUTRAL_ANGLE, elevatorInputs.acceleration);
 
       if (atPivotSetpoint(PIVOT_NEUTRAL_ANGLE)) {
         nextSystemState = ElevatorPivotState.HOMING;
       }
     } else if (systemState == ElevatorPivotState.HOMING) {
       elevatorIO.setVoltage(-2.0);
-      pivotIO.setAngle(PIVOT_NEUTRAL_ANGLE);
+      pivotIO.setAngle(PIVOT_NEUTRAL_ANGLE, elevatorInputs.acceleration);
 
       if (BreadUtil.getFPGATimeSeconds() - mStateStartTime > ELEVATOR_HOMING_TRESHOLD_SEC
           && Math.abs(elevatorInputs.velMetersPerSecond) < ELEVATOR_HOMING_TRESHOLD_MPS) {
@@ -131,7 +131,7 @@ public class ElevatorPivot {
       // }
 
       elevatorIO.setVoltage(0.0);
-      pivotIO.setAngle(PIVOT_NEUTRAL_ANGLE);
+      pivotIO.setAngle(PIVOT_NEUTRAL_ANGLE, elevatorInputs.acceleration);
 
       if (requestHome) {
         nextSystemState = ElevatorPivotState.NEUTRALIZING_PIVOT;
@@ -140,7 +140,7 @@ public class ElevatorPivot {
       }
     } else if (systemState == ElevatorPivotState.PURSUING_SETPOINT) {
       elevatorIO.setHeight(adjustedDesiredElevatorHeight);
-      pivotIO.setAngle(adjustedDesiredPivotAngle);
+      pivotIO.setAngle(adjustedDesiredPivotAngle, elevatorInputs.acceleration);
 
       if (requestHome) {
         nextSystemState = ElevatorPivotState.NEUTRALIZING_PIVOT;
@@ -168,7 +168,8 @@ public class ElevatorPivot {
   /* Returns whether or not the pivot is at its setpoint */
   public boolean atPivotSetpoint(Rotation2d setpoint) {
     return BreadUtil.atReference(
-        pivotInputs.angleRads, setpoint.getRadians(), PIVOT_SETPOINT_TOLERANCE_RADS, true);
+            pivotInputs.angleRads, setpoint.getRadians(), PIVOT_SETPOINT_TOLERANCE_RADS, true)
+        && Math.abs(pivotInputs.deltaError) < PIVOT_DELTA_ERROR_TOLERANCE;
   }
 
   /* Returns whether or not the elevator is at its setpoint */

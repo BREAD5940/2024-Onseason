@@ -35,7 +35,7 @@ public class ElevatorIOKrakenX60 implements ElevatorIO {
   private final MotorOutputConfigs followerMotorConfigs;
   private final Slot0Configs slot0Configs;
   private final MotionMagicConfigs motionMagicConfigs;
-  private double posTarget;
+  private double setpoint;
 
   /* Gains */
   LoggedTunableNumber kA = new LoggedTunableNumber("Elevator/kA", 0.0);
@@ -54,6 +54,9 @@ public class ElevatorIOKrakenX60 implements ElevatorIO {
   /* Status Signals */
   private StatusSignal<Double> supplyLeft;
   private StatusSignal<Double> supplyRight;
+  private StatusSignal<Double> closedLoopReferenceSlope;
+  double prevClosedLoopReferenceSlope = 0.0;
+  double prevReferenceSlopeTimestamp = 0.0;
 
   public ElevatorIOKrakenX60() {
     /* Instantiate motors and configurators */
@@ -121,15 +124,17 @@ public class ElevatorIOKrakenX60 implements ElevatorIO {
 
     supplyLeft = leader.getSupplyCurrent();
     supplyRight = follower.getSupplyCurrent();
+    closedLoopReferenceSlope = leader.getClosedLoopReferenceSlope();
 
-    BaseStatusSignal.setUpdateFrequencyForAll(50, supplyLeft, supplyRight);
+    BaseStatusSignal.setUpdateFrequencyForAll(
+        100, supplyLeft, supplyRight, closedLoopReferenceSlope);
 
     follower.setControl(new Follower(ELEVATOR_LEFT_ID, false));
   }
 
   @Override
   public void updateInputs(ElevatorIOInputs inputs) {
-    BaseStatusSignal.refreshAll(supplyLeft, supplyRight);
+    BaseStatusSignal.refreshAll(supplyLeft, supplyRight, closedLoopReferenceSlope);
 
     inputs.posMeters = getHeight();
     inputs.velMetersPerSecond = getVelocity();
@@ -141,7 +146,16 @@ public class ElevatorIOKrakenX60 implements ElevatorIO {
     inputs.currentAmps = new double[] {supplyLeft.getValue(), supplyRight.getValue()};
     inputs.tempCelcius =
         new double[] {leader.getStatorCurrent().getValue(), follower.getStatorCurrent().getValue()};
-    inputs.setpointMeters = posTarget;
+    inputs.setpointMeters = setpoint;
+
+    double currentTime = closedLoopReferenceSlope.getTimestamp().getTime();
+    if (currentTime - prevReferenceSlopeTimestamp > 0.0) {
+      inputs.acceleration =
+          (inputs.motionMagicVelocityTarget - prevClosedLoopReferenceSlope)
+              / (currentTime - prevReferenceSlopeTimestamp);
+    }
+    prevClosedLoopReferenceSlope = inputs.motionMagicVelocityTarget;
+    prevReferenceSlopeTimestamp = currentTime;
   }
 
   @Override
@@ -150,9 +164,18 @@ public class ElevatorIOKrakenX60 implements ElevatorIO {
       leader.setControl(new VoltageOut(0.0));
       return;
     }
-    posTarget = heightMeters;
-    // double kG = getHeight() < ELEVATOR_S2_HEIGHT ? ELEVATOR_S1_KG : ELEVATOR_S2_KG;
-    // double arbFF = MathUtil.clamp(kG, -0.999, 0.999);
+    // if (heightMeters != setpoint) {
+    //   setpoint = heightMeters;
+    //   double travelDistance = Math.abs(setpoint - getHeight());
+    //   double acceleration =
+    //       BreadUtil.numericalMap(
+    //           travelDistance, ELEVATOR_MIN_HEIGHT, ELEVATOR_MAX_HEIGHT, 100, 400);
+    //   motionMagicConfigs.MotionMagicAcceleration = acceleration;
+    //   leaderConfigurator.apply(slot0Configs);
+    //   followerConfigurator.apply(slot0Configs);
+    //   Logger.recordOutput("Elevator/UpdatedMotionMagicAccel", acceleration);
+    // }
+    setpoint = heightMeters;
     leader.setControl(new MotionMagicVoltage(metersToRotations(heightMeters)));
   }
 

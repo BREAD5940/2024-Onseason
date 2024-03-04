@@ -24,6 +24,7 @@ public class VisionSupplier extends SubsystemBase {
   private ShotParameter shot;
   private ShotParameter shotSOD;
   private Rotation2d robotToAmpAngle;
+  private double distance;
 
   public Rotation2d robotToSpeakerAngle() {
     return yaw;
@@ -39,6 +40,10 @@ public class VisionSupplier extends SubsystemBase {
 
   public Rotation2d robotToAmpAngle() {
     return robotToAmpAngle;
+  }
+
+  public double getDistance() {
+    return distance;
   }
 
   @Override
@@ -83,6 +88,8 @@ public class VisionSupplier extends SubsystemBase {
     shot = InterpolatingTable.get(robotToRadialVirtualTarget.getNorm());
 
     shotSOD = SODInterpolatingTable.get(robotToRadialVirtualTarget.getNorm());
+
+    distance = robotToRadialVirtualTarget.getNorm();
 
     /* Robot To Amp */
     Translation2d robotToAmp = ampCenter2d.minus(robotPose.getTranslation());

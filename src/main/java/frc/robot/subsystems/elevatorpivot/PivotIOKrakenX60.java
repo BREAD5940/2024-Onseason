@@ -26,6 +26,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import frc.robot.commons.AveragingFilter;
 import frc.robot.commons.LoggedTunableNumber;
 
 public class PivotIOKrakenX60 implements PivotIO {
@@ -63,9 +64,14 @@ public class PivotIOKrakenX60 implements PivotIO {
   LoggedTunableNumber motionCruiseVelocity =
       new LoggedTunableNumber("Pivot/MotionCruiseVelocity", 5.0);
 
+  LoggedTunableNumber kE = new LoggedTunableNumber("Pivot/kE", 0.0);
+
   StatusCode pivotStatusCode;
 
-  double setpointDeg = 0.0; // for tuning cuz we're the goats
+  double setpointDeg = 0.0;
+
+  private AveragingFilter deltaErrorFilter = new AveragingFilter(5);
+  private double prevError = 0.0;
 
   public PivotIOKrakenX60() {
     /* Configurators */
@@ -168,6 +174,12 @@ public class PivotIOKrakenX60 implements PivotIO {
         Units.rotationsToDegrees(pivot.getClosedLoopReferenceSlope().getValue());
     inputs.setpointDeg = setpointDeg;
     inputs.shaftPosition = Units.rotationsToDegrees(pivot.getPosition().getValue());
+
+    // Delta error filter calculations
+    double err = inputs.setpointDeg - inputs.angleDegrees;
+    deltaErrorFilter.addSample(err - prevError);
+    inputs.deltaError = deltaErrorFilter.getAverage();
+    prevError = err;
   }
 
   @Override
@@ -176,12 +188,15 @@ public class PivotIOKrakenX60 implements PivotIO {
   }
 
   @Override
-  public void setAngle(Rotation2d angle) {
+  public void setAngle(Rotation2d angle, double elevatorAcceleration) {
+    // Elevator acceleration kick
+    double elevatorKick = kE.get() * elevatorAcceleration;
+
     setpointDeg = angle.getDegrees();
     double setpoint =
         MathUtil.clamp(
             angle.getRotations(), PIVOT_MIN_ANGLE.getRotations(), PIVOT_MAX_ANGLE.getRotations());
-    pivot.setControl(new MotionMagicVoltage(setpoint));
+    pivot.setControl(new MotionMagicVoltage(setpoint).withFeedForward(elevatorKick));
   }
 
   @Override

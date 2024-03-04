@@ -14,6 +14,7 @@ public interface ElevatorIO {
     public double appliedVoltage = 0.0;
     public double[] currentAmps = new double[] {}; // {leader, follower}
     public double[] tempCelcius = new double[] {}; // {leader, follower}
+    public double acceleration = 0.0;
   }
 
   /* Updates the set of loggable inputs */

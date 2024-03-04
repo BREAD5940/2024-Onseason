@@ -502,6 +502,7 @@ public class Constants {
 
     /* Physical Measurements */
     public static final double PIVOT_SETPOINT_TOLERANCE_RADS;
+    public static final double PIVOT_DELTA_ERROR_TOLERANCE;
     public static final InvertedValue PIVOT_INVERSION;
     public static final SensorDirectionValue PIVOT_ENCODER_INVERSION;
     public static final double PIVOT_GEAR_RATIO;
@@ -530,7 +531,8 @@ public class Constants {
 
         PIVOT_SPIT_ANGLE = Rotation2d.fromDegrees(0.0);
 
-        PIVOT_AMP_ANGLE = Rotation2d.fromDegrees(25.0);
+        // PIVOT_AMP_ANGLE = Rotation2d.fromDegrees(25.0);
+        PIVOT_AMP_ANGLE = Rotation2d.fromDegrees(-28.0);
 
         PIVOT_PRE_CLIMB_ANGLE = Rotation2d.fromDegrees(25.0);
 
@@ -541,6 +543,7 @@ public class Constants {
         PIVOT_FENDER_ANGLE = Rotation2d.fromDegrees(-50.0); // -50.0
 
         PIVOT_SETPOINT_TOLERANCE_RADS = Units.degreesToRadians(1.5);
+        PIVOT_DELTA_ERROR_TOLERANCE = 0.05;
         PIVOT_INVERSION = InvertedValue.CounterClockwise_Positive;
         PIVOT_ENCODER_INVERSION = SensorDirectionValue.Clockwise_Positive;
         PIVOT_GEAR_RATIO = (25.0 / 1.0) * (48.0 / 20.0);
@@ -578,6 +581,7 @@ public class Constants {
         PIVOT_FENDER_ANGLE = Rotation2d.fromDegrees(-50.0);
 
         PIVOT_SETPOINT_TOLERANCE_RADS = Units.degreesToRadians(3.0);
+        PIVOT_DELTA_ERROR_TOLERANCE = 0.05;
         PIVOT_INVERSION = InvertedValue.CounterClockwise_Positive;
         PIVOT_ENCODER_INVERSION = SensorDirectionValue.Clockwise_Positive;
         PIVOT_GEAR_RATIO = 118.0556;

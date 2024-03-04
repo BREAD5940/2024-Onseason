@@ -3,10 +3,11 @@
   "robotLength": 0.737,
   "holonomicMode": true,
   "pathFolders": [
+    "Bomb",
     "FiveNoteMidlineAmpSide",
     "FourNoteCenter",
     "FourNoteSourceSide",
-    "Bomb",
+    "ReverseFiveNoteMidlineAmpSide",
     "SixNoteAmpSide"
   ],
   "autoFolders": [],
