@@ -14,9 +14,9 @@ import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.TrajectoryFollowerCommand;
 
-public class ReverseFiveNoteMidlineAmpSide extends SequentialCommandGroup {
+public class ReverseSixNoteAmpSide extends SequentialCommandGroup {
 
-  public ReverseFiveNoteMidlineAmpSide(
+  public ReverseSixNoteAmpSide(
       Superstructure superstructure, Swerve swerve, Shooter shooter, Intake intake) {
     addRequirements(superstructure, swerve, shooter, intake);
     addCommands(
@@ -25,50 +25,53 @@ public class ReverseFiveNoteMidlineAmpSide extends SequentialCommandGroup {
         new InstantCommand(() -> superstructure.requestIntake(false)),
         new InstantCommand(
             () -> {
-              PathPlannerPath path = Robot.fiveNoteMidlineAmpSideA;
+              PathPlannerPath path = Robot.reverseSixNoteA;
               if (DriverStation.getAlliance().get() == Alliance.Red) {
                 path = path.flipPath();
               }
               swerve.resetPose(path.getPreviewStartingHolonomicPose());
             }),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.fiveNoteMidlineAmpSideA, swerve, false)
+        new TrajectoryFollowerCommand(Robot.reverseSixNoteA, swerve, false)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
                   superstructure.requestIntake(true);
                   superstructure.requestVisionSpeaker(false, false, false);
                 }),
-        new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.fiveNoteMidlineAmpSideB, swerve, false)
+        new TrajectoryFollowerCommand(Robot.reverseSixNoteB, swerve, false)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
                   superstructure.requestIntake(true);
                   superstructure.requestVisionSpeaker(false, false, false);
                 }),
-        new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.fiveNoteMidlineAmpSideC, swerve, false)
+        new TrajectoryFollowerCommand(Robot.reverseSixNoteC, swerve, false)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
                   superstructure.requestIntake(true);
                   superstructure.requestVisionSpeaker(false, false, false);
                 }),
-        new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.fiveNoteMidlineAmpSideD, swerve, false),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.fiveNoteMidlineAmpSideE, swerve, false)
+        new TrajectoryFollowerCommand(Robot.reverseSixNoteD, swerve, false)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
                   superstructure.requestIntake(true);
                   superstructure.requestVisionSpeaker(false, false, false);
                 }),
-        new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.fiveNoteMidlineAmpSideF, swerve, false),
-        new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2));
+        new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
+        new TrajectoryFollowerCommand(Robot.reverseSixNoteE, swerve, false)
+            .beforeStarting(
+                () -> {
+                  intake.requestIntake();
+                  superstructure.requestIntake(true);
+                  superstructure.requestVisionSpeaker(false, false, false);
+                }),
+        new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2)
+        );
   }
 }

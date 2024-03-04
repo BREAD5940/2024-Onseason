@@ -7,6 +7,7 @@ import frc.robot.autonomous.modes.Bomb;
 import frc.robot.autonomous.modes.FiveNoteMidlineAmpSide;
 import frc.robot.autonomous.modes.FourNoteCenter;
 import frc.robot.autonomous.modes.FourNoteSourceSide;
+import frc.robot.autonomous.modes.ReverseSixNoteAmpSide;
 import frc.robot.autonomous.modes.SixNoteAmpSide;
 import frc.robot.autonomous.modes.ThreeNoteCenter;
 import frc.robot.subsystems.Superstructure;
@@ -33,6 +34,8 @@ public class AutonomousSelector {
         "SIX_NOTE_AMP_SIDE", new SixNoteAmpSide(superstructure, swerve, shooter, intake));
     autonomousSelector.addOption(
         "FOUR_NOTE_CENTER", new FourNoteCenter(superstructure, swerve, shooter, intake));
+    autonomousSelector.addOption(
+        "REVERSE_SIX_NOTE_AMP_SIDE", new ReverseSixNoteAmpSide(superstructure, swerve, shooter, intake));
     autonomousSelector.addOption("BOMB", new Bomb(superstructure, swerve, shooter, intake));
 
     SmartDashboard.putData("Autonomus Selector", autonomousSelector);

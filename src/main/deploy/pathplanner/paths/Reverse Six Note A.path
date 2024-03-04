@@ -1,0 +1,49 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.248517779153614,
+        "y": 6.129137742505809
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.009663126311741,
+        "y": 6.613126918598686
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.5409245870189796,
+        "y": 6.984995605333745
+      },
+      "prevControl": {
+        "x": 1.9690460675047512,
+        "y": 6.594650026105608
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "ReverseSixNoteA",
+  "previewStartingState": null,
+  "useDefaultConstraints": false
+}

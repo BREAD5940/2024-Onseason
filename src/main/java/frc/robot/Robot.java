@@ -48,6 +48,12 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath fiveNoteMidlineAmpSideE;
   public static PathPlannerPath fiveNoteMidlineAmpSideF;
 
+  public static PathPlannerPath reverseSixNoteA;
+  public static PathPlannerPath reverseSixNoteB;
+  public static PathPlannerPath reverseSixNoteC;
+  public static PathPlannerPath reverseSixNoteD;
+  public static PathPlannerPath reverseSixNoteE;
+
   public static PathPlannerPath bombA;
   public static PathPlannerPath bombB;
   public static PathPlannerPath bombC;
@@ -113,6 +119,12 @@ public class Robot extends LoggedRobot {
     fiveNoteMidlineAmpSideD = PathPlannerPath.fromPathFile("Five Note Midline D");
     fiveNoteMidlineAmpSideE = PathPlannerPath.fromPathFile("Five Note Midline E");
     fiveNoteMidlineAmpSideF = PathPlannerPath.fromPathFile("Five Note Midline F");
+
+    reverseSixNoteA = PathPlannerPath.fromPathFile("Reverse Six Note A");
+    reverseSixNoteB = PathPlannerPath.fromPathFile("Reverse Six Note B");
+    reverseSixNoteC = PathPlannerPath.fromPathFile("Reverse Six Note C");
+    reverseSixNoteD = PathPlannerPath.fromPathFile("Reverse Six Note D");
+    reverseSixNoteE = PathPlannerPath.fromPathFile("Reverse Six Note E");
 
     bombA = PathPlannerPath.fromPathFile("Bomb A");
     bombB = PathPlannerPath.fromPathFile("Bomb B");
