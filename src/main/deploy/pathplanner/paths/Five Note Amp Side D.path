@@ -3,41 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.54,
-        "y": 6.98
+        "x": 2.52,
+        "y": 6.757152686917502
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.3461549203191,
-        "y": 7.205200302110675
+        "x": 3.7498736338414176,
+        "y": 6.897682725465309
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.094593992326358,
-        "y": 7.29585116802188
+        "x": 7.1928595783011815,
+        "y": 6.031080821077477
       },
       "prevControl": {
-        "x": 8.109677784795444,
-        "y": 7.300932121020275
+        "x": 5.85782421208209,
+        "y": 6.75715268691593
       },
       "nextControl": {
-        "x": 6.971205794956792,
-        "y": 6.917439529073312
+        "x": 8.756500821960582,
+        "y": 5.180679442946928
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.1369901505669455,
-        "y": 6.373140264833664
+        "x": 5.729005010078493,
+        "y": 6.757152686917502
       },
       "prevControl": {
-        "x": 7.1070112187919525,
-        "y": 7.0267952483589085
+        "x": 8.879220040893717,
+        "y": 5.539225686156224
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,33 +46,33 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.45,
-      "rotationDegrees": -160.0,
+      "waypointRelativePos": 0.65,
+      "rotationDegrees": 178.63607246839717,
       "rotateFast": false
     },
     {
-      "waypointRelativePos": 0.85,
-      "rotationDegrees": -163.32574724310382,
+      "waypointRelativePos": 1.15,
+      "rotationDegrees": 180.0,
       "rotateFast": false
     }
   ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 5.0,
+    "maxVelocity": 4.0,
     "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -162.5349973254979,
+    "rotation": -171.384351815836,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "ReverseSixNoteA",
+  "folder": "FiveNoteAmpSide",
   "previewStartingState": {
-    "rotation": 180.0,
+    "rotation": -145.15198318390364,
     "velocity": 0
   },
   "useDefaultConstraints": false

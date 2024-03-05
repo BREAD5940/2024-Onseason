@@ -21,6 +21,7 @@ public class Shooter extends SubsystemBase {
   private boolean requestAmp = false;
 
   private boolean wantsShootOverDefense = false;
+  private boolean override = false;
 
   private double stateStartTime = 0.0;
 
@@ -142,6 +143,15 @@ public class Shooter extends SubsystemBase {
     unsetAllRequests();
     requestVisionSpeaker = true;
     this.wantsShootOverDefense = wantsShootOverDefense;
+    this.override = true;
+  }
+
+  public void requestSpeakerOverride(double leftSpeed, double rightSpeed) {
+    desiredLeftRPM = leftSpeed;
+    desiredRightRPM = rightSpeed;
+    unsetAllRequests();
+    requestVisionSpeaker = true;
+    this.override = false;
   }
 
   public void requestAmp() {

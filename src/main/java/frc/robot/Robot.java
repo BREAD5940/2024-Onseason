@@ -58,6 +58,11 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath bombB;
   public static PathPlannerPath bombC;
 
+  public static PathPlannerPath fiveNoteAmpSideA;
+  public static PathPlannerPath fiveNoteAmpSideB;
+  public static PathPlannerPath fiveNoteAmpSideC;
+  public static PathPlannerPath fiveNoteAmpSideD;
+
   private boolean requestedHome = false;
 
   private CANdle leds = new CANdle(31, "dabus");
@@ -129,6 +134,11 @@ public class Robot extends LoggedRobot {
     bombA = PathPlannerPath.fromPathFile("Bomb A");
     bombB = PathPlannerPath.fromPathFile("Bomb B");
     bombC = PathPlannerPath.fromPathFile("Bomb C");
+
+    fiveNoteAmpSideA = PathPlannerPath.fromPathFile("Five Note Amp Side A");
+    fiveNoteAmpSideB = PathPlannerPath.fromPathFile("Five Note Amp Side B");
+    fiveNoteAmpSideC = PathPlannerPath.fromPathFile("Five Note Amp Side C");
+    fiveNoteAmpSideD = PathPlannerPath.fromPathFile("Five Note Amp Side D");
 
     m_robotContainer.configureAutonomousSelector();
   }

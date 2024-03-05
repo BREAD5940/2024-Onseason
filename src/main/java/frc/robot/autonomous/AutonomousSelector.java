@@ -4,7 +4,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.autonomous.modes.Bomb;
+import frc.robot.autonomous.modes.DriveBackTwo;
+import frc.robot.autonomous.modes.FiveNoteAmpSide;
 import frc.robot.autonomous.modes.FiveNoteMidlineAmpSide;
+import frc.robot.autonomous.modes.FourNoteAmpSide;
 import frc.robot.autonomous.modes.FourNoteCenter;
 import frc.robot.autonomous.modes.FourNoteSourceSide;
 import frc.robot.autonomous.modes.ReverseSixNoteAmpSide;
@@ -35,8 +38,15 @@ public class AutonomousSelector {
     autonomousSelector.addOption(
         "FOUR_NOTE_CENTER", new FourNoteCenter(superstructure, swerve, shooter, intake));
     autonomousSelector.addOption(
-        "REVERSE_SIX_NOTE_AMP_SIDE", new ReverseSixNoteAmpSide(superstructure, swerve, shooter, intake));
+        "REVERSE_SIX_NOTE_AMP_SIDE",
+        new ReverseSixNoteAmpSide(superstructure, swerve, shooter, intake));
     autonomousSelector.addOption("BOMB", new Bomb(superstructure, swerve, shooter, intake));
+    autonomousSelector.addOption(
+        "FOUR_NOTE_AMP_SIDE", new FourNoteAmpSide(superstructure, swerve, shooter, intake));
+    autonomousSelector.addOption(
+        "FIVE_NOTE_AMP_SIDE", new FiveNoteAmpSide(superstructure, swerve, shooter, intake));
+    autonomousSelector.addOption(
+        "DRIVE_BACK_TWO", new DriveBackTwo(superstructure, swerve, shooter, intake));
 
     SmartDashboard.putData("Autonomus Selector", autonomousSelector);
   }

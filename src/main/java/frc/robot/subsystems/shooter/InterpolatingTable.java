@@ -32,38 +32,27 @@ public class InterpolatingTable {
               // entry(Units.inchesToMeters(203.4), new ShotParameter(-23.5, 4200, 2200, 0.16)),
               // entry(Units.inchesToMeters(225.7), new ShotParameter(-22, 4600, 2600, 0.125))));
               // THIRD
-              // entry(1.2629021804364189, new ShotParameter(-51.0, 2000, 1500, 0.4)),
-              // entry(1.8709308362652906, new ShotParameter(-43.0, 2000, 1500, 0.3)),
-              // entry(2.4528234316913737, new ShotParameter(-39.0, 2400, 1800, 0.23)),
-              // entry(3.0075105927719874, new ShotParameter(-33.0, 2400, 1800, 0.2)),
-              // entry(3.570768447818622, new ShotParameter(-30.0, 2400, 1800, 0.175)),
-              // entry(4.141237376169209, new ShotParameter(-27.0, 2666, 2000, 0.15)),
-              // entry(4.779837214305064, new ShotParameter(-25.0, 3000, 2000, 0.125)),
-              // entry(5.4, new ShotParameter(-21.0, 3000, 2000, 0.125)),
-              // entry(5.95, new ShotParameter(-21.0, 3300, 2200, 0.125)),
-              // entry(6.55, new ShotParameter(-19.0, 2600, 2200, 0.125))));
-              // FOURTH
-              // entry(1.15, new ShotParameter(-51.0, 2000, 1500, 0.4)),
-              // entry(1.66, new ShotParameter(-45.0, 2500, 1500, 0.3)),
-              // entry(2.29, new ShotParameter(-39.0, 2500, 1500, 0.23)),
-              // entry(2.815, new ShotParameter(-33.0, 3000, 1800, 0.2)),
-              // entry(3.35, new ShotParameter(-30.0, 3200, 2200, 0.175)),
-              // entry(3.86, new ShotParameter(-25.5, 3200, 2200, 0.15)),
-              // entry(4.65, new ShotParameter(-24, 3500, 2300, 0.125)),
-              // entry(5.05, new ShotParameter(-22, 3600, 2300, 0.125)),
-              // entry(5.65, new ShotParameter(-20.5, 3800, 2400, 0.125)),
-              // entry(6.5, new ShotParameter(-19, 3900, 2500, 0.125))));
-              // FIVE
-              entry(1.15, new ShotParameter(-51.0, 2000, 1500, 0.4)),
-              entry(1.66, new ShotParameter(-45.0, 2500, 1500, 0.3)),
-              entry(2.29, new ShotParameter(-39.0, 2500, 1500, 0.23)),
-              entry(2.815, new ShotParameter(-33.0, 3000, 1800, 0.2)),
-              entry(3.35, new ShotParameter(-30.0, 3200, 2200, 0.175)),
-              entry(3.86, new ShotParameter(-25.5, 3200, 2200, 0.15)),
-              entry(4.65, new ShotParameter(-24, 3500, 2300, 0.125)),
-              entry(5.05, new ShotParameter(-22, 3600, 2300, 0.125)),
-              entry(5.65, new ShotParameter(-20.5, 3800, 2400, 0.125)),
-              entry(6.5, new ShotParameter(-19, 3900, 2500, 0.125))));
+              entry(1.2629021804364189, new ShotParameter(-51.0, 2000, 1500, 0.4)),
+              entry(1.8709308362652906, new ShotParameter(-43.0, 2000, 1500, 0.3)),
+              entry(2.4528234316913737, new ShotParameter(-39.0, 2400, 1800, 0.23)),
+              entry(3.0075105927719874, new ShotParameter(-33.0, 2400, 1800, 0.2)),
+              entry(3.570768447818622, new ShotParameter(-30.0, 2400, 1800, 0.175)),
+              entry(4.141237376169209, new ShotParameter(-27.0, 2666, 2000, 0.15)),
+              entry(4.779837214305064, new ShotParameter(-25.0, 3000, 2000, 0.125)),
+              entry(5.4, new ShotParameter(-21.0, 3000, 2000, 0.125)),
+              entry(5.95, new ShotParameter(-21.0, 3300, 2200, 0.125)),
+              entry(6.55, new ShotParameter(-19.0, 2600, 2200, 0.125))));
+  // FOURTH
+  // entry(1.15, new ShotParameter(-51.0, 2000, 1500, 0.4)),
+  // entry(1.66, new ShotParameter(-45.0, 2500, 1500, 0.3)),
+  // entry(2.29, new ShotParameter(-39.0, 2500, 1500, 0.23)),
+  // entry(2.815, new ShotParameter(-33.0, 3000, 1800, 0.2)),
+  // entry(3.35, new ShotParameter(-30.0, 3200, 2200, 0.175)),
+  // entry(3.86, new ShotParameter(-25.5, 3200, 2200, 0.15)),
+  // entry(4.65, new ShotParameter(-24, 3500, 2300, 0.125)),
+  // entry(5.05, new ShotParameter(-22, 3600, 2300, 0.125)),
+  // entry(5.65, new ShotParameter(-20.5, 3800, 2400, 0.125)),
+  // entry(6.5, new ShotParameter(-19, 3900, 2500, 0.125))));
 
   // limp -50 1800 1800 0.4
 

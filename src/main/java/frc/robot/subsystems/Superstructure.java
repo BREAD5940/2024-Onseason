@@ -46,8 +46,10 @@ public class Superstructure extends SubsystemBase {
 
   private boolean wantsShoot = false;
   private boolean wantsShootOverDefense = false;
-
   private boolean shouldShoot = false;
+  private boolean overrideVision = false;
+  private double overrideElevatorHeight = 0.0;
+  private double overridePivotAngle = 0.0;
 
   /* System States */
   public enum SuperstructureState {
@@ -181,10 +183,14 @@ public class Superstructure extends SubsystemBase {
       }
     } else if (systemState == SuperstructureState.VISION_SPEAKER) {
       ShotParameter shot;
-      if (wantsShootOverDefense) {
-        shot = RobotContainer.visionSupplier.robotToSpeakerShotSOD();
+      if (overrideVision) {
+        shot = new ShotParameter(overridePivotAngle, 0.0, 0.0, overrideElevatorHeight);
       } else {
-        shot = RobotContainer.visionSupplier.robotToSpeakerShot();
+        if (wantsShootOverDefense) {
+          shot = RobotContainer.visionSupplier.robotToSpeakerShotSOD();
+        } else {
+          shot = RobotContainer.visionSupplier.robotToSpeakerShot();
+        }
       }
 
       if (shouldShoot) {
@@ -336,6 +342,21 @@ public class Superstructure extends SubsystemBase {
     requestVisionSpeaker = set;
     this.wantsShoot = wantsShoot;
     this.wantsShootOverDefense = wantsShootOverDefense;
+    this.overrideVision = false;
+  }
+
+  public void requestVisionSpeaker(
+      boolean set,
+      boolean wantsShoot,
+      boolean wantsShootOverDefense,
+      double overridePivotAngle,
+      double overrideElevatorHeight) {
+    requestVisionSpeaker = set;
+    this.wantsShoot = wantsShoot;
+    this.wantsShootOverDefense = wantsShootOverDefense;
+    this.overrideVision = true;
+    this.overridePivotAngle = overridePivotAngle;
+    this.overrideElevatorHeight = overrideElevatorHeight;
   }
 
   public void requestAmp(boolean set, boolean wantsShoot) {

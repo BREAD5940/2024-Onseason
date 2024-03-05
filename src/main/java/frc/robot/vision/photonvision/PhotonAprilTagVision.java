@@ -164,12 +164,12 @@ public class PhotonAprilTagVision extends SubsystemBase {
         // If not using multitag, disambiugate and then use
         PhotonTrackedTarget target = latestCameraResult.targets.get(0);
 
-        if (!(target.getFiducialId() == 3
-            || target.getFiducialId() == 4
-            || target.getFiducialId() == 7
-            || target.getFiducialId() == 8)) {
-          continue;
-        }
+        // if (!(target.getFiducialId() == 3
+        //     || target.getFiducialId() == 4
+        //     || target.getFiducialId() == 7
+        //     || target.getFiducialId() == 8)) {
+        //   continue;
+        // }
 
         Pose3d tagPos = aprilTags.getTagPose(target.getFiducialId()).get();
 
@@ -258,11 +258,11 @@ public class PhotonAprilTagVision extends SubsystemBase {
 
   public void setStdDevMode(StdDevMode mode) {
     if (mode == StdDevMode.AUTONOMOUS) {
-      stdDevScalar = 5.0;
+      stdDevScalar = 20.0;
       xyStdDevCoefficient = 0.006;
       thetaStdDevCoefficient = 0.002;
     } else if (mode == StdDevMode.TELEOP) {
-      stdDevScalar = 0.1;
+      stdDevScalar = 10.0;
       xyStdDevCoefficient = 0.0006;
       thetaStdDevCoefficient = 0.0002;
     }

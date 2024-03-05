@@ -262,6 +262,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import frc.robot.subsystems.shooter.ShotParameter;
 
 // By default these constants are the **Beta** constants
 public class Constants {
@@ -714,5 +715,19 @@ public class Constants {
         FEEDER_INVERSION = InvertedValue.CounterClockwise_Positive;
       }
     }
+  }
+
+  /* Constants pertaining to the shots taken in auto */
+  public static class AutoShots {
+
+    // Five Note Amp Side Shots
+    public static final ShotParameter FIVE_NOTE_AMP_FIRST_SHOT =
+        new ShotParameter(-32.5, 2500, 1200, 0.3);
+    public static final ShotParameter FIVE_NOTE_AMP_SECOND_SHOT =
+        new ShotParameter(-33.5, 2500, 1200, 0.3);
+    public static final ShotParameter FIVE_NOTE_AMP_THIRD_SHOT =
+        new ShotParameter(-33.5, 1200, 2500, 0.3);
+    public static final ShotParameter FIVE_NOTE_AMP_FOURTH_SHOT =
+        new ShotParameter(-20.0, 1500, 3000, 0.2);
   }
 }
