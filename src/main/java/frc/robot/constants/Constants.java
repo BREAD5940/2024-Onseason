@@ -273,6 +273,7 @@ public class Constants {
 
   public static final double FALCON_FREE_SPEED = 6380.0;
   public static final double KRAKEN_FREE_SPEED = 6000.0;
+  public static final double INWARD_SHIFT_AMOUNT = Units.inchesToMeters(8.0);
 
   public enum RobotType {
     BETA,
@@ -543,7 +544,7 @@ public class Constants {
         PIVOT_FENDER_ANGLE = Rotation2d.fromDegrees(-50.0); // -50.0
 
         PIVOT_SETPOINT_TOLERANCE_RADS = Units.degreesToRadians(1.5);
-        PIVOT_DELTA_ERROR_TOLERANCE = 0.05;
+        PIVOT_DELTA_ERROR_TOLERANCE = 0.002;
         PIVOT_INVERSION = InvertedValue.CounterClockwise_Positive;
         PIVOT_ENCODER_INVERSION = SensorDirectionValue.Clockwise_Positive;
         PIVOT_GEAR_RATIO = (25.0 / 1.0) * (48.0 / 20.0);
@@ -581,7 +582,7 @@ public class Constants {
         PIVOT_FENDER_ANGLE = Rotation2d.fromDegrees(-50.0);
 
         PIVOT_SETPOINT_TOLERANCE_RADS = Units.degreesToRadians(3.0);
-        PIVOT_DELTA_ERROR_TOLERANCE = 0.05;
+        PIVOT_DELTA_ERROR_TOLERANCE = 0.002;
         PIVOT_INVERSION = InvertedValue.CounterClockwise_Positive;
         PIVOT_ENCODER_INVERSION = SensorDirectionValue.Clockwise_Positive;
         PIVOT_GEAR_RATIO = 118.0556;
@@ -692,7 +693,7 @@ public class Constants {
       if (robot == RobotType.BETA) {
         FEEDER_ID = 15;
 
-        FEEDER_INTAKE_SPEED = 65;
+        FEEDER_INTAKE_SPEED = 65; // 65
 
         FEEDER_SPIT_SPEED = -0.4;
 
@@ -704,7 +705,7 @@ public class Constants {
       } else {
         FEEDER_ID = 15;
 
-        FEEDER_INTAKE_SPEED = 0.3;
+        FEEDER_INTAKE_SPEED = 0.75;
 
         FEEDER_SPIT_SPEED = -0.1;
 

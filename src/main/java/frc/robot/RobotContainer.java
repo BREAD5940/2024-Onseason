@@ -115,8 +115,8 @@ public class RobotContainer {
 
     new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new AmpCommand(swerve));
 
-    new JoystickButton(driver, XboxController.Button.kRightBumper.value)
-        .whileTrue(new FenderShotCommand(swerve, superstructure, shooter));
+    // new JoystickButton(driver, XboxController.Button.kRightBumper.value)
+    //     .whileTrue(new FenderShotCommand(swerve, superstructure, shooter));
 
     new JoystickButton(driver, XboxController.Button.kRightBumper.value)
         .whileTrue(new AimAtTrapCommand(swerve));

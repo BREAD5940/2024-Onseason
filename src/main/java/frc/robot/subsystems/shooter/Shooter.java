@@ -140,6 +140,8 @@ public class Shooter extends SubsystemBase {
     }
     desiredLeftRPM = shot.leftRPM;
     desiredRightRPM = shot.rightRPM;
+    // desiredLeftRPM = Robot.leftSpeed.get();
+    // desiredRightRPM = Robot.rightSpeed.get();
     unsetAllRequests();
     requestVisionSpeaker = true;
     this.wantsShootOverDefense = wantsShootOverDefense;

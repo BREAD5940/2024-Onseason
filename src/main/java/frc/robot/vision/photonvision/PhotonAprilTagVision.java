@@ -258,11 +258,13 @@ public class PhotonAprilTagVision extends SubsystemBase {
 
   public void setStdDevMode(StdDevMode mode) {
     if (mode == StdDevMode.AUTONOMOUS) {
-      stdDevScalar = 20.0;
+      // stdDevScalar = 20.0;
+      stdDevScalar = 5.0;
       xyStdDevCoefficient = 0.006;
       thetaStdDevCoefficient = 0.002;
     } else if (mode == StdDevMode.TELEOP) {
-      stdDevScalar = 10.0;
+      // stdDevScalar = 10.0;
+      stdDevScalar = 0.1;
       xyStdDevCoefficient = 0.0006;
       thetaStdDevCoefficient = 0.0002;
     }

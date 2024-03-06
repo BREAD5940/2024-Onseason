@@ -1,5 +1,7 @@
 package frc.robot.constants;
 
+import static frc.robot.constants.Constants.INWARD_SHIFT_AMOUNT;
+
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -153,21 +155,40 @@ public class FieldConstants {
   // Target Rectangle
   public static final Pose3d tagSevenPose = aprilTags.getTagPose(7).get();
 
+  // public static final Translation3d[] targetVerticies = {
+  //   new Translation3d(
+  //       tagSevenPose.getX(),
+  //       tagSevenPose.getY() - Units.inchesToMeters(21.125),
+  //       tagSevenPose.getZ() + Units.inchesToMeters(21.125)),
+  //   new Translation3d(
+  //       tagSevenPose.getX(),
+  //       tagSevenPose.getY() + Units.inchesToMeters(21.125),
+  //       tagSevenPose.getZ() + Units.inchesToMeters(21.125)),
+  //   new Translation3d(
+  //       tagSevenPose.getX() + Units.inchesToMeters(20.0),
+  //       tagSevenPose.getY() - Units.inchesToMeters(21.25),
+  //       tagSevenPose.getZ() + Units.inchesToMeters(26.35)),
+  //   new Translation3d(
+  //       tagSevenPose.getX() + Units.inchesToMeters(20.0),
+  //       tagSevenPose.getY() + Units.inchesToMeters(21.125),
+  //       tagSevenPose.getZ() + Units.inchesToMeters(26.35))
+  // };
+
   public static final Translation3d[] targetVerticies = {
     new Translation3d(
-        tagSevenPose.getX(),
+        tagSevenPose.getX() - INWARD_SHIFT_AMOUNT,
         tagSevenPose.getY() - Units.inchesToMeters(21.125),
         tagSevenPose.getZ() + Units.inchesToMeters(21.125)),
     new Translation3d(
-        tagSevenPose.getX(),
+        tagSevenPose.getX() - INWARD_SHIFT_AMOUNT,
         tagSevenPose.getY() + Units.inchesToMeters(21.125),
         tagSevenPose.getZ() + Units.inchesToMeters(21.125)),
     new Translation3d(
-        tagSevenPose.getX() + Units.inchesToMeters(20.0),
+        tagSevenPose.getX() + Units.inchesToMeters(20.0) - INWARD_SHIFT_AMOUNT,
         tagSevenPose.getY() - Units.inchesToMeters(21.25),
         tagSevenPose.getZ() + Units.inchesToMeters(26.35)),
     new Translation3d(
-        tagSevenPose.getX() + Units.inchesToMeters(20.0),
+        tagSevenPose.getX() + Units.inchesToMeters(20.0) - INWARD_SHIFT_AMOUNT,
         tagSevenPose.getY() + Units.inchesToMeters(21.125),
         tagSevenPose.getZ() + Units.inchesToMeters(26.35))
   };

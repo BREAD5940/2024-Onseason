@@ -146,7 +146,7 @@ public class IntakeIOFalcon500 implements IntakeIO {
     inputs.vectorVelocitySetpoint = vectorVelocitySetpoint;
     inputs.vectorSupplyCurrent = supplyVector.getValueAsDouble();
 
-    inputs.beamBreakTriggered = false;
+    inputs.beamBreakTriggered = !beamBreak.get();
   }
 
   @Override

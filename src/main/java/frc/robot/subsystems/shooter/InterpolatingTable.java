@@ -1,5 +1,6 @@
 package frc.robot.subsystems.shooter;
 
+import static frc.robot.constants.Constants.INWARD_SHIFT_AMOUNT;
 import static java.util.Map.entry;
 
 import java.util.Map;
@@ -32,16 +33,48 @@ public class InterpolatingTable {
               // entry(Units.inchesToMeters(203.4), new ShotParameter(-23.5, 4200, 2200, 0.16)),
               // entry(Units.inchesToMeters(225.7), new ShotParameter(-22, 4600, 2600, 0.125))));
               // THIRD
-              entry(1.2629021804364189, new ShotParameter(-51.0, 2000, 1500, 0.4)),
-              entry(1.8709308362652906, new ShotParameter(-43.0, 2000, 1500, 0.3)),
-              entry(2.4528234316913737, new ShotParameter(-39.0, 2400, 1800, 0.23)),
-              entry(3.0075105927719874, new ShotParameter(-33.0, 2400, 1800, 0.2)),
-              entry(3.570768447818622, new ShotParameter(-30.0, 2400, 1800, 0.175)),
-              entry(4.141237376169209, new ShotParameter(-27.0, 2666, 2000, 0.15)),
-              entry(4.779837214305064, new ShotParameter(-25.0, 3000, 2000, 0.125)),
-              entry(5.4, new ShotParameter(-21.0, 3000, 2000, 0.125)),
-              entry(5.95, new ShotParameter(-21.0, 3300, 2200, 0.125)),
-              entry(6.55, new ShotParameter(-19.0, 2600, 2200, 0.125))));
+              // entry(1.2629021804364189, new ShotParameter(-51.0, 2000, 1500, 0.4)),
+              // entry(1.8709308362652906, new ShotParameter(-43.0, 2000, 1500, 0.3)),
+              // entry(2.4528234316913737, new ShotParameter(-39.0, 2400, 1800, 0.23)),
+              // entry(3.0075105927719874, new ShotParameter(-33.0, 2400, 1800, 0.2)),
+              // entry(3.570768447818622, new ShotParameter(-30.0, 2400, 1800, 0.175)),
+              // entry(4.141237376169209, new ShotParameter(-27.0, 2666, 2000, 0.15)),
+              // entry(4.779837214305064, new ShotParameter(-25.0, 3000, 2000, 0.125)),
+              // entry(5.4, new ShotParameter(-21.0, 3000, 2000, 0.125)),
+              // entry(5.95, new ShotParameter(-21.0, 3300, 2200, 0.125)),
+              //             entry(6.55, new ShotParameter(-19.0, 2600, 2200, 0.125))));
+              // FIFTH
+              entry(
+                  0.9533967832127577 + INWARD_SHIFT_AMOUNT,
+                  new ShotParameter(-54.0, 1700, 1200, 0.33)), // (first) 0 feet
+              entry(
+                  1.5379214993123282 + INWARD_SHIFT_AMOUNT,
+                  new ShotParameter(-44.5, 1850.000000, 1350.000000, 0.3)), // 5 feet
+              entry(
+                  2.135834451111118 + INWARD_SHIFT_AMOUNT,
+                  new ShotParameter(-39.0, 2000.000000, 1400.000000, 0.23)), // 7 feet
+              entry(
+                  2.713838083504854 + INWARD_SHIFT_AMOUNT,
+                  new ShotParameter(-33.500000, 2250.000000, 1450.000000, 0.2)), // 9 feet
+              entry(
+                  3.314519093402443 + INWARD_SHIFT_AMOUNT,
+                  new ShotParameter(-30.000000, 2650.000000, 1800.000000, 0.175)), // 11 feet
+              entry(
+                  3.884010466202368 + INWARD_SHIFT_AMOUNT,
+                  new ShotParameter(-28.000000, 2650.000000, 1800.000000, 0.15)), // 13 feet
+              entry(
+                  4.391338677115708 + INWARD_SHIFT_AMOUNT,
+                  new ShotParameter(-26.700000, 2650.000000, 1800.000000, 0.125)), // 15 feet
+              entry(
+                  5.117897012633007 + INWARD_SHIFT_AMOUNT,
+                  new ShotParameter(-23.000000, 2650.000000, 1800.000000, 0.125)), // 17 feet
+              entry(
+                  5.6431411860907055 + INWARD_SHIFT_AMOUNT,
+                  new ShotParameter(-22.300000, 2700.000000, 1850.000000, 0.125)), // 19 feet
+              entry(
+                  6.159945658209746 + INWARD_SHIFT_AMOUNT,
+                  new ShotParameter(-21.400000, 2750.000000, 1900.000000, 0.125)))); // 21 feet
+
   // FOURTH
   // entry(1.15, new ShotParameter(-51.0, 2000, 1500, 0.4)),
   // entry(1.66, new ShotParameter(-45.0, 2500, 1500, 0.3)),

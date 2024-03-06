@@ -19,13 +19,12 @@ import org.littletonrobotics.junction.Logger;
 
 /* Superstructure class for handling the interaction between all the subsystems minus swerve */
 public class Superstructure extends SubsystemBase {
-
   // For on-the-fly adjustments
   static LoggedTunableNumber angleAddition =
-      new LoggedTunableNumber("On-the-fly/angleAddition", 0.0);
+      new LoggedTunableNumber("On-the-fly/angleAddition", 2.0);
 
   static LoggedTunableNumber angleMultiplication =
-      new LoggedTunableNumber("On-the-fly/distanceScaledAddition");
+      new LoggedTunableNumber("On-the-fly/distanceScaledAddition", 1.0);
 
   /* Subsystems */
   private final ElevatorPivot elevatorPivot;
@@ -201,6 +200,17 @@ public class Superstructure extends SubsystemBase {
 
       elevatorPivot.requestPursueSetpoint(
           Rotation2d.fromDegrees((shot.pivotAngleDeg + angleAddition.get())), shot.elevatorHeight);
+      // double multipliedPivotAngle = Robot.pivotAngle.get() * angleMultiplication.get();
+      // elevatorPivot.requestPursueSetpoint(
+      //     Rotation2d.fromDegrees(multipliedPivotAngle), Robot.elevatorHeight.get());
+
+      // elevatorPivot.requestPursueSetpoint(
+      //     Rotation2d.fromDegrees(Robot.pivotAngle.get()), Robot.elevatorHeight.get());
+
+      Logger.recordOutput("Vision/Shot/ElevatorHeight", shot.elevatorHeight);
+      Logger.recordOutput("Vision/Shot/PivotAngleDeg", shot.pivotAngleDeg);
+      Logger.recordOutput("Vision/Shot/LeftRpm", shot.leftRPM);
+      Logger.recordOutput("Vision/Shot/RightRpm", shot.rightRPM);
 
       if ((wantsShoot)
           && elevatorPivot.atSetpoint()

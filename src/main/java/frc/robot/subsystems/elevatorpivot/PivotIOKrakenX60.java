@@ -70,7 +70,7 @@ public class PivotIOKrakenX60 implements PivotIO {
 
   double setpointDeg = 0.0;
 
-  private AveragingFilter deltaErrorFilter = new AveragingFilter(5);
+  private AveragingFilter deltaErrorFilter = new AveragingFilter(15);
   private double prevError = 0.0;
 
   public PivotIOKrakenX60() {
