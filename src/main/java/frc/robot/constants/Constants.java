@@ -403,7 +403,7 @@ public class Constants {
 
         ELEVATOR_AMP_HEIGHT = 0.48;
 
-        ELEVATOR_PRE_CLIMB_HEIGHT = 0.55;
+        ELEVATOR_PRE_CLIMB_HEIGHT = 0.55 + Units.inchesToMeters(1.5);
 
         ELEVATOR_CLIMBED_HEIGHT = 0.00;
 
@@ -535,7 +535,7 @@ public class Constants {
 
         PIVOT_AMP_ANGLE = Rotation2d.fromDegrees(25.0);
 
-        PIVOT_PRE_CLIMB_ANGLE = Rotation2d.fromDegrees(25.0);
+        PIVOT_PRE_CLIMB_ANGLE = Rotation2d.fromDegrees(20.0);
 
         PIVOT_CLIMBED_ANGLE = Rotation2d.fromDegrees(25.0);
 

@@ -4,6 +4,7 @@ import static frc.robot.constants.Constants.Elevator.*;
 import static frc.robot.constants.Constants.Pivot.*;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.commons.BreadUtil;
@@ -312,8 +313,9 @@ public class Superstructure extends SubsystemBase {
       }
     } else if (systemState == SuperstructureState.POST_TRAP) {
       elevatorPivot.requestPursueSetpoint(
-          PIVOT_TRAP_ANGLE.plus(Rotation2d.fromDegrees(10.0)), ELEVATOR_TRAP_HEIGHT - 0.2);
-      feeder.requestSpit(true);
+          PIVOT_TRAP_ANGLE.plus(Rotation2d.fromDegrees(15.0)),
+          (ELEVATOR_TRAP_HEIGHT - 0.2) - Units.inchesToMeters(5.0));
+      feeder.requestIdle();
 
       if (requestPrevClimbState) {
         nextSystemState = SuperstructureState.TRAP;

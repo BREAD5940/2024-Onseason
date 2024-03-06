@@ -94,7 +94,7 @@ public class Feeder {
         nextSystemState = FeederState.IDLE;
       }
     } else if (systemState == FeederState.PRE_TRAP) {
-      io.setPercent(0.1);
+      io.setPercent(0.0);
 
       if (!requestPreTrap) {
         nextSystemState = FeederState.IDLE;
