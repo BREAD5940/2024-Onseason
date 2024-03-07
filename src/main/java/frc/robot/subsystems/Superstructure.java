@@ -3,10 +3,12 @@ package frc.robot.subsystems;
 import static frc.robot.constants.Constants.Elevator.*;
 import static frc.robot.constants.Constants.Pivot.*;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
+import frc.robot.commons.AllianceFlipUtil;
 import frc.robot.commons.BreadUtil;
 import frc.robot.commons.LoggedTunableNumber;
 import frc.robot.subsystems.elevatorpivot.ElevatorIO;
@@ -50,6 +52,7 @@ public class Superstructure extends SubsystemBase {
   private boolean overrideVision = false;
   private double overrideElevatorHeight = 0.0;
   private double overridePivotAngle = 0.0;
+  private Pose2d overrideRobotPose = null;
 
   /* System States */
   public enum SuperstructureState {
@@ -183,7 +186,11 @@ public class Superstructure extends SubsystemBase {
       }
     } else if (systemState == SuperstructureState.VISION_SPEAKER) {
       ShotParameter shot;
-      if (overrideVision) {
+      if (overrideRobotPose != null) {
+        shot = RobotContainer.visionSupplier.getShotFromOverrideRobotPose();
+
+        Logger.recordOutput("Vision/OverrideRobotPoseShot", shot.elevatorHeight);
+      } else if (overrideVision) {
         shot = new ShotParameter(overridePivotAngle, 0.0, 0.0, overrideElevatorHeight);
       } else {
         if (wantsShootOverDefense) {
@@ -355,6 +362,20 @@ public class Superstructure extends SubsystemBase {
     this.wantsShoot = wantsShoot;
     this.wantsShootOverDefense = wantsShootOverDefense;
     this.overrideVision = false;
+  }
+
+  public void requestVisionSpeaker(
+      boolean set, boolean wantsShoot, boolean wantsShootOverDefense, Pose2d overrideRobotPose) {
+    requestVisionSpeaker = set;
+    this.wantsShoot = wantsShoot;
+    this.wantsShootOverDefense = wantsShootOverDefense;
+    this.overrideRobotPose = overrideRobotPose;
+
+    if (overrideRobotPose != null) {
+      RobotContainer.visionSupplier.setOverrideRobotPose(AllianceFlipUtil.apply(overrideRobotPose));
+    } else {
+      RobotContainer.visionSupplier.setOverrideRobotPose(new Pose2d());
+    }
   }
 
   public void requestVisionSpeaker(

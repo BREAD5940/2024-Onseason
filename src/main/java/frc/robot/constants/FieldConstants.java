@@ -1,6 +1,6 @@
 package frc.robot.constants;
 
-import static frc.robot.constants.Constants.INWARD_SHIFT_AMOUNT;
+import static frc.robot.constants.Constants.GOAL_INWARD_SHIFT;
 
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -176,19 +176,19 @@ public class FieldConstants {
 
   public static final Translation3d[] targetVerticies = {
     new Translation3d(
-        tagSevenPose.getX() - INWARD_SHIFT_AMOUNT,
+        tagSevenPose.getX() - GOAL_INWARD_SHIFT,
         tagSevenPose.getY() - Units.inchesToMeters(21.125),
         tagSevenPose.getZ() + Units.inchesToMeters(21.125)),
     new Translation3d(
-        tagSevenPose.getX() - INWARD_SHIFT_AMOUNT,
+        tagSevenPose.getX() - GOAL_INWARD_SHIFT,
         tagSevenPose.getY() + Units.inchesToMeters(21.125),
         tagSevenPose.getZ() + Units.inchesToMeters(21.125)),
     new Translation3d(
-        tagSevenPose.getX() + Units.inchesToMeters(20.0) - INWARD_SHIFT_AMOUNT,
+        tagSevenPose.getX() + Units.inchesToMeters(20.0) - GOAL_INWARD_SHIFT,
         tagSevenPose.getY() - Units.inchesToMeters(21.25),
         tagSevenPose.getZ() + Units.inchesToMeters(26.35)),
     new Translation3d(
-        tagSevenPose.getX() + Units.inchesToMeters(20.0) - INWARD_SHIFT_AMOUNT,
+        tagSevenPose.getX() + Units.inchesToMeters(20.0) - GOAL_INWARD_SHIFT,
         tagSevenPose.getY() + Units.inchesToMeters(21.125),
         tagSevenPose.getZ() + Units.inchesToMeters(26.35))
   };

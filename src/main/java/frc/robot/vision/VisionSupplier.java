@@ -23,8 +23,10 @@ public class VisionSupplier extends SubsystemBase {
   private Rotation2d yaw;
   private ShotParameter shot;
   private ShotParameter shotSOD;
+  private ShotParameter overrideRobotPoseShot;
   private Rotation2d robotToAmpAngle;
   private double distance;
+  private Pose2d overrideRobotPose;
 
   public Rotation2d robotToSpeakerAngle() {
     return yaw;
@@ -44,6 +46,18 @@ public class VisionSupplier extends SubsystemBase {
 
   public double getDistance() {
     return distance;
+  }
+
+  public void setOverrideRobotPose(Pose2d overrideRobotPose) {
+    this.overrideRobotPose = overrideRobotPose;
+  }
+
+  public ShotParameter getShotFromOverrideRobotPose() {
+    if (overrideRobotPose != null) {
+      return overrideRobotPoseShot;
+    } else {
+      return new ShotParameter(0.0, 0.0, 0.0, 0.0);
+    }
   }
 
   @Override
@@ -89,6 +103,13 @@ public class VisionSupplier extends SubsystemBase {
 
     shotSOD = SODInterpolatingTable.get(robotToRadialVirtualTarget.getNorm());
 
+    if (overrideRobotPose != null) {
+      Translation2d overrideRobotPoseToVirtualTarget =
+          radialVirtualTarget.minus(overrideRobotPose.getTranslation());
+
+      overrideRobotPoseShot = InterpolatingTable.get(overrideRobotPoseToVirtualTarget.getNorm());
+    }
+
     distance = robotToRadialVirtualTarget.getNorm();
 
     /* Robot To Amp */
@@ -98,6 +119,7 @@ public class VisionSupplier extends SubsystemBase {
 
     // Logs
     Logger.recordOutput("Vision/DistanceToTarget", robotToRadialVirtualTarget.getNorm());
+    Logger.recordOutput("Vision/TargetPose", targetPose);
     Logger.recordOutput(
         "Vision/RadialVirtualTarget", new Pose2d(radialVirtualTarget, new Rotation2d()));
     Logger.recordOutput(

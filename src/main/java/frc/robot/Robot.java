@@ -2,6 +2,8 @@ package frc.robot;
 
 import com.ctre.phoenix.led.CANdle;
 import com.pathplanner.lib.path.PathPlannerPath;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.RobotController;
@@ -20,6 +22,7 @@ public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+  public static Alliance alliance = DriverStation.Alliance.Red;
 
   public static PathPlannerPath fourNoteCenterA;
   public static PathPlannerPath fourNoteCenterB;
@@ -176,6 +179,8 @@ public class Robot extends LoggedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+
+    alliance = DriverStation.getAlliance().get();
     RobotContainer.shooter.requestIdle();
     RobotController.setBrownoutVoltage(5.75);
   }
@@ -198,6 +203,8 @@ public class Robot extends LoggedRobot {
       RobotContainer.superstructure.requestHome();
       requestedHome = true;
     }
+
+    alliance = DriverStation.getAlliance().get();
     RobotContainer.shooter.requestIdle();
     RobotController.setBrownoutVoltage(5.75);
   }

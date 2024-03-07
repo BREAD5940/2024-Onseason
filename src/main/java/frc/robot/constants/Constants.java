@@ -273,7 +273,11 @@ public class Constants {
 
   public static final double FALCON_FREE_SPEED = 6380.0;
   public static final double KRAKEN_FREE_SPEED = 6000.0;
-  public static final double INWARD_SHIFT_AMOUNT = Units.inchesToMeters(8.0);
+  public static final double GOAL_INWARD_SHIFT = Units.inchesToMeters(12.0);
+
+  // FOR EPA:
+  // 12 in inward shift on the red side
+  // 0 in inward shift on the blue side
 
   public enum RobotType {
     BETA,
@@ -533,18 +537,18 @@ public class Constants {
 
         PIVOT_SPIT_ANGLE = Rotation2d.fromDegrees(0.0);
 
-        PIVOT_AMP_ANGLE = Rotation2d.fromDegrees(25.0);
+        PIVOT_AMP_ANGLE = Rotation2d.fromDegrees(28.0);
 
         PIVOT_PRE_CLIMB_ANGLE = Rotation2d.fromDegrees(20.0);
 
         PIVOT_CLIMBED_ANGLE = Rotation2d.fromDegrees(25.0);
 
-        PIVOT_TRAP_ANGLE = Rotation2d.fromDegrees(6.9);
+        PIVOT_TRAP_ANGLE = Rotation2d.fromDegrees(0.0);
 
         PIVOT_FENDER_ANGLE = Rotation2d.fromDegrees(-50.0); // -50.0
 
         PIVOT_SETPOINT_TOLERANCE_RADS = Units.degreesToRadians(1.5);
-        PIVOT_DELTA_ERROR_TOLERANCE = 0.002;
+        PIVOT_DELTA_ERROR_TOLERANCE = 0.07;
         PIVOT_INVERSION = InvertedValue.CounterClockwise_Positive;
         PIVOT_ENCODER_INVERSION = SensorDirectionValue.Clockwise_Positive;
         PIVOT_GEAR_RATIO = (25.0 / 1.0) * (48.0 / 20.0);

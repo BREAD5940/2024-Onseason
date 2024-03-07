@@ -12,33 +12,19 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.swerve.Swerve;
 
-public class DriveBackTwo extends SequentialCommandGroup {
+public class Preload extends SequentialCommandGroup {
 
-  public DriveBackTwo(
-      Superstructure superstructure, Swerve swerve, Shooter shooter, Intake intake) {
+  public Preload(Superstructure superstructure, Swerve swerve, Shooter shooter, Intake intake) {
     addRequirements(superstructure, swerve, shooter, intake);
     addCommands(
         // Fire preload
         new InstantCommand(() -> superstructure.requestIntake(true)),
         new WaitUntilCommand(() -> superstructure.hasPiece()),
         new InstantCommand(() -> superstructure.requestIntake(false)),
-        new StationaryShootCommand(swerve, superstructure, shooter),
 
         // Drive back and shoot
-        new InstantCommand(() -> swerve.requestVelocity(new ChassisSpeeds(-1.0, 0.0, 0.0), false))
-            .beforeStarting(
-                () -> {
-                  intake.requestIntake();
-                  superstructure.requestIntake(true);
-                  superstructure.requestVisionSpeaker(false, false, false);
-                }),
+        new InstantCommand(() -> swerve.requestVelocity(new ChassisSpeeds(-1.0, 0.0, 0.0), false)),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(3.0),
-        new StationaryShootCommand(swerve, superstructure, shooter),
-        new InstantCommand(
-            () -> {
-              swerve.requestVelocity(new ChassisSpeeds(0.0, 0.0, 0.0), false);
-              intake.requestIdle();
-              shooter.requestIdle();
-            }));
+        new StationaryShootCommand(swerve, superstructure, shooter));
   }
 }

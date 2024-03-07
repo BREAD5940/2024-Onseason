@@ -10,6 +10,7 @@ import frc.robot.autonomous.modes.FiveNoteMidlineAmpSide;
 import frc.robot.autonomous.modes.FourNoteAmpSide;
 import frc.robot.autonomous.modes.FourNoteCenter;
 import frc.robot.autonomous.modes.FourNoteSourceSide;
+import frc.robot.autonomous.modes.Preload;
 import frc.robot.autonomous.modes.SixNoteAmpSide;
 import frc.robot.autonomous.modes.ThreeNoteCenter;
 import frc.robot.subsystems.Superstructure;
@@ -44,6 +45,7 @@ public class AutonomousSelector {
         "FOUR_NOTE_AMP_SIDE", new FourNoteAmpSide(superstructure, swerve, shooter, intake));
     autonomousSelector.addOption(
         "FIVE_NOTE_AMP_SIDE", new FiveNoteAmpSide(superstructure, swerve, shooter, intake));
+    autonomousSelector.addOption("PRELOAD", new Preload(superstructure, swerve, shooter, intake));
     autonomousSelector.addOption(
         "DRIVE_BACK_TWO", new DriveBackTwo(superstructure, swerve, shooter, intake));
 
