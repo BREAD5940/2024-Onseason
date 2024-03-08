@@ -5,11 +5,15 @@ import static frc.robot.constants.FieldConstants.*;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.commons.AllianceFlipUtil;
-import frc.robot.subsystems.shooter.InterpolatingTable;
-import frc.robot.subsystems.shooter.SODInterpolatingTable;
+import frc.robot.subsystems.shooter.InterpolatingTableBlue;
+import frc.robot.subsystems.shooter.InterpolatingTableRed;
+import frc.robot.subsystems.shooter.SODInterpolatingTableBlue;
+import frc.robot.subsystems.shooter.SODInterpolatingTableRed;
 import frc.robot.subsystems.shooter.ShotParameter;
 import org.littletonrobotics.junction.Logger;
 
@@ -17,7 +21,7 @@ public class VisionSupplier extends SubsystemBase {
 
   /* Constants */
   private static double TANGENTIAL_NOTE_FLIGHT_TIME = 0.2;
-  private static double RADIAL_NOTE_FLIGHT_TIME = 0.001;
+  private static double RADIAL_NOTE_FLIGHT_TIME = 0.1;
 
   /* Speaker Results */
   private Rotation2d yaw;
@@ -62,11 +66,9 @@ public class VisionSupplier extends SubsystemBase {
 
   @Override
   public void periodic() {
-    /* Flip amp position depending on alliance */
-    Translation2d ampCenter2d = AllianceFlipUtil.apply(ampCenter);
 
     /* Flip the target position if you're on the red alliance */
-    Pose2d targetPose = AllianceFlipUtil.apply(targetPoseBlue.toPose2d());
+    Pose2d targetPose = AllianceFlipUtil.apply(targetPoseBlue);
 
     /* Get the robot's position */
     Pose2d robotPose = RobotContainer.swerve.getPose();
@@ -99,23 +101,23 @@ public class VisionSupplier extends SubsystemBase {
         new Rotation2d(
             robotToTangentialVirtualTarget.getX(), robotToTangentialVirtualTarget.getY());
 
-    shot = InterpolatingTable.get(robotToRadialVirtualTarget.getNorm());
-
-    shotSOD = SODInterpolatingTable.get(robotToRadialVirtualTarget.getNorm());
+    if (DriverStation.getAlliance().get() == Alliance.Blue) {
+      shot = InterpolatingTableBlue.get(robotToRadialVirtualTarget.getNorm());
+      shotSOD = SODInterpolatingTableBlue.get(robotToRadialVirtualTarget.getNorm());
+    } else {
+      shot = InterpolatingTableRed.get(robotToRadialVirtualTarget.getNorm());
+      shotSOD = SODInterpolatingTableRed.get(robotToRadialVirtualTarget.getNorm());
+    }
 
     if (overrideRobotPose != null) {
       Translation2d overrideRobotPoseToVirtualTarget =
           radialVirtualTarget.minus(overrideRobotPose.getTranslation());
 
-      overrideRobotPoseShot = InterpolatingTable.get(overrideRobotPoseToVirtualTarget.getNorm());
+      overrideRobotPoseShot =
+          InterpolatingTableBlue.get(overrideRobotPoseToVirtualTarget.getNorm());
     }
 
     distance = robotToRadialVirtualTarget.getNorm();
-
-    /* Robot To Amp */
-    Translation2d robotToAmp = ampCenter2d.minus(robotPose.getTranslation());
-
-    robotToAmpAngle = new Rotation2d(robotToAmp.getX(), robotToAmp.getY());
 
     // Logs
     Logger.recordOutput("Vision/DistanceToTarget", robotToRadialVirtualTarget.getNorm());

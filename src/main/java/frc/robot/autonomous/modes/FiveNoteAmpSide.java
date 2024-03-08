@@ -10,8 +10,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Robot;
 import frc.robot.subsystems.Superstructure;
-import frc.robot.subsystems.commands.AimAtSpeakerCommand;
 import frc.robot.subsystems.commands.FenderShotCommand;
+import frc.robot.subsystems.commands.StationaryShootCommand;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.swerve.Swerve;
@@ -36,12 +36,6 @@ public class FiveNoteAmpSide extends SequentialCommandGroup {
               swerve.resetPose(path.getPreviewStartingHolonomicPose());
             }),
         new FenderShotCommand(swerve, superstructure, shooter).withTimeout(2),
-
-        // Intake first piece and shoot
-        new InstantCommand(
-            () ->
-                shooter.requestSpeakerOverride(
-                    FIVE_NOTE_AMP_FIRST_SHOT.leftRPM, FIVE_NOTE_AMP_FIRST_SHOT.rightRPM)),
         new TrajectoryFollowerCommand(Robot.fiveNoteAmpSideA, swerve, true)
             .beforeStarting(
                 () -> {
@@ -50,25 +44,7 @@ public class FiveNoteAmpSide extends SequentialCommandGroup {
                   superstructure.requestVisionSpeaker(false, false, false);
                 }),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
-        new InstantCommand(
-            () -> {
-              intake.requestIdle();
-              superstructure.requestVisionSpeaker(
-                  true,
-                  true,
-                  false,
-                  FIVE_NOTE_AMP_FIRST_SHOT.pivotAngleDeg,
-                  FIVE_NOTE_AMP_FIRST_SHOT.elevatorHeight);
-            }),
-        new WaitUntilCommand(() -> !superstructure.hasPiece())
-            .withTimeout(3.0)
-            .deadlineWith(new AimAtSpeakerCommand(swerve)),
-
-        // Intake second piece and shoot
-        new InstantCommand(
-            () ->
-                shooter.requestSpeakerOverride(
-                    FIVE_NOTE_AMP_SECOND_SHOT.leftRPM, FIVE_NOTE_AMP_SECOND_SHOT.rightRPM)),
+        new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
         new TrajectoryFollowerCommand(Robot.fiveNoteAmpSideB, swerve, true)
             .beforeStarting(
                 () -> {
@@ -77,25 +53,7 @@ public class FiveNoteAmpSide extends SequentialCommandGroup {
                   superstructure.requestVisionSpeaker(false, false, false);
                 }),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
-        new InstantCommand(
-            () -> {
-              intake.requestIdle();
-              superstructure.requestVisionSpeaker(
-                  true,
-                  true,
-                  false,
-                  FIVE_NOTE_AMP_SECOND_SHOT.pivotAngleDeg,
-                  FIVE_NOTE_AMP_SECOND_SHOT.elevatorHeight);
-            }),
-        new WaitUntilCommand(() -> !superstructure.hasPiece())
-            .withTimeout(3.0)
-            .deadlineWith(new AimAtSpeakerCommand(swerve)),
-
-        // Intake third piece and shoot
-        new InstantCommand(
-            () ->
-                shooter.requestSpeakerOverride(
-                    FIVE_NOTE_AMP_THIRD_SHOT.leftRPM, FIVE_NOTE_AMP_THIRD_SHOT.rightRPM)),
+        new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
         new TrajectoryFollowerCommand(Robot.fiveNoteAmpSideC, swerve, true)
             .beforeStarting(
                 () -> {
@@ -104,45 +62,14 @@ public class FiveNoteAmpSide extends SequentialCommandGroup {
                   superstructure.requestVisionSpeaker(false, false, false);
                 }),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
-        new InstantCommand(
-            () -> {
-              intake.requestIdle();
-              superstructure.requestVisionSpeaker(
-                  true,
-                  true,
-                  false,
-                  FIVE_NOTE_AMP_THIRD_SHOT.pivotAngleDeg,
-                  FIVE_NOTE_AMP_THIRD_SHOT.elevatorHeight);
-            }),
-        new WaitUntilCommand(() -> !superstructure.hasPiece())
-            .withTimeout(3.0)
-            .deadlineWith(new AimAtSpeakerCommand(swerve)),
-
-        // Intake fourth piece and shoot
-        new InstantCommand(
-            () ->
-                shooter.requestSpeakerOverride(
-                    FIVE_NOTE_AMP_FOURTH_SHOT.leftRPM, FIVE_NOTE_AMP_FOURTH_SHOT.rightRPM)),
-        new TrajectoryFollowerCommand(Robot.fiveNoteAmpSideD, swerve, true)
+        new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
+        new TrajectoryFollowerCommand(Robot.fiveNoteAmpSideD, swerve, false)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
                   superstructure.requestIntake(true);
                   superstructure.requestVisionSpeaker(false, false, false);
                 }),
-        new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
-        new InstantCommand(
-            () -> {
-              intake.requestIdle();
-              superstructure.requestVisionSpeaker(
-                  true,
-                  true,
-                  false,
-                  FIVE_NOTE_AMP_FOURTH_SHOT.pivotAngleDeg,
-                  FIVE_NOTE_AMP_FOURTH_SHOT.elevatorHeight);
-            }),
-        new WaitUntilCommand(() -> !superstructure.hasPiece())
-            .withTimeout(3.0)
-            .deadlineWith(new AimAtSpeakerCommand(swerve)));
+        new StationaryShootCommand(swerve, superstructure, shooter));
   }
 }

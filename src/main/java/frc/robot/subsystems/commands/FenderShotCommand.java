@@ -2,9 +2,7 @@ package frc.robot.subsystems.commands;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.RobotContainer;
 import frc.robot.subsystems.Superstructure;
-import frc.robot.subsystems.Superstructure.SuperstructureState;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.swerve.Swerve;
 
@@ -33,13 +31,11 @@ public class FenderShotCommand extends Command {
 
   @Override
   public boolean isFinished() {
-    return !superstructure.hasPiece()
-        && superstructure.getSystemState() == SuperstructureState.IDLE;
+    return !superstructure.hasPiece();
   }
 
   @Override
   public void end(boolean interrupted) {
-    RobotContainer.shooter.requestIdle();
     superstructure.requestFender(false, false);
   }
 }

@@ -2,20 +2,20 @@ package frc.robot.subsystems.shooter;
 
 import static java.util.Map.entry;
 
+import edu.wpi.first.math.util.Units;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-public class SODInterpolatingTable {
+public class SODInterpolatingTableBlue {
 
-  private SODInterpolatingTable() {}
+  private SODInterpolatingTableBlue() {}
 
   public static TreeMap<Double, ShotParameter> table =
       new TreeMap<>(
           Map.ofEntries(
-              entry(2.0216634299077194, new ShotParameter(-29, 3000, 1500, 0.6)),
-              entry(2.553, new ShotParameter(-26.0, 3000, 1500, 0.6)),
-              entry(3.9052370831553973, new ShotParameter(-17.5, 3000, 1500, 0.6))));
+              entry(Units.inchesToMeters(118), new ShotParameter(-27, 2500, 1500, 0.6)),
+              entry(Units.inchesToMeters(138.8), new ShotParameter(-24, 2500, 1500, 0.6))));
 
   public static ShotParameter get(double distanceToTarget) {
     Entry<Double, ShotParameter> ceil = table.ceilingEntry(distanceToTarget);

@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Robot;
 import frc.robot.subsystems.Superstructure;
-import frc.robot.subsystems.commands.StationaryShootCommand;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.swerve.Swerve;
@@ -99,28 +98,8 @@ public class SixNoteAmpSide extends SequentialCommandGroup {
                 () -> {
                   intake.requestIntake();
                   superstructure.requestIntake(true);
-                  superstructure.requestVisionSpeaker(false, false, false);
                   shooter.requestVisionSpeaker(false);
                   superstructure.requestVisionSpeaker(true, true, false);
-                }),
-        new WaitUntilCommand(() -> !superstructure.hasPiece()).withTimeout(1),
-        new TrajectoryFollowerCommand(Robot.sixNoteAmpSideB, swerve, false, false)
-            .beforeStarting(
-                () -> {
-                  intake.requestIntake();
-                  superstructure.requestIntake(true);
-                  shooter.requestVisionSpeaker(false);
-                  superstructure.requestVisionSpeaker(true, false, false);
-                }),
-        new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(1.5),
-        new TrajectoryFollowerCommand(Robot.sixNoteAmpSideC, swerve, false, false)
-            .beforeStarting(
-                () -> {
-                  intake.requestIntake();
-                  superstructure.requestIntake(true);
-                  shooter.requestVisionSpeaker(false);
-                  superstructure.requestVisionSpeaker(true, false, false);
-                }),
-        new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(1.5));
+                }));
   }
 }

@@ -4,13 +4,13 @@ import static frc.robot.constants.Constants.GOAL_INWARD_SHIFT;
 
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Quaternion;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
-import frc.robot.commons.BreadUtil;
 import java.util.List;
 
 public class FieldConstants {
@@ -193,6 +193,5 @@ public class FieldConstants {
         tagSevenPose.getZ() + Units.inchesToMeters(26.35))
   };
 
-  public static final Pose3d targetPoseBlue =
-      new Pose3d(BreadUtil.average(targetVerticies), new Rotation3d());
+  public static final Pose2d targetPoseBlue = tagSevenPose.toPose2d();
 }

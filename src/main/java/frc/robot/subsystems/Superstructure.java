@@ -24,10 +24,10 @@ import org.littletonrobotics.junction.Logger;
 public class Superstructure extends SubsystemBase {
   // For on-the-fly adjustments
   static LoggedTunableNumber angleAddition =
-      new LoggedTunableNumber("On-the-fly/angleAddition", 2.0);
+      new LoggedTunableNumber("On-the-fly/angleAddition", 0.0);
 
   static LoggedTunableNumber angleMultiplication =
-      new LoggedTunableNumber("On-the-fly/distanceScaledAddition", 1.0);
+      new LoggedTunableNumber("On-the-fly/distanceScaledAddition", 0.0);
 
   /* Subsystems */
   private final ElevatorPivot elevatorPivot;
@@ -208,12 +208,6 @@ public class Superstructure extends SubsystemBase {
 
       elevatorPivot.requestPursueSetpoint(
           Rotation2d.fromDegrees((shot.pivotAngleDeg + angleAddition.get())), shot.elevatorHeight);
-      // double multipliedPivotAngle = Robot.pivotAngle.get() * angleMultiplication.get();
-      // elevatorPivot.requestPursueSetpoint(
-      //     Rotation2d.fromDegrees(multipliedPivotAngle), Robot.elevatorHeight.get());
-
-      // elevatorPivot.requestPursueSetpoint(
-      //     Rotation2d.fromDegrees(Robot.pivotAngle.get()), Robot.elevatorHeight.get());
 
       Logger.recordOutput("Vision/Shot/ElevatorHeight", shot.elevatorHeight);
       Logger.recordOutput("Vision/Shot/PivotAngleDeg", shot.pivotAngleDeg);
@@ -320,7 +314,7 @@ public class Superstructure extends SubsystemBase {
       }
     } else if (systemState == SuperstructureState.POST_TRAP) {
       elevatorPivot.requestPursueSetpoint(
-          PIVOT_TRAP_ANGLE.plus(Rotation2d.fromDegrees(15.0)),
+          PIVOT_TRAP_ANGLE.plus(Rotation2d.fromDegrees(25.0)),
           (ELEVATOR_TRAP_HEIGHT - 0.2) - Units.inchesToMeters(5.0));
       feeder.requestIdle();
 

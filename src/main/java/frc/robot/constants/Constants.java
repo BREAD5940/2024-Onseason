@@ -273,7 +273,7 @@ public class Constants {
 
   public static final double FALCON_FREE_SPEED = 6380.0;
   public static final double KRAKEN_FREE_SPEED = 6000.0;
-  public static final double GOAL_INWARD_SHIFT = Units.inchesToMeters(12.0);
+  public static final double GOAL_INWARD_SHIFT = 0.0;
 
   // FOR EPA:
   // 12 in inward shift on the red side
@@ -539,7 +539,7 @@ public class Constants {
 
         PIVOT_AMP_ANGLE = Rotation2d.fromDegrees(28.0);
 
-        PIVOT_PRE_CLIMB_ANGLE = Rotation2d.fromDegrees(20.0);
+        PIVOT_PRE_CLIMB_ANGLE = Rotation2d.fromDegrees(30.0);
 
         PIVOT_CLIMBED_ANGLE = Rotation2d.fromDegrees(25.0);
 

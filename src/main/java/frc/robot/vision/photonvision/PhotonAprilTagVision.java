@@ -164,12 +164,12 @@ public class PhotonAprilTagVision extends SubsystemBase {
         // If not using multitag, disambiugate and then use
         PhotonTrackedTarget target = latestCameraResult.targets.get(0);
 
-        if (!(target.getFiducialId() == 3
-            || target.getFiducialId() == 4
-            || target.getFiducialId() == 7
-            || target.getFiducialId() == 8)) {
-          continue;
-        }
+        // if (!(target.getFiducialId() == 3
+        //     || target.getFiducialId() == 4
+        //     || target.getFiducialId() == 7
+        //     || target.getFiducialId() == 8)) {
+        //   continue;
+        // }
 
         Pose3d tagPos = aprilTags.getTagPose(target.getFiducialId()).get();
 
