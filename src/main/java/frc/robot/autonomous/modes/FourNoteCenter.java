@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Robot;
 import frc.robot.subsystems.Superstructure;
+import frc.robot.subsystems.commands.FenderShotCommand;
 import frc.robot.subsystems.commands.StationaryShootCommand;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
@@ -20,7 +21,7 @@ public class FourNoteCenter extends SequentialCommandGroup {
     addRequirements(superstructure, swerve, shooter, intake);
     addCommands(
         new InstantCommand(() -> superstructure.requestIntake(true)),
-        new WaitUntilCommand(() -> superstructure.hasPiece()),
+        new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
         new InstantCommand(() -> superstructure.requestIntake(false)),
         new InstantCommand(
             () -> {
@@ -30,7 +31,7 @@ public class FourNoteCenter extends SequentialCommandGroup {
               }
               swerve.resetPose(path.getPreviewStartingHolonomicPose());
             }),
-        new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(3),
+        new FenderShotCommand(swerve, superstructure, shooter).withTimeout(2),
         new TrajectoryFollowerCommand(Robot.fourNoteCenterA, swerve, false)
             .beforeStarting(
                 () -> {

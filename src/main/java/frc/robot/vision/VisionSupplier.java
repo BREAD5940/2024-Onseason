@@ -104,9 +104,11 @@ public class VisionSupplier extends SubsystemBase {
     if (DriverStation.getAlliance().get() == Alliance.Blue) {
       shot = InterpolatingTableBlue.get(robotToRadialVirtualTarget.getNorm());
       shotSOD = SODInterpolatingTableBlue.get(robotToRadialVirtualTarget.getNorm());
+      Logger.recordOutput("Using Blue Table", true);
     } else {
       shot = InterpolatingTableRed.get(robotToRadialVirtualTarget.getNorm());
       shotSOD = SODInterpolatingTableRed.get(robotToRadialVirtualTarget.getNorm());
+      Logger.recordOutput("Using Blue Table", false);
     }
 
     if (overrideRobotPose != null) {

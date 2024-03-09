@@ -405,13 +405,13 @@ public class Constants {
 
         ELEVATOR_SPEAKER_SHORT_HEIGHT = 0.125;
 
-        ELEVATOR_AMP_HEIGHT = 0.48;
+        ELEVATOR_AMP_HEIGHT = 0.48 + Units.inchesToMeters(2);
 
         ELEVATOR_PRE_CLIMB_HEIGHT = 0.55 + Units.inchesToMeters(1.5);
 
-        ELEVATOR_CLIMBED_HEIGHT = 0.00;
+        ELEVATOR_CLIMBED_HEIGHT = Units.inchesToMeters(0.0);
 
-        ELEVATOR_TRAP_HEIGHT = 0.65;
+        ELEVATOR_TRAP_HEIGHT = 0.64;
 
         ELEVATOR_FENDER_HEIGHT = 0.4; // 0.4
 
@@ -537,11 +537,11 @@ public class Constants {
 
         PIVOT_SPIT_ANGLE = Rotation2d.fromDegrees(0.0);
 
-        PIVOT_AMP_ANGLE = Rotation2d.fromDegrees(28.0);
+        PIVOT_AMP_ANGLE = Rotation2d.fromDegrees(24.0);
 
-        PIVOT_PRE_CLIMB_ANGLE = Rotation2d.fromDegrees(30.0);
+        PIVOT_PRE_CLIMB_ANGLE = Rotation2d.fromDegrees(25.0);
 
-        PIVOT_CLIMBED_ANGLE = Rotation2d.fromDegrees(25.0);
+        PIVOT_CLIMBED_ANGLE = Rotation2d.fromDegrees(38.0);
 
         PIVOT_TRAP_ANGLE = Rotation2d.fromDegrees(0.0);
 
@@ -634,8 +634,8 @@ public class Constants {
         SHOOTER_LEFT_IDLE_RPM = 0.0;
         SHOOTER_RIGHT_IDLE_RPM = 0.0;
 
-        SHOOTER_LEFT_AMP_RPM = 1500.0;
-        SHOOTER_RIGHT_AMP_RPM = 1500.0;
+        SHOOTER_LEFT_AMP_RPM = 950.0;
+        SHOOTER_RIGHT_AMP_RPM = 950.0;
 
         SHOOTER_LEFT_TRAP_RPM = 0.0;
         SHOOTER_RIGHT_TRAP_RPM = 0.0;
@@ -699,7 +699,7 @@ public class Constants {
 
         FEEDER_INTAKE_SPEED = 65; // 65
 
-        FEEDER_SPIT_SPEED = -0.4;
+        FEEDER_SPIT_SPEED = -1.0;
 
         FEEDER_SHOOT_SPEED = 0.8;
 

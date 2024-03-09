@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Robot;
 import frc.robot.subsystems.Superstructure;
@@ -39,11 +38,7 @@ public class ThreeNoteCenter extends SequentialCommandGroup {
                   intake.requestIntake();
                   superstructure.requestIntake(true);
                   superstructure.requestVisionSpeaker(false, false, false);
-                })
-            .deadlineWith(
-                new SequentialCommandGroup(
-                    new WaitCommand(3.43),
-                    new InstantCommand(() -> shooter.requestVisionSpeaker(true)))),
+                }),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
         new TrajectoryFollowerCommand(Robot.fourNoteCenterB, swerve, false)
             .beforeStarting(
@@ -51,23 +46,14 @@ public class ThreeNoteCenter extends SequentialCommandGroup {
                   intake.requestIntake();
                   superstructure.requestIntake(true);
                   superstructure.requestVisionSpeaker(false, false, false);
-                })
-            .deadlineWith(
-                new SequentialCommandGroup(
-                    new WaitCommand(2.17),
-                    new InstantCommand(() -> shooter.requestVisionSpeaker(true)))),
-        new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
+                }),
         new TrajectoryFollowerCommand(Robot.fourNoteCenterC, swerve, false)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
                   superstructure.requestIntake(true);
                   superstructure.requestVisionSpeaker(false, false, false);
-                })
-            .deadlineWith(
-                new SequentialCommandGroup(
-                    new WaitCommand(3.2),
-                    new InstantCommand(() -> shooter.requestVisionSpeaker(true)))),
+                }),
         new StationaryShootCommand(swerve, superstructure, shooter));
   }
 }

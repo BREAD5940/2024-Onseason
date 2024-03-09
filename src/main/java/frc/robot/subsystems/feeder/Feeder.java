@@ -77,7 +77,7 @@ public class Feeder {
         nextSystemState = FeederState.IDLE;
       }
     } else if (systemState == FeederState.SPIT) {
-      io.setPercent(isTrapping ? -0.3 : FEEDER_SPIT_SPEED);
+      io.setPercent(isTrapping ? -0.45 : FEEDER_SPIT_SPEED);
 
       if (!requestSpit) {
         hasPiece = false;

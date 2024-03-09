@@ -279,7 +279,7 @@ public class Superstructure extends SubsystemBase {
       elevatorPivot.requestPursueSetpoint(PIVOT_CLIMBED_ANGLE, ELEVATOR_CLIMBED_HEIGHT);
       feeder.requestIdle();
 
-      if (requestNextClimbState && elevatorPivot.atSetpoint()) {
+      if (requestNextClimbState && elevatorPivot.atElevatorSetpoint(ELEVATOR_CLIMBED_HEIGHT)) {
         nextSystemState = SuperstructureState.TRAP;
         requestNextClimbState = false;
       } else if (requestPrevClimbState) {
