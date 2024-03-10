@@ -25,11 +25,11 @@ public class FiveNoteAmpSide extends SequentialCommandGroup {
     addCommands(
         // Fire preload
         new InstantCommand(() -> superstructure.requestIntake(true)),
-        new WaitUntilCommand(() -> superstructure.hasPiece()),
+        new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
         new InstantCommand(() -> superstructure.requestIntake(false)),
         new InstantCommand(
             () -> {
-              PathPlannerPath path = Robot.fiveNoteMidlineAmpSideA;
+              PathPlannerPath path = Robot.fiveNoteAmpSideA;
               if (DriverStation.getAlliance().get() == Alliance.Red) {
                 path = path.flipPath();
               }

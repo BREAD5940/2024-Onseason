@@ -5,6 +5,7 @@ import static frc.robot.constants.Constants.Shooter.*;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.commons.BreadUtil;
+import frc.robot.commons.LoggedTunableNumber;
 import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends SubsystemBase {
@@ -28,6 +29,9 @@ public class Shooter extends SubsystemBase {
   /* Setpoints */
   private double desiredLeftRPM = 1000.0;
   private double desiredRightRPM = 1000.0;
+
+  /* Tunable numbers */
+  LoggedTunableNumber ampSpeed = new LoggedTunableNumber("Amp/ShotVelocity", SHOOTER_LEFT_AMP_RPM);
 
   /* System states */
   public enum ShooterState {
@@ -145,8 +149,8 @@ public class Shooter extends SubsystemBase {
   }
 
   public void requestAmp() {
-    desiredLeftRPM = SHOOTER_LEFT_AMP_RPM;
-    desiredRightRPM = SHOOTER_RIGHT_AMP_RPM;
+    desiredLeftRPM = ampSpeed.get();
+    desiredRightRPM = ampSpeed.get();
     unsetAllRequests();
     requestAmp = true;
   }

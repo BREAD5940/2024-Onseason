@@ -17,12 +17,13 @@ import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.TrajectoryFollowerCommand;
 
-public class FourNoteAmpSide extends SequentialCommandGroup {
+public class FiveNoteAmpSideAlternate extends SequentialCommandGroup {
 
-  public FourNoteAmpSide(
+  public FiveNoteAmpSideAlternate(
       Superstructure superstructure, Swerve swerve, Shooter shooter, Intake intake) {
     addRequirements(superstructure, swerve, shooter, intake);
     addCommands(
+        // Fire preload
         new InstantCommand(() -> superstructure.requestIntake(true)),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
         new InstantCommand(() -> superstructure.requestIntake(false)),
@@ -35,7 +36,7 @@ public class FourNoteAmpSide extends SequentialCommandGroup {
               swerve.resetPose(path.getPreviewStartingHolonomicPose());
             }),
         new FenderShotCommand(swerve, superstructure, shooter).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.fiveNoteAmpSideA, swerve, false)
+        new TrajectoryFollowerCommand(Robot.fiveNoteAmpSideA, swerve, true)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
@@ -44,7 +45,7 @@ public class FourNoteAmpSide extends SequentialCommandGroup {
                 }),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.fiveNoteAmpSideB, swerve, false)
+        new TrajectoryFollowerCommand(Robot.fiveNoteAmpSideB, swerve, true)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
@@ -53,7 +54,7 @@ public class FourNoteAmpSide extends SequentialCommandGroup {
                 }),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.fiveNoteAmpSideC, swerve, false)
+        new TrajectoryFollowerCommand(Robot.fiveNoteAmpSideC, swerve, true)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
@@ -61,6 +62,14 @@ public class FourNoteAmpSide extends SequentialCommandGroup {
                   superstructure.requestVisionSpeaker(false, false, false);
                 }),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
-        new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2));
+        new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
+        new TrajectoryFollowerCommand(Robot.fiveNoteAmpSideAlternate, swerve, false)
+            .beforeStarting(
+                () -> {
+                  intake.requestIntake();
+                  superstructure.requestIntake(true);
+                  superstructure.requestVisionSpeaker(false, false, false);
+                }),
+        new StationaryShootCommand(swerve, superstructure, shooter));
   }
 }

@@ -29,6 +29,11 @@ public class Superstructure extends SubsystemBase {
   static LoggedTunableNumber angleMultiplication =
       new LoggedTunableNumber("On-the-fly/distanceScaledAddition", 0.0);
 
+  static LoggedTunableNumber ampAngle =
+      new LoggedTunableNumber("Amp/AmpAngle", PIVOT_AMP_ANGLE.getDegrees());
+  static LoggedTunableNumber ampHeight =
+      new LoggedTunableNumber("Amp/ElevatorHeight", ELEVATOR_AMP_HEIGHT);
+
   /* Subsystems */
   private final ElevatorPivot elevatorPivot;
   private final Feeder feeder;
@@ -238,7 +243,7 @@ public class Superstructure extends SubsystemBase {
         nextSystemState = SuperstructureState.IDLE;
       }
     } else if (systemState == SuperstructureState.AMP) {
-      elevatorPivot.requestPursueSetpoint(PIVOT_AMP_ANGLE, ELEVATOR_AMP_HEIGHT);
+      elevatorPivot.requestPursueSetpoint(Rotation2d.fromDegrees(ampAngle.get()), ampHeight.get());
       if (shouldShoot) {
         feeder.requestShoot();
       } else {

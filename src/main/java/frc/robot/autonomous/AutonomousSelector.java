@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.autonomous.modes.Bomb;
 import frc.robot.autonomous.modes.DriveBackTwo;
 import frc.robot.autonomous.modes.FiveNoteAmpSide;
+import frc.robot.autonomous.modes.FiveNoteAmpSideAlternate;
 import frc.robot.autonomous.modes.FiveNoteMidlineAmpSide;
 import frc.robot.autonomous.modes.FourNoteAmpSide;
 import frc.robot.autonomous.modes.FourNoteCenter;
@@ -48,6 +49,9 @@ public class AutonomousSelector {
     autonomousSelector.addOption("PRELOAD", new Preload(superstructure, swerve, shooter, intake));
     autonomousSelector.addOption(
         "DRIVE_BACK_TWO", new DriveBackTwo(superstructure, swerve, shooter, intake));
+    autonomousSelector.addOption(
+        "FIVE_NOTE_AMP_SIDE_ALTERNATE",
+        new FiveNoteAmpSideAlternate(superstructure, swerve, shooter, intake));
 
     SmartDashboard.putData("Autonomus Selector", autonomousSelector);
   }

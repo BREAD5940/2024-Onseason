@@ -65,6 +65,7 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath fiveNoteAmpSideB;
   public static PathPlannerPath fiveNoteAmpSideC;
   public static PathPlannerPath fiveNoteAmpSideD;
+  public static PathPlannerPath fiveNoteAmpSideAlternate;
 
   private boolean requestedHome = false;
 
@@ -142,6 +143,7 @@ public class Robot extends LoggedRobot {
     fiveNoteAmpSideB = PathPlannerPath.fromPathFile("Five Note Amp Side B");
     fiveNoteAmpSideC = PathPlannerPath.fromPathFile("Five Note Amp Side C");
     fiveNoteAmpSideD = PathPlannerPath.fromPathFile("Five Note Amp Side D");
+    fiveNoteAmpSideAlternate = PathPlannerPath.fromPathFile("Five Note Amp Side Alternate");
 
     m_robotContainer.configureAutonomousSelector();
   }
