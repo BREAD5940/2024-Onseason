@@ -299,7 +299,7 @@ public class Superstructure extends SubsystemBase {
       }
       feeder.requestIdle();
 
-      if (requestNextClimbState && elevatorPivot.atSetpoint()) {
+      if (requestNextClimbState) {
         nextSystemState = SuperstructureState.TRAP_SCORED;
         requestNextClimbState = false;
       } else if (requestPrevClimbState) {

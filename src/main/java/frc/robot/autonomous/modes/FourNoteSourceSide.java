@@ -47,14 +47,6 @@ public class FourNoteSourceSide extends SequentialCommandGroup {
                   superstructure.requestIntake(true);
                   superstructure.requestVisionSpeaker(false, false, false);
                 }),
-        new StationaryShootCommand(swerve, superstructure, shooter),
-        new TrajectoryFollowerCommand(Robot.fourNoteSourceSideC, swerve, false)
-            .beforeStarting(
-                () -> {
-                  intake.requestIntake();
-                  superstructure.requestIntake(true);
-                  superstructure.requestVisionSpeaker(false, false, false);
-                }),
         new StationaryShootCommand(swerve, superstructure, shooter));
   }
 }
