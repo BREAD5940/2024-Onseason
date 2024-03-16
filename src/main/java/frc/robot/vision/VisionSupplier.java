@@ -32,6 +32,17 @@ public class VisionSupplier extends SubsystemBase {
   private double distance;
   private Pose2d overrideRobotPose;
 
+  private Rotation2d robotToNoteAngle;
+  private Translation2d notePose;
+
+  public Rotation2d robotToNoteAngle() {
+    return robotToNoteAngle;
+  }
+
+  public Translation2d notePose() {
+    return notePose;
+  }
+
   public Rotation2d robotToSpeakerAngle() {
     return yaw;
   }
@@ -120,6 +131,14 @@ public class VisionSupplier extends SubsystemBase {
     }
 
     distance = robotToRadialVirtualTarget.getNorm();
+
+    /* Note follower calculations */
+    notePose = RobotContainer.noteDetection.getNotePose();
+
+    Translation2d robotToNote = notePose.minus(robotPose.getTranslation());
+    robotToNoteAngle =
+        new Rotation2d(robotToNote.getX(), robotToNote.getY())
+            .rotateBy(Rotation2d.fromDegrees(180.0));
 
     // Logs
     Logger.recordOutput("Vision/DistanceToTarget", robotToRadialVirtualTarget.getNorm());

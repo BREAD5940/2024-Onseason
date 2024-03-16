@@ -18,7 +18,7 @@ import frc.robot.constants.GammaTunerConstants;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.commands.AimAtTrapCommand;
 import frc.robot.subsystems.commands.AmpCommand;
-import frc.robot.subsystems.commands.FenderShotCommand;
+import frc.robot.subsystems.commands.AutoPickupNote;
 import frc.robot.subsystems.commands.TeleopShootCommand;
 import frc.robot.subsystems.elevatorpivot.ElevatorIO;
 import frc.robot.subsystems.elevatorpivot.ElevatorIOKrakenX60;
@@ -35,6 +35,7 @@ import frc.robot.subsystems.shooter.ShooterIOKrakenX60;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.vision.VisionSupplier;
 import frc.robot.vision.photonvision.PhotonAprilTagVision;
+import frc.robot.vision.photonvision.PhotonNoteDetection;
 import org.photonvision.PhotonCamera;
 
 public class RobotContainer {
@@ -60,13 +61,18 @@ public class RobotContainer {
           GammaTunerConstants.BackLeft,
           GammaTunerConstants.BackRight);
 
+  // April tag cameras
   public static final PhotonCamera frontLeftCamera = new PhotonCamera("front-left");
   public static final PhotonCamera frontRightCamera = new PhotonCamera("front-right");
   public static final PhotonCamera backLeftCamera = new PhotonCamera("back-left");
   public static final PhotonCamera backRightCamera = new PhotonCamera("back-right");
 
+  // Note detection cameras
+  public static final PhotonCamera leftObjCamera = new PhotonCamera("left-obj-camera");
+
   public static final PhotonAprilTagVision aprilTagVision =
       new PhotonAprilTagVision(frontLeftCamera, frontRightCamera, backLeftCamera, backRightCamera);
+  public static final PhotonNoteDetection noteDetection = new PhotonNoteDetection(leftObjCamera);
   public static final VisionSupplier visionSupplier = new VisionSupplier();
   public static AutonomousSelector autonomousSelector;
 
@@ -111,7 +117,7 @@ public class RobotContainer {
         .whileTrue(new TeleopShootCommand(swerve));
 
     new JoystickButton(driver, XboxController.Button.kX.value)
-        .whileTrue(new FenderShotCommand(swerve, superstructure, shooter));
+        .whileTrue(new AutoPickupNote(swerve, superstructure));
 
     new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new AmpCommand(swerve));
 
