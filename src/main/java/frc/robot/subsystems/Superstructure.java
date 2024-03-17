@@ -50,6 +50,7 @@ public class Superstructure extends SubsystemBase {
   private boolean requestAmp = false;
   private boolean requestNextClimbState = false;
   private boolean requestPrevClimbState = false;
+  private boolean requestPass = false;
 
   private boolean wantsShoot = false;
   private boolean wantsShootOverDefense = false;
@@ -73,7 +74,8 @@ public class Superstructure extends SubsystemBase {
     CLIMB,
     TRAP,
     TRAP_SCORED,
-    POST_TRAP
+    POST_TRAP,
+    PASS
   }
 
   /* Take in io objects and construct subsystems */
@@ -133,6 +135,8 @@ public class Superstructure extends SubsystemBase {
       } else if (requestNextClimbState) {
         requestNextClimbState = false;
         nextSystemState = SuperstructureState.PRE_CLIMB;
+      } else if (requestPass) {
+        nextSystemState = SuperstructureState.PASS;
       }
     } else if (systemState == SuperstructureState.INTAKE) {
       feeder.requestIntake();
@@ -327,6 +331,33 @@ public class Superstructure extends SubsystemBase {
         nextSystemState = SuperstructureState.TRAP;
         requestPrevClimbState = false;
       }
+    } else if (systemState == SuperstructureState.PASS) {
+      elevatorPivot.requestPursueSetpoint(PIVOT_PASS_ANGLE, ELEVATOR_PASS_HEIGHT);
+      if (shouldShoot) {
+        feeder.requestShoot();
+      } else {
+        feeder.requestIdle();
+      }
+
+      if (wantsShoot
+          && elevatorPivot.atSetpoint()
+          && RobotContainer.shooter.atSetpoint()
+          && feeder.hasPiece()) {
+        shouldShoot = true;
+      }
+
+      if (requestHome) {
+        shouldShoot = false;
+        nextSystemState = SuperstructureState.HOMING;
+      } else if (requestSpit) {
+        shouldShoot = false;
+        nextSystemState = SuperstructureState.SPIT;
+      } else if (!requestPass && !shouldShoot) {
+        nextSystemState = SuperstructureState.IDLE;
+      } else if (shouldShoot && !feeder.hasPiece()) {
+        shouldShoot = false;
+        nextSystemState = SuperstructureState.IDLE;
+      }
     }
 
     if (systemState != nextSystemState) {
@@ -398,6 +429,11 @@ public class Superstructure extends SubsystemBase {
 
   public void requestIntake(boolean set) {
     requestIntake = set;
+  }
+
+  public void requestPass(boolean set, boolean wantsShoot) {
+    requestPass = set;
+    this.wantsShoot = wantsShoot;
   }
 
   public boolean atElevatorPivotSetpoint() {

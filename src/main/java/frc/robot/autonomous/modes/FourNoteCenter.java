@@ -32,7 +32,7 @@ public class FourNoteCenter extends SequentialCommandGroup {
               swerve.resetPose(path.getPreviewStartingHolonomicPose());
             }),
         new FenderShotCommand(swerve, superstructure, shooter).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.fourNoteCenterA, swerve, false)
+        new TrajectoryFollowerCommand(Robot.fourNoteCenterA, swerve, () -> false)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
@@ -40,9 +40,9 @@ public class FourNoteCenter extends SequentialCommandGroup {
                   superstructure.requestVisionSpeaker(false, false, false);
                 }),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.fourNoteCenterB, swerve, false),
+        new TrajectoryFollowerCommand(Robot.fourNoteCenterB, swerve, () -> false),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.fourNoteCenterC, swerve, false)
+        new TrajectoryFollowerCommand(Robot.fourNoteCenterC, swerve, () -> false)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
@@ -51,7 +51,7 @@ public class FourNoteCenter extends SequentialCommandGroup {
                 }),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
         new StationaryShootCommand(swerve, superstructure, shooter),
-        new TrajectoryFollowerCommand(Robot.fourNoteCenterD, swerve, false)
+        new TrajectoryFollowerCommand(Robot.fourNoteCenterD, swerve, () -> false)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();

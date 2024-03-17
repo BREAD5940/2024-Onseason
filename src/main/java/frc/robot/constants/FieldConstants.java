@@ -24,6 +24,8 @@ public class FieldConstants {
   public static final Translation2d ampCenter =
       new Translation2d(Units.inchesToMeters(72.455), fieldWidth);
 
+  public static final Translation2d passingTarget = new Translation2d(0.53, 6.94);
+
   public static final AprilTagFieldLayout aprilTags =
       new AprilTagFieldLayout(
           List.of(

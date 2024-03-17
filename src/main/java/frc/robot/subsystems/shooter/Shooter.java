@@ -20,6 +20,7 @@ public class Shooter extends SubsystemBase {
   private boolean requestFender = false;
   private boolean requestVisionSpeaker = false;
   private boolean requestAmp = false;
+  private boolean requestPass = false;
 
   private boolean wantsShootOverDefense = false;
   private boolean override = false;
@@ -39,7 +40,8 @@ public class Shooter extends SubsystemBase {
     FENDER,
     VISION_SPEAKER,
     AMP,
-    TUNING
+    TUNING,
+    PASS
   }
 
   public Shooter(ShooterIO io) {
@@ -68,6 +70,8 @@ public class Shooter extends SubsystemBase {
         nextSystemState = ShooterState.VISION_SPEAKER;
       } else if (requestAmp) {
         nextSystemState = ShooterState.AMP;
+      } else if (requestPass) {
+        nextSystemState = ShooterState.PASS;
       }
     } else if (systemState == ShooterState.FENDER) {
       // Outputs
@@ -89,6 +93,12 @@ public class Shooter extends SubsystemBase {
       io.setVelocity(desiredLeftRPM, desiredRightRPM);
 
       if (!requestAmp) {
+        nextSystemState = ShooterState.IDLE;
+      }
+    } else if (systemState == ShooterState.PASS) {
+      io.setVelocity(desiredLeftRPM, desiredRightRPM);
+
+      if (!requestPass) {
         nextSystemState = ShooterState.IDLE;
       }
     }
@@ -155,9 +165,17 @@ public class Shooter extends SubsystemBase {
     requestAmp = true;
   }
 
+  public void requestPass() {
+    desiredLeftRPM = SHOOTER_LEFT_PASS_RPM;
+    desiredRightRPM = SHOOTER_RIGHT_PASS_RPM;
+    unsetAllRequests();
+    requestPass = true;
+  }
+
   private void unsetAllRequests() {
     requestFender = false;
     requestVisionSpeaker = false;
     requestAmp = false;
+    requestPass = false;
   }
 }

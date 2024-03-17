@@ -214,30 +214,30 @@ public class Robot extends LoggedRobot {
   @Override
   public void teleopPeriodic() {
     RobotContainer.aprilTagVision.setStdDevMode(StdDevMode.TELEOP);
-    // /* Intake requests */
-    // if (RobotContainer.driver.getRightTriggerAxis() > 0.1) {
-    //   RobotContainer.intake.requestIntake();
-    //   RobotContainer.superstructure.requestIntake(true);
-    // } else if (RobotContainer.driver.getLeftTriggerAxis() > 0.1) {
-    //   RobotContainer.intake.requestSpit();
-    // } else {
-    //   RobotContainer.superstructure.requestIntake(false);
-    //   RobotContainer.intake.requestIdle();
-    // }
+    /* Intake requests */
+    if (RobotContainer.driver.getRightTriggerAxis() > 0.1) {
+      RobotContainer.intake.requestIntake();
+      RobotContainer.superstructure.requestIntake(true);
+    } else if (RobotContainer.driver.getLeftTriggerAxis() > 0.1) {
+      RobotContainer.intake.requestSpit();
+    } else {
+      RobotContainer.superstructure.requestIntake(false);
+      RobotContainer.intake.requestIdle();
+    }
 
-    // /* Superstructure spit requests */
-    // if (RobotContainer.operator.getXButton()) {
-    //   RobotContainer.superstructure.requestSpit(true);
-    // } else {
-    //   RobotContainer.superstructure.requestSpit(false);
-    // }
+    /* Superstructure spit requests */
+    if (RobotContainer.operator.getXButton()) {
+      RobotContainer.superstructure.requestSpit(true);
+    } else {
+      RobotContainer.superstructure.requestSpit(false);
+    }
 
-    // /* Climb requests */
-    // if (RobotContainer.operator.getRightBumperPressed()) {
-    //   RobotContainer.superstructure.requestNextClimbState();
-    // } else if (RobotContainer.operator.getLeftBumperPressed()) {
-    //   RobotContainer.superstructure.requestPrevClimbState();
-    // }
+    /* Climb requests */
+    if (RobotContainer.operator.getRightBumperPressed()) {
+      RobotContainer.superstructure.requestNextClimbState();
+    } else if (RobotContainer.operator.getLeftBumperPressed()) {
+      RobotContainer.superstructure.requestPrevClimbState();
+    }
   }
 
   @Override

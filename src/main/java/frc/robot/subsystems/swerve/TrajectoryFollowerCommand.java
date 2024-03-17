@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.commons.BreadHolonomicDriveController;
+import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
 public class TrajectoryFollowerCommand extends Command {
@@ -21,7 +22,7 @@ public class TrajectoryFollowerCommand extends Command {
   private final Swerve swerve;
   private final Timer timer = new Timer();
   private boolean flippedForRed = false;
-  private boolean aimAtSpeaker = false;
+  private Supplier<Boolean> aimAtSpeaker = () -> false;
 
   public final BreadHolonomicDriveController autonomusController =
       new BreadHolonomicDriveController(
@@ -30,7 +31,7 @@ public class TrajectoryFollowerCommand extends Command {
           new PIDController(5.0, 0, 0.0));
 
   public TrajectoryFollowerCommand(
-      PathPlannerPath path, Swerve swerve, boolean isInitialPoint, boolean aimAtSpeaker) {
+      PathPlannerPath path, Swerve swerve, boolean isInitialPoint, Supplier<Boolean> aimAtSpeaker) {
     this.path = path;
     this.swerve = swerve;
     this.isInitialPoint = isInitialPoint;
@@ -38,7 +39,8 @@ public class TrajectoryFollowerCommand extends Command {
     addRequirements(swerve);
   }
 
-  public TrajectoryFollowerCommand(PathPlannerPath path, Swerve swerve, boolean aimAtSpeaker) {
+  public TrajectoryFollowerCommand(
+      PathPlannerPath path, Swerve swerve, Supplier<Boolean> aimAtSpeaker) {
     this(path, swerve, false, aimAtSpeaker);
   }
 
@@ -74,7 +76,7 @@ public class TrajectoryFollowerCommand extends Command {
   public void execute() {
     PathPlannerTrajectory.State goal = trajectory.sample(timer.get());
     goal.targetHolonomicRotation =
-        aimAtSpeaker
+        aimAtSpeaker.get()
             ? RobotContainer.visionSupplier.robotToSpeakerAngle()
             : goal.targetHolonomicRotation;
     ChassisSpeeds adjustedSpeeds =

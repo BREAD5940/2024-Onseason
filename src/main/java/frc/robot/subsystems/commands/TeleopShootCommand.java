@@ -45,12 +45,12 @@ public class TeleopShootCommand extends Command {
     double dy;
 
     if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-      dx = Math.pow(-x, 1) * 1.5;
-      dy = Math.pow(-y, 1) * 1.5;
+      dx = Math.pow(-x, 1) * 2.5;
+      dy = Math.pow(-y, 1) * 2.5;
 
     } else {
-      dx = Math.pow(-x, 1) * -1 * 1.5;
-      dy = Math.pow(-y, 1) * -1 * 1.5;
+      dx = Math.pow(-x, 1) * -1 * 2.5;
+      dy = Math.pow(-y, 1) * -1 * 2.5;
     }
 
     // Subsystem Requests

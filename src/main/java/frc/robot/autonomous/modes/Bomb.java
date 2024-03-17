@@ -33,7 +33,7 @@ public class Bomb extends SequentialCommandGroup {
               swerve.resetPose(path.getPreviewStartingHolonomicPose());
             }),
         new FenderShotCommand(swerve, superstructure, shooter).withTimeout(3),
-        new TrajectoryFollowerCommand(Robot.bombA, swerve, false)
+        new TrajectoryFollowerCommand(Robot.bombA, swerve, () -> false)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
@@ -45,7 +45,7 @@ public class Bomb extends SequentialCommandGroup {
                     new WaitCommand(3.43),
                     new InstantCommand(() -> shooter.requestVisionSpeaker(true)))),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.bombB, swerve, false)
+        new TrajectoryFollowerCommand(Robot.bombB, swerve, () -> false)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
@@ -57,7 +57,7 @@ public class Bomb extends SequentialCommandGroup {
                     new WaitCommand(2.17),
                     new InstantCommand(() -> shooter.requestVisionSpeaker(true)))),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.bombC, swerve, false)
+        new TrajectoryFollowerCommand(Robot.bombC, swerve, () -> false)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();

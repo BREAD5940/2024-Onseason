@@ -1,20 +1,14 @@
 package frc.robot.vision.photonvision;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RobotContainer;
-import frc.robot.commons.GeomUtil;
 import java.util.ArrayList;
 import java.util.List;
-import org.littletonrobotics.junction.Logger;
 import org.photonvision.PhotonCamera;
-import org.photonvision.targeting.PhotonPipelineResult;
-import org.photonvision.targeting.PhotonTrackedTarget;
 import org.photonvision.targeting.TargetCorner;
 
 public class PhotonNoteDetection extends SubsystemBase {
@@ -65,138 +59,143 @@ public class PhotonNoteDetection extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // Loop through all the cameras
-    for (int instanceIndex = 0; instanceIndex < cameras.length; instanceIndex++) {
-      Pose3d cameraPose = cameraPoses[instanceIndex];
-      Pose2d robotPose = RobotContainer.swerve.getPose();
+    // // Loop through all the cameras
+    // for (int instanceIndex = 0; instanceIndex < cameras.length; instanceIndex++) {
+    //   Pose3d cameraPose = cameraPoses[instanceIndex];
+    //   Pose2d robotPose = RobotContainer.swerve.getPose();
 
-      // Track the best note in the FOV
-      PhotonPipelineResult latestCameraResult = cameras[instanceIndex].getLatestResult();
+    //   // Track the best note in the FOV
+    //   PhotonPipelineResult latestCameraResult = cameras[instanceIndex].getLatestResult();
 
-      if (!latestCameraResult.hasTargets()) {
-        continue;
-      }
+    //   if (!latestCameraResult.hasTargets()) {
+    //     continue;
+    //   }
 
-      PhotonTrackedTarget bestTarget = latestCameraResult.getBestTarget();
+    //   PhotonTrackedTarget bestTarget = latestCameraResult.getBestTarget();
 
-      // Calculate the center pixel coordinate of the note by averaging the corners
-      List<TargetCorner> corners = bestTarget.getMinAreaRectCorners();
-      TargetCorner center = averageCorners(corners);
+    //   // Calculate the center pixel coordinate of the note by averaging the corners
+    //   List<TargetCorner> corners = bestTarget.getMinAreaRectCorners();
+    //   TargetCorner center = averageCorners(corners);
 
-      // If the note is justified towards the right side of the frame us the left verticies and vice
-      // versa
-      if (center.x < cameraResolutionX / 2.0) {
-        // Note is on the left side of frame, use right verticies
-        List<TargetCorner> rightVerticies = getRightVerticies(corners);
-        if (rightVerticies.size() < 2) {
-          continue;
-        }
+    //   // If the note is justified towards the right side of the frame us the left verticies and
+    // vice
+    //   // versa
+    //   if (center.x < cameraResolutionX / 2.0) {
+    //     // Note is on the left side of frame, use right verticies
+    //     List<TargetCorner> rightVerticies = getRightVerticies(corners);
+    //     if (rightVerticies.size() < 2) {
+    //       continue;
+    //     }
 
-        // Figure out which of the corners is the top right and which is the bottom
-        TargetCorner topRight;
-        TargetCorner bottomRight;
-        if (rightVerticies.get(0).y < rightVerticies.get(1).y) {
-          topRight = rightVerticies.get(0);
-          bottomRight = rightVerticies.get(1);
-        } else {
-          topRight = rightVerticies.get(1);
-          bottomRight = rightVerticies.get(0);
-        }
+    //     // Figure out which of the corners is the top right and which is the bottom
+    //     TargetCorner topRight;
+    //     TargetCorner bottomRight;
+    //     if (rightVerticies.get(0).y < rightVerticies.get(1).y) {
+    //       topRight = rightVerticies.get(0);
+    //       bottomRight = rightVerticies.get(1);
+    //     } else {
+    //       topRight = rightVerticies.get(1);
+    //       bottomRight = rightVerticies.get(0);
+    //     }
 
-        double[] pitchYawTopRight = getPitchYawFromTargetCorner(topRight, instanceIndex);
-        double[] pitchYawBottomRight = getPitchYawFromTargetCorner(bottomRight, instanceIndex);
+    //     double[] pitchYawTopRight = getPitchYawFromTargetCorner(topRight, instanceIndex);
+    //     double[] pitchYawBottomRight = getPitchYawFromTargetCorner(bottomRight, instanceIndex);
 
-        Translation2d translationTopRight =
-            getCameraToTarget(
-                pitchYawTopRight[0], pitchYawTopRight[1], instanceIndex, noteThickness);
-        Translation2d translationBottomRight =
-            getCameraToTarget(pitchYawBottomRight[0], pitchYawBottomRight[1], instanceIndex, 0.0);
+    //     Translation2d translationTopRight =
+    //         getCameraToTarget(
+    //             pitchYawTopRight[0], pitchYawTopRight[1], instanceIndex, noteThickness);
+    //     Translation2d translationBottomRight =
+    //         getCameraToTarget(pitchYawBottomRight[0], pitchYawBottomRight[1], instanceIndex,
+    // 0.0);
 
-        Pose2d topRightVertexPose =
-            robotPose
-                .plus(GeomUtil.poseToTransform(cameraPoses[0].toPose2d()))
-                .plus(GeomUtil.translationToTransform(translationTopRight));
+    //     Pose2d topRightVertexPose =
+    //         robotPose
+    //             .plus(GeomUtil.poseToTransform(cameraPoses[0].toPose2d()))
+    //             .plus(GeomUtil.translationToTransform(translationTopRight));
 
-        Pose2d bottomRightVertexPose =
-            robotPose
-                .plus(GeomUtil.poseToTransform(cameraPoses[0].toPose2d()))
-                .plus(GeomUtil.translationToTransform(translationBottomRight));
+    //     Pose2d bottomRightVertexPose =
+    //         robotPose
+    //             .plus(GeomUtil.poseToTransform(cameraPoses[0].toPose2d()))
+    //             .plus(GeomUtil.translationToTransform(translationBottomRight));
 
-        Translation2d averageVertexPose =
-            averageTranslations(
-                topRightVertexPose.getTranslation(), bottomRightVertexPose.getTranslation());
+    //     Translation2d averageVertexPose =
+    //         averageTranslations(
+    //             topRightVertexPose.getTranslation(), bottomRightVertexPose.getTranslation());
 
-        Translation2d topRightToBottomRight =
-            topRightVertexPose.getTranslation().minus(bottomRightVertexPose.getTranslation());
+    //     Translation2d topRightToBottomRight =
+    //         topRightVertexPose.getTranslation().minus(bottomRightVertexPose.getTranslation());
 
-        Rotation2d angleOffset =
-            new Rotation2d(topRightToBottomRight.getX(), topRightToBottomRight.getY())
-                .rotateBy(Rotation2d.fromDegrees(90.0));
+    //     Rotation2d angleOffset =
+    //         new Rotation2d(topRightToBottomRight.getX(), topRightToBottomRight.getY())
+    //             .rotateBy(Rotation2d.fromDegrees(90.0));
 
-        notePose = averageVertexPose.plus(new Translation2d(noteWidth / 2.0, angleOffset));
+    //     notePose = averageVertexPose.plus(new Translation2d(noteWidth / 2.0, angleOffset));
 
-        Logger.recordOutput("NoteDetection/Top Pose", topRightVertexPose);
-        Logger.recordOutput("NoteDetection/Bottom Pose", bottomRightVertexPose);
-        Logger.recordOutput(
-            "NoteDetection/Average Vertex Pose", new Pose2d(averageVertexPose, new Rotation2d()));
-        Logger.recordOutput("NoteDetection/Note Pose", new Pose2d(notePose, new Rotation2d()));
+    //     Logger.recordOutput("NoteDetection/Top Pose", topRightVertexPose);
+    //     Logger.recordOutput("NoteDetection/Bottom Pose", bottomRightVertexPose);
+    //     Logger.recordOutput(
+    //         "NoteDetection/Average Vertex Pose", new Pose2d(averageVertexPose, new
+    // Rotation2d()));
+    //     Logger.recordOutput("NoteDetection/Note Pose", new Pose2d(notePose, new Rotation2d()));
 
-      } else {
-        // Note is on the right side of frame, use left verticies
-        List<TargetCorner> leftVerticies = getLeftVerticies(corners);
-        if (leftVerticies.size() < 2) {
-          continue;
-        }
+    //   } else {
+    //     // Note is on the right side of frame, use left verticies
+    //     List<TargetCorner> leftVerticies = getLeftVerticies(corners);
+    //     if (leftVerticies.size() < 2) {
+    //       continue;
+    //     }
 
-        // Figure out which of the corners is the top left and which is the bottom
-        TargetCorner topLeft;
-        TargetCorner bottomLeft;
-        if (leftVerticies.get(0).y < leftVerticies.get(1).y) {
-          topLeft = leftVerticies.get(0);
-          bottomLeft = leftVerticies.get(1);
-        } else {
-          topLeft = leftVerticies.get(1);
-          bottomLeft = leftVerticies.get(0);
-        }
+    //     // Figure out which of the corners is the top left and which is the bottom
+    //     TargetCorner topLeft;
+    //     TargetCorner bottomLeft;
+    //     if (leftVerticies.get(0).y < leftVerticies.get(1).y) {
+    //       topLeft = leftVerticies.get(0);
+    //       bottomLeft = leftVerticies.get(1);
+    //     } else {
+    //       topLeft = leftVerticies.get(1);
+    //       bottomLeft = leftVerticies.get(0);
+    //     }
 
-        double[] pitchYawTopLeft = getPitchYawFromTargetCorner(topLeft, instanceIndex);
-        double[] pitchYawBottomLeft = getPitchYawFromTargetCorner(bottomLeft, instanceIndex);
+    //     double[] pitchYawTopLeft = getPitchYawFromTargetCorner(topLeft, instanceIndex);
+    //     double[] pitchYawBottomLeft = getPitchYawFromTargetCorner(bottomLeft, instanceIndex);
 
-        Translation2d translationTopLeft =
-            getCameraToTarget(pitchYawTopLeft[0], pitchYawTopLeft[1], instanceIndex, noteThickness);
-        Translation2d translationBottomLeft =
-            getCameraToTarget(pitchYawBottomLeft[0], pitchYawBottomLeft[1], instanceIndex, 0.0);
+    //     Translation2d translationTopLeft =
+    //         getCameraToTarget(pitchYawTopLeft[0], pitchYawTopLeft[1], instanceIndex,
+    // noteThickness);
+    //     Translation2d translationBottomLeft =
+    //         getCameraToTarget(pitchYawBottomLeft[0], pitchYawBottomLeft[1], instanceIndex, 0.0);
 
-        Pose2d topLeftVertexPose =
-            robotPose
-                .plus(GeomUtil.poseToTransform(cameraPoses[0].toPose2d()))
-                .plus(GeomUtil.translationToTransform(translationTopLeft));
+    //     Pose2d topLeftVertexPose =
+    //         robotPose
+    //             .plus(GeomUtil.poseToTransform(cameraPoses[0].toPose2d()))
+    //             .plus(GeomUtil.translationToTransform(translationTopLeft));
 
-        Pose2d bottomLeftVertexPose =
-            robotPose
-                .plus(GeomUtil.poseToTransform(cameraPoses[0].toPose2d()))
-                .plus(GeomUtil.translationToTransform(translationBottomLeft));
+    //     Pose2d bottomLeftVertexPose =
+    //         robotPose
+    //             .plus(GeomUtil.poseToTransform(cameraPoses[0].toPose2d()))
+    //             .plus(GeomUtil.translationToTransform(translationBottomLeft));
 
-        Translation2d averageVertexPose =
-            averageTranslations(
-                topLeftVertexPose.getTranslation(), bottomLeftVertexPose.getTranslation());
+    //     Translation2d averageVertexPose =
+    //         averageTranslations(
+    //             topLeftVertexPose.getTranslation(), bottomLeftVertexPose.getTranslation());
 
-        Translation2d topLeftToBottomLeft =
-            topLeftVertexPose.getTranslation().minus(bottomLeftVertexPose.getTranslation());
+    //     Translation2d topLeftToBottomLeft =
+    //         topLeftVertexPose.getTranslation().minus(bottomLeftVertexPose.getTranslation());
 
-        Rotation2d angleOffset =
-            new Rotation2d(topLeftToBottomLeft.getX(), topLeftToBottomLeft.getY())
-                .rotateBy(Rotation2d.fromDegrees(-90.0));
+    //     Rotation2d angleOffset =
+    //         new Rotation2d(topLeftToBottomLeft.getX(), topLeftToBottomLeft.getY())
+    //             .rotateBy(Rotation2d.fromDegrees(-90.0));
 
-        notePose = averageVertexPose.plus(new Translation2d(noteWidth / 2.0, angleOffset));
+    //     notePose = averageVertexPose.plus(new Translation2d(noteWidth / 2.0, angleOffset));
 
-        Logger.recordOutput("NoteDetection/Top Pose", topLeftVertexPose);
-        Logger.recordOutput("NoteDetection/Bottom Pose", bottomLeftVertexPose);
-        Logger.recordOutput(
-            "NoteDetection/Average Vertex Pose", new Pose2d(averageVertexPose, new Rotation2d()));
-        Logger.recordOutput("NoteDetection/Note Pose", new Pose2d(notePose, new Rotation2d()));
-      }
-    }
+    //     Logger.recordOutput("NoteDetection/Top Pose", topLeftVertexPose);
+    //     Logger.recordOutput("NoteDetection/Bottom Pose", bottomLeftVertexPose);
+    //     Logger.recordOutput(
+    //         "NoteDetection/Average Vertex Pose", new Pose2d(averageVertexPose, new
+    // Rotation2d()));
+    //     Logger.recordOutput("NoteDetection/Note Pose", new Pose2d(notePose, new Rotation2d()));
+    //   }
+    // }
   }
 
   /* Note Detection Helper Methods */

@@ -32,7 +32,7 @@ public class ThreeNoteCenter extends SequentialCommandGroup {
               swerve.resetPose(path.getPreviewStartingHolonomicPose());
             }),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(3),
-        new TrajectoryFollowerCommand(Robot.fourNoteCenterA, swerve, false)
+        new TrajectoryFollowerCommand(Robot.fourNoteCenterA, swerve, () -> false)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
@@ -40,14 +40,14 @@ public class ThreeNoteCenter extends SequentialCommandGroup {
                   superstructure.requestVisionSpeaker(false, false, false);
                 }),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.fourNoteCenterB, swerve, false)
+        new TrajectoryFollowerCommand(Robot.fourNoteCenterB, swerve, () -> false)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
                   superstructure.requestIntake(true);
                   superstructure.requestVisionSpeaker(false, false, false);
                 }),
-        new TrajectoryFollowerCommand(Robot.fourNoteCenterC, swerve, false)
+        new TrajectoryFollowerCommand(Robot.fourNoteCenterC, swerve, () -> false)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();

@@ -36,7 +36,7 @@ public class FiveNoteAmpSideAlternate extends SequentialCommandGroup {
               swerve.resetPose(path.getPreviewStartingHolonomicPose());
             }),
         new FenderShotCommand(swerve, superstructure, shooter).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.fiveNoteAmpSideA, swerve, true)
+        new TrajectoryFollowerCommand(Robot.fiveNoteAmpSideA, swerve, () -> true)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
@@ -45,7 +45,7 @@ public class FiveNoteAmpSideAlternate extends SequentialCommandGroup {
                 }),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.fiveNoteAmpSideB, swerve, true)
+        new TrajectoryFollowerCommand(Robot.fiveNoteAmpSideB, swerve, () -> true)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
@@ -54,7 +54,7 @@ public class FiveNoteAmpSideAlternate extends SequentialCommandGroup {
                 }),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.fiveNoteAmpSideC, swerve, true)
+        new TrajectoryFollowerCommand(Robot.fiveNoteAmpSideC, swerve, () -> true)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
@@ -63,7 +63,7 @@ public class FiveNoteAmpSideAlternate extends SequentialCommandGroup {
                 }),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.fiveNoteAmpSideAlternate, swerve, false)
+        new TrajectoryFollowerCommand(Robot.fiveNoteAmpSideAlternate, swerve, () -> false)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();

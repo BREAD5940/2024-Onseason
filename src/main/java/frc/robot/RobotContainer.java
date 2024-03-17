@@ -18,7 +18,7 @@ import frc.robot.constants.GammaTunerConstants;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.commands.AimAtTrapCommand;
 import frc.robot.subsystems.commands.AmpCommand;
-import frc.robot.subsystems.commands.AutoPickupNote;
+import frc.robot.subsystems.commands.PassCommand;
 import frc.robot.subsystems.commands.TeleopShootCommand;
 import frc.robot.subsystems.elevatorpivot.ElevatorIO;
 import frc.robot.subsystems.elevatorpivot.ElevatorIOKrakenX60;
@@ -68,11 +68,11 @@ public class RobotContainer {
   public static final PhotonCamera backRightCamera = new PhotonCamera("back-right");
 
   // Note detection cameras
-  public static final PhotonCamera leftObjCamera = new PhotonCamera("left-obj-camera");
+  // public static final PhotonCamera leftObjCamera = new PhotonCamera("left-obj-camera");
 
   public static final PhotonAprilTagVision aprilTagVision =
       new PhotonAprilTagVision(frontLeftCamera, frontRightCamera, backLeftCamera, backRightCamera);
-  public static final PhotonNoteDetection noteDetection = new PhotonNoteDetection(leftObjCamera);
+  public static final PhotonNoteDetection noteDetection = new PhotonNoteDetection();
   public static final VisionSupplier visionSupplier = new VisionSupplier();
   public static AutonomousSelector autonomousSelector;
 
@@ -117,7 +117,7 @@ public class RobotContainer {
         .whileTrue(new TeleopShootCommand(swerve));
 
     new JoystickButton(driver, XboxController.Button.kX.value)
-        .whileTrue(new AutoPickupNote(swerve, superstructure));
+        .whileTrue(new PassCommand(swerve, superstructure, shooter));
 
     new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new AmpCommand(swerve));
 

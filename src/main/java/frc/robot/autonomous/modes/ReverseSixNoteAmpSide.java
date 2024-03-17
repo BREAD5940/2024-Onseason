@@ -34,7 +34,7 @@ public class ReverseSixNoteAmpSide extends SequentialCommandGroup {
             }),
         new FenderShotCommand(swerve, superstructure, shooter).withTimeout(2),
         new InstantCommand(() -> shooter.requestVisionSpeaker(true)),
-        new TrajectoryFollowerCommand(Robot.reverseSixNoteA, swerve, true)
+        new TrajectoryFollowerCommand(Robot.reverseSixNoteA, swerve, () -> true)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
@@ -43,7 +43,7 @@ public class ReverseSixNoteAmpSide extends SequentialCommandGroup {
                 }),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(1.0),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.reverseSixNoteB, swerve, true)
+        new TrajectoryFollowerCommand(Robot.reverseSixNoteB, swerve, () -> true)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
@@ -52,7 +52,7 @@ public class ReverseSixNoteAmpSide extends SequentialCommandGroup {
                 }),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(1.0),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.reverseSixNoteC, swerve, true)
+        new TrajectoryFollowerCommand(Robot.reverseSixNoteC, swerve, () -> true)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
@@ -61,7 +61,7 @@ public class ReverseSixNoteAmpSide extends SequentialCommandGroup {
                 }),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(1.0),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.reverseSixNoteD, swerve, true)
+        new TrajectoryFollowerCommand(Robot.reverseSixNoteD, swerve, () -> true)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
@@ -70,7 +70,7 @@ public class ReverseSixNoteAmpSide extends SequentialCommandGroup {
                 }),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(1.0),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.reverseSixNoteE, swerve, true)
+        new TrajectoryFollowerCommand(Robot.reverseSixNoteE, swerve, () -> true)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();

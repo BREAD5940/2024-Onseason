@@ -31,9 +31,14 @@ public class VisionSupplier extends SubsystemBase {
   private Rotation2d robotToAmpAngle;
   private double distance;
   private Pose2d overrideRobotPose;
+  private Rotation2d robotToPassingAngle;
 
   private Rotation2d robotToNoteAngle;
   private Translation2d notePose;
+
+  public Rotation2d robotToPassingAngle() {
+    return robotToPassingAngle;
+  }
 
   public Rotation2d robotToNoteAngle() {
     return robotToNoteAngle;
@@ -139,6 +144,11 @@ public class VisionSupplier extends SubsystemBase {
     robotToNoteAngle =
         new Rotation2d(robotToNote.getX(), robotToNote.getY())
             .rotateBy(Rotation2d.fromDegrees(180.0));
+
+    /* Passing target calculation */
+    Translation2d flippedPassingTarget = AllianceFlipUtil.apply(passingTarget);
+    Translation2d robotToPassingPose = flippedPassingTarget.minus(robotPose.getTranslation());
+    robotToPassingAngle = new Rotation2d(robotToPassingPose.getX(), robotToPassingPose.getY());
 
     // Logs
     Logger.recordOutput("Vision/DistanceToTarget", robotToRadialVirtualTarget.getNorm());
