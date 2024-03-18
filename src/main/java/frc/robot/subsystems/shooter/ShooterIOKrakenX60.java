@@ -48,6 +48,11 @@ public class ShooterIOKrakenX60 implements ShooterIO {
   private StatusSignal<Double> supplyRight;
 
   /* Gains */
+  /*
+   * Tune that worked extremely well testing the new shooter rev on both sides:
+   * kP: 0.050000
+   * kV: 0.011300
+   */
   LoggedTunableNumber rightShooterKs = new LoggedTunableNumber("RightShooter/kS", 0.0);
   LoggedTunableNumber rightShooterKa = new LoggedTunableNumber("RightShooter/kA", 0.0);
   LoggedTunableNumber rightShooterKv = new LoggedTunableNumber("RightShooter/kV", 0.131);
