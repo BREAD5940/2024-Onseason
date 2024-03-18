@@ -152,11 +152,15 @@ public class Robot extends LoggedRobot {
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
 
-    // Controller vibrations
-    if (RobotContainer.superstructure.hasPiece()) {
-      leds.setLEDs(0, 0, 255, 0, 0, 60);
-    } else {
+    // LED colors
+
+    // g r b
+    if (RobotContainer.intake.hasPiece()) {
+      leds.setLEDs(255, 0, 0, 0, 0, 60);
+    } else if (RobotContainer.superstructure.hasPiece()) {
       leds.setLEDs(0, 255, 0, 0, 0, 60);
+    } else {
+      leds.setLEDs(0, 0, 0, 0, 0, 60);
     }
   }
 

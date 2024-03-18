@@ -22,7 +22,7 @@ public class IntakeIOFalcon500 implements IntakeIO {
   /* Hardware */
   private final TalonFX intake = new TalonFX(INTAKE_ID, "dabus");
   private final TalonFX vector = new TalonFX(VECTOR_ID, "dabus");
-  private final DigitalInput beamBreak = new DigitalInput(4);
+  private final DigitalInput beamBreak = new DigitalInput(3);
 
   /* Configurator */
   private final TalonFXConfigurator intakeConfigurator;

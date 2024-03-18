@@ -357,6 +357,9 @@ public class Superstructure extends SubsystemBase {
       } else if (shouldShoot && !feeder.hasPiece()) {
         shouldShoot = false;
         nextSystemState = SuperstructureState.IDLE;
+      } else if (requestIntake && !feeder.hasPiece()) {
+        shouldShoot = false;
+        nextSystemState = SuperstructureState.IDLE;
       }
     }
 

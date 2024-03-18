@@ -16,8 +16,8 @@ import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.commons.BreadUtil;
 import frc.robot.constants.GammaTunerConstants;
 import frc.robot.subsystems.Superstructure;
-import frc.robot.subsystems.commands.AimAtTrapCommand;
 import frc.robot.subsystems.commands.AmpCommand;
+import frc.robot.subsystems.commands.AutoPickupNote;
 import frc.robot.subsystems.commands.PassCommand;
 import frc.robot.subsystems.commands.TeleopShootCommand;
 import frc.robot.subsystems.elevatorpivot.ElevatorIO;
@@ -68,11 +68,13 @@ public class RobotContainer {
   public static final PhotonCamera backRightCamera = new PhotonCamera("back-right");
 
   // Note detection cameras
-  // public static final PhotonCamera leftObjCamera = new PhotonCamera("left-obj-camera");
+  public static final PhotonCamera leftObjCamera = new PhotonCamera("left-obj-camera");
+  public static final PhotonCamera rightObjCamera = new PhotonCamera("right-obj-camera");
 
   public static final PhotonAprilTagVision aprilTagVision =
       new PhotonAprilTagVision(frontLeftCamera, frontRightCamera, backLeftCamera, backRightCamera);
-  public static final PhotonNoteDetection noteDetection = new PhotonNoteDetection();
+  public static final PhotonNoteDetection noteDetection =
+      new PhotonNoteDetection(leftObjCamera, rightObjCamera);
   public static final VisionSupplier visionSupplier = new VisionSupplier();
   public static AutonomousSelector autonomousSelector;
 
@@ -121,11 +123,11 @@ public class RobotContainer {
 
     new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new AmpCommand(swerve));
 
-    // new JoystickButton(driver, XboxController.Button.kRightBumper.value)
-    //     .whileTrue(new FenderShotCommand(swerve, superstructure, shooter));
-
     new JoystickButton(driver, XboxController.Button.kRightBumper.value)
-        .whileTrue(new AimAtTrapCommand(swerve));
+        .whileTrue(new AutoPickupNote(swerve, superstructure));
+
+    // new JoystickButton(driver, XboxController.Button.kRightBumper.value)
+    //     .whileTrue(new AimAtTrapCommand(swerve));
   }
 
   private void configureAprilTagVision() {

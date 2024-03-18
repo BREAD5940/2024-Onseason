@@ -56,12 +56,17 @@ public class Shooter extends SubsystemBase {
 
     Logger.recordOutput("Shooter/SystemState", systemState);
 
-    /* Handle statemachine loic */
+    /* Handle statemachine logic */
     ShooterState nextSystemState = systemState;
 
     if (systemState == ShooterState.IDLE) {
       // Outputs
-      io.setVelocity(desiredLeftRPM, desiredRightRPM);
+      if (RobotContainer.operator.getLeftTriggerAxis() > 0.1) {
+        ShotParameter shot = RobotContainer.visionSupplier.robotToSpeakerShot();
+        io.setVelocity(shot.leftRPM, shot.rightRPM);
+      } else {
+        io.setVelocity(desiredLeftRPM, desiredRightRPM);
+      }
 
       // Transitions
       if (requestFender) {

@@ -56,9 +56,9 @@ public class PivotIOKrakenX60 implements PivotIO {
   LoggedTunableNumber kS = new LoggedTunableNumber("Pivot/kS", 0.3);
   LoggedTunableNumber kG = new LoggedTunableNumber("Pivot/kG", 0.0);
   LoggedTunableNumber kV = new LoggedTunableNumber("Pivot/kV", 12.0);
-  LoggedTunableNumber kP = new LoggedTunableNumber("Pivot/kP", 80.0);
+  LoggedTunableNumber kP = new LoggedTunableNumber("Pivot/kP", 200.000000);
   LoggedTunableNumber kI = new LoggedTunableNumber("Pivot/kI", 0.0);
-  LoggedTunableNumber kD = new LoggedTunableNumber("Pivot/kD", 3.0);
+  LoggedTunableNumber kD = new LoggedTunableNumber("Pivot/kD", 9.000000);
 
   LoggedTunableNumber motionAcceleration = new LoggedTunableNumber("Pivot/MotionAcceleration", 5.0);
   LoggedTunableNumber motionCruiseVelocity =
@@ -106,7 +106,7 @@ public class PivotIOKrakenX60 implements PivotIO {
     pivotMagnetSensorConfigs.MagnetOffset = PIVOT_MAGNET_OFFSET;
 
     FeedbackConfigs pivotFeedbackConfigs = new FeedbackConfigs();
-    pivotFeedbackConfigs.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
+    pivotFeedbackConfigs.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
     pivotFeedbackConfigs.FeedbackRemoteSensorID = azimuth.getDeviceID();
     pivotFeedbackConfigs.RotorToSensorRatio = PIVOT_GEAR_RATIO;
     pivotFeedbackConfigs.SensorToMechanismRatio = 1.0;

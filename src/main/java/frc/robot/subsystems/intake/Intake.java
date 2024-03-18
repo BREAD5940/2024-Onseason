@@ -3,9 +3,7 @@ package frc.robot.subsystems.intake;
 import static frc.robot.constants.Constants.Intake.*;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RobotContainer;
 import frc.robot.commons.BreadUtil;
-import frc.robot.subsystems.Superstructure.SuperstructureState;
 import org.littletonrobotics.junction.Logger;
 
 public class Intake extends SubsystemBase {
@@ -20,15 +18,12 @@ public class Intake extends SubsystemBase {
   private boolean requestIntake = false;
   private boolean requestSpit = false;
 
-  private boolean hasPiece = false;
-
   private double stateStartTime = 0.0;
 
   /* System States */
   public enum IntakeState {
     IDLE,
     INTAKE,
-    FEED,
     SPIT
   }
 
@@ -52,13 +47,10 @@ public class Intake extends SubsystemBase {
       io.setIntakePercent(0);
       io.setVectorPercent(0);
 
-      if (requestIntake && !hasPiece) {
+      if (requestIntake) {
         nextSystemState = IntakeState.INTAKE;
       } else if (requestSpit) {
         nextSystemState = IntakeState.SPIT;
-      } else if (RobotContainer.superstructure.getSystemState() == SuperstructureState.INTAKE
-          && RobotContainer.superstructure.atElevatorPivotSetpoint()) {
-        nextSystemState = IntakeState.FEED;
       }
     } else if (systemState == IntakeState.INTAKE) {
       io.setIntakePercent(INTAKE_SPEED);
@@ -67,29 +59,13 @@ public class Intake extends SubsystemBase {
 
       if (!requestIntake) {
         nextSystemState = IntakeState.IDLE;
-      } else if (inputs.beamBreakTriggered) {
-        hasPiece = true;
-        nextSystemState = IntakeState.IDLE;
       }
     } else if (systemState == IntakeState.SPIT) {
       io.setIntakePercent(SPIT_SPEED);
       io.setVectorVelocity(-2000);
 
       if (!requestSpit) {
-        hasPiece = false;
         nextSystemState = IntakeState.IDLE;
-      }
-    } else if (systemState == IntakeState.FEED) {
-      io.setIntakePercent(FEED_SPEED);
-      // io.setVectorVelocity(3000);
-      io.setVectorPercent(0.5);
-
-      if (RobotContainer.superstructure.hasPiece()
-          || RobotContainer.superstructure.getSystemState() != SuperstructureState.INTAKE) {
-        hasPiece = false;
-        nextSystemState = IntakeState.IDLE;
-      } else if (requestSpit) {
-        nextSystemState = IntakeState.SPIT;
       }
     }
 
@@ -100,7 +76,7 @@ public class Intake extends SubsystemBase {
   }
 
   public boolean hasPiece() {
-    return hasPiece;
+    return inputs.beamBreakTriggered;
   }
 
   public IntakeState getSystemState() {

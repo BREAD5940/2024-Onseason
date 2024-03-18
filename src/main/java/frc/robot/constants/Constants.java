@@ -560,7 +560,7 @@ public class Constants {
         PIVOT_DELTA_ERROR_TOLERANCE = 0.07;
         PIVOT_INVERSION = InvertedValue.CounterClockwise_Positive;
         PIVOT_ENCODER_INVERSION = SensorDirectionValue.Clockwise_Positive;
-        PIVOT_GEAR_RATIO = (25.0 / 1.0) * (48.0 / 20.0);
+        PIVOT_GEAR_RATIO = (25.0 / 1.0) * (48.0 / 30.0) * (85.0 / 30.0);
         PIVOT_MAX_SPEED = ((FALCON_FREE_SPEED / 60.0) * (1.0 / PIVOT_GEAR_RATIO));
       } else {
         PIVOT_ID = 18;
@@ -600,7 +600,7 @@ public class Constants {
         PIVOT_DELTA_ERROR_TOLERANCE = 0.002;
         PIVOT_INVERSION = InvertedValue.CounterClockwise_Positive;
         PIVOT_ENCODER_INVERSION = SensorDirectionValue.Clockwise_Positive;
-        PIVOT_GEAR_RATIO = 118.0556;
+        PIVOT_GEAR_RATIO = (25.0 / 1.0) * (48.0 / 30.0) * (85.0 / 30.0);
         PIVOT_MAX_SPEED = ((FALCON_FREE_SPEED / 60.0) * (1.0 / PIVOT_GEAR_RATIO));
       }
     }
@@ -643,7 +643,7 @@ public class Constants {
         SHOOTER_LEFT_ID = 13;
         SHOOTER_RIGHT_ID = 14;
 
-        SHOOTER_SETPOINT_TOLERANCE_RPM = 30.0;
+        SHOOTER_SETPOINT_TOLERANCE_RPM = 200.0;
 
         SHOOTER_LEFT_IDLE_RPM = 0.0;
         SHOOTER_RIGHT_IDLE_RPM = 0.0;
@@ -669,7 +669,7 @@ public class Constants {
         SHOOTER_LEFT_ID = 13;
         SHOOTER_RIGHT_ID = 14;
 
-        SHOOTER_SETPOINT_TOLERANCE_RPM = 50.0;
+        SHOOTER_SETPOINT_TOLERANCE_RPM = 200.0;
 
         SHOOTER_LEFT_IDLE_RPM = 3000.0;
         SHOOTER_RIGHT_IDLE_RPM = 3000.0;

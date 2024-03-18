@@ -33,7 +33,6 @@ public class SixNoteAmpSide extends SequentialCommandGroup {
               swerve.resetPose(path.getPreviewStartingHolonomicPose());
             }),
         new FenderShotCommand(swerve, superstructure, shooter).withTimeout(2.0),
-        new InstantCommand(() -> shooter.requestVisionSpeaker(false)),
         new TrajectoryFollowerCommand(Robot.sixNoteAmpSideA, swerve, false, () -> true)
             .beforeStarting(
                 () -> {
@@ -49,19 +48,21 @@ public class SixNoteAmpSide extends SequentialCommandGroup {
                 () -> {
                   intake.requestIntake();
                   superstructure.requestIntake(true);
+                  shooter.requestVisionSpeaker(false);
                   superstructure.requestVisionSpeaker(true, false, false);
                 }),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
-        new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
+        new StationaryShootCommand(swerve, superstructure, shooter),
         new TrajectoryFollowerCommand(
                 Robot.sixNoteAmpSideC, swerve, () -> superstructure.hasPiece())
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
                   superstructure.requestIntake(true);
+                  shooter.requestVisionSpeaker(false);
                   superstructure.requestVisionSpeaker(true, false, false);
                 }),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
-        new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2));
+        new StationaryShootCommand(swerve, superstructure, shooter));
   }
 }
