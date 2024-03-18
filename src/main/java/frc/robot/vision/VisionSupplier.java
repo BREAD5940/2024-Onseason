@@ -27,10 +27,8 @@ public class VisionSupplier extends SubsystemBase {
   private Rotation2d yaw;
   private ShotParameter shot;
   private ShotParameter shotSOD;
-  private ShotParameter overrideRobotPoseShot;
   private Rotation2d robotToAmpAngle;
   private double distance;
-  private Pose2d overrideRobotPose;
   private Rotation2d robotToPassingAngle;
 
   private Rotation2d robotToNoteAngle;
@@ -66,18 +64,6 @@ public class VisionSupplier extends SubsystemBase {
 
   public double getDistance() {
     return distance;
-  }
-
-  public void setOverrideRobotPose(Pose2d overrideRobotPose) {
-    this.overrideRobotPose = overrideRobotPose;
-  }
-
-  public ShotParameter getShotFromOverrideRobotPose() {
-    if (overrideRobotPose != null) {
-      return overrideRobotPoseShot;
-    } else {
-      return new ShotParameter(0.0, 0.0, 0.0, 0.0);
-    }
   }
 
   @Override
@@ -125,14 +111,6 @@ public class VisionSupplier extends SubsystemBase {
       shot = InterpolatingTableRed.get(robotToRadialVirtualTarget.getNorm());
       shotSOD = SODInterpolatingTableRed.get(robotToRadialVirtualTarget.getNorm());
       Logger.recordOutput("Using Blue Table", false);
-    }
-
-    if (overrideRobotPose != null) {
-      Translation2d overrideRobotPoseToVirtualTarget =
-          radialVirtualTarget.minus(overrideRobotPose.getTranslation());
-
-      overrideRobotPoseShot =
-          InterpolatingTableBlue.get(overrideRobotPoseToVirtualTarget.getNorm());
     }
 
     distance = robotToRadialVirtualTarget.getNorm();

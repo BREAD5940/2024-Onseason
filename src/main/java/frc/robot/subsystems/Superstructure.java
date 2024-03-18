@@ -195,11 +195,7 @@ public class Superstructure extends SubsystemBase {
       }
     } else if (systemState == SuperstructureState.VISION_SPEAKER) {
       ShotParameter shot;
-      if (overrideRobotPose != null) {
-        shot = RobotContainer.visionSupplier.getShotFromOverrideRobotPose();
-
-        Logger.recordOutput("Vision/OverrideRobotPoseShot", shot.elevatorHeight);
-      } else if (overrideVision) {
+      if (overrideVision) {
         shot = new ShotParameter(overridePivotAngle, 0.0, 0.0, overrideElevatorHeight);
       } else {
         if (wantsShootOverDefense) {
@@ -395,20 +391,6 @@ public class Superstructure extends SubsystemBase {
     this.wantsShoot = wantsShoot;
     this.wantsShootOverDefense = wantsShootOverDefense;
     this.overrideVision = false;
-  }
-
-  public void requestVisionSpeaker(
-      boolean set, boolean wantsShoot, boolean wantsShootOverDefense, Pose2d overrideRobotPose) {
-    requestVisionSpeaker = set;
-    this.wantsShoot = wantsShoot;
-    this.wantsShootOverDefense = wantsShootOverDefense;
-    this.overrideRobotPose = overrideRobotPose;
-
-    if (overrideRobotPose != null) {
-      RobotContainer.visionSupplier.setOverrideRobotPose(AllianceFlipUtil.apply(overrideRobotPose));
-    } else {
-      RobotContainer.visionSupplier.setOverrideRobotPose(new Pose2d());
-    }
   }
 
   public void requestVisionSpeaker(
