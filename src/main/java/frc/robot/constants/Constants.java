@@ -538,19 +538,19 @@ public class Constants {
 
         PIVOT_NEUTRAL_ANGLE = Rotation2d.fromDegrees(0.0);
 
-        PIVOT_IDLE_ANGLE = Rotation2d.fromDegrees(-28.0);
+        PIVOT_IDLE_ANGLE = Rotation2d.fromDegrees(-22);
 
-        PIVOT_INTAKE_ANGLE = Rotation2d.fromDegrees(-28.0);
+        PIVOT_INTAKE_ANGLE = Rotation2d.fromDegrees(-22);
 
         PIVOT_SPIT_ANGLE = Rotation2d.fromDegrees(0.0);
 
         PIVOT_AMP_ANGLE = Rotation2d.fromDegrees(24.0);
 
-        PIVOT_PRE_CLIMB_ANGLE = Rotation2d.fromDegrees(25.0);
+        PIVOT_PRE_CLIMB_ANGLE = Rotation2d.fromDegrees(19.1);
 
         PIVOT_CLIMBED_ANGLE = Rotation2d.fromDegrees(38.0);
 
-        PIVOT_TRAP_ANGLE = Rotation2d.fromDegrees(0.0);
+        PIVOT_TRAP_ANGLE = Rotation2d.fromDegrees(10.0);
 
         PIVOT_FENDER_ANGLE = Rotation2d.fromDegrees(-50.0); // -50.0
 
@@ -643,7 +643,7 @@ public class Constants {
         SHOOTER_LEFT_ID = 13;
         SHOOTER_RIGHT_ID = 14;
 
-        SHOOTER_SETPOINT_TOLERANCE_RPM = 200.0;
+        SHOOTER_SETPOINT_TOLERANCE_RPM = 50.0;
 
         SHOOTER_LEFT_IDLE_RPM = 0.0;
         SHOOTER_RIGHT_IDLE_RPM = 0.0;
@@ -725,7 +725,7 @@ public class Constants {
 
         FEEDER_GEAR_RATIO = 1.0;
         FEEDER_ROLLER_DIAMETER = 1.0;
-        FEEDER_INVERSION = InvertedValue.CounterClockwise_Positive;
+        FEEDER_INVERSION = InvertedValue.Clockwise_Positive;
       } else {
         FEEDER_ID = 15;
 

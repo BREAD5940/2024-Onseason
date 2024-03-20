@@ -10,8 +10,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.commons.AllianceFlipUtil;
-import frc.robot.subsystems.shooter.InterpolatingTableBlue;
-import frc.robot.subsystems.shooter.InterpolatingTableRed;
+import frc.robot.subsystems.shooter.InterpolatingTableDtech;
 import frc.robot.subsystems.shooter.SODInterpolatingTableBlue;
 import frc.robot.subsystems.shooter.SODInterpolatingTableRed;
 import frc.robot.subsystems.shooter.ShotParameter;
@@ -104,11 +103,11 @@ public class VisionSupplier extends SubsystemBase {
             robotToTangentialVirtualTarget.getX(), robotToTangentialVirtualTarget.getY());
 
     if (DriverStation.getAlliance().get() == Alliance.Blue) {
-      shot = InterpolatingTableBlue.get(robotToRadialVirtualTarget.getNorm());
+      shot = InterpolatingTableDtech.get(robotToRadialVirtualTarget.getNorm());
       shotSOD = SODInterpolatingTableBlue.get(robotToRadialVirtualTarget.getNorm());
       Logger.recordOutput("Using Blue Table", true);
     } else {
-      shot = InterpolatingTableRed.get(robotToRadialVirtualTarget.getNorm());
+      shot = InterpolatingTableDtech.get(robotToRadialVirtualTarget.getNorm());
       shotSOD = SODInterpolatingTableRed.get(robotToRadialVirtualTarget.getNorm());
       Logger.recordOutput("Using Blue Table", false);
     }

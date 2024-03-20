@@ -55,7 +55,8 @@ public class TeleopShootCommand extends Command {
 
     // Subsystem Requests
     swerve.requestVelocity(new ChassisSpeeds(dx, dy, output), true);
-    // RobotContainer.superstructure.requestFender(true, RobotContainer.driver.getYButton());
+    // RobotContainer.superstructure.requestFender(
+    //     true, RobotContainer.swerve.atAngularSetpoint(setpoint));
     // RobotContainer.shooter.requestFender();
     RobotContainer.superstructure.requestVisionSpeaker(
         true,

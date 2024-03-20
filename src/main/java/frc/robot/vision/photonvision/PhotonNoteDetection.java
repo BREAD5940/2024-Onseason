@@ -226,7 +226,8 @@ public class PhotonNoteDetection extends SubsystemBase {
   }
 
   /* Note Detection Helper Methods */
-  // Private method to find the closest pose from a list of poses based on the distance from the robot
+  // Private method to find the closest pose from a list of poses based on the distance from the
+  // robot
   private Translation2d findClosestPose(List<Translation2d> poses) {
     Translation2d closestPose = poses.get(0);
     double closestDistance = Double.MAX_VALUE;
@@ -240,7 +241,8 @@ public class PhotonNoteDetection extends SubsystemBase {
     return closestPose;
   }
 
-  // Filters out closely located poses and selects the top four note positions based on their distance to the robot
+  // Filters out closely located poses and selects the top four note positions based on their
+  // distance to the robot
   private List<Translation2d> filterAndSelectPoses(List<Translation2d> allPoses) {
     List<Translation2d> mergedPoses = mergePoses(allPoses);
 

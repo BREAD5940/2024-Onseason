@@ -16,6 +16,8 @@ import com.ctre.phoenix6.signals.ForwardLimitSourceValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.ReverseLimitSourceValue;
 import com.ctre.phoenix6.signals.ReverseLimitValue;
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import frc.robot.commons.LoggedTunableNumber;
 
 public class FeederIOFalcon500 implements FeederIO {
@@ -37,6 +39,7 @@ public class FeederIOFalcon500 implements FeederIO {
   private StatusSignal<Double> current;
   private StatusSignal<Double> temperature;
   private StatusSignal<ReverseLimitValue> beamBreak;
+  private Debouncer beamBreakDebounce = new Debouncer(0.25, DebounceType.kFalling);
 
   /* Gains */
   LoggedTunableNumber kS = new LoggedTunableNumber("Feeder/kS", 0.0);
@@ -105,7 +108,8 @@ public class FeederIOFalcon500 implements FeederIO {
     inputs.appliedVolts = motor.getMotorVoltage().getValue();
     inputs.tempCelcius = temperature.getValue();
     inputs.currentAmps = current.getValue();
-    inputs.beamBreakTriggered = beamBreak.getValue().value == 0;
+    inputs.beamBreakTriggered = beamBreakDebounce.calculate(beamBreak.getValue().value == 0);
+    inputs.rawBeamBreakTriggered = beamBreak.getValue().value == 0;
     inputs.setpoint = setpoint;
   }
 
