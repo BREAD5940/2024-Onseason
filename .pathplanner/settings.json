@@ -4,10 +4,11 @@
   "holonomicMode": true,
   "pathFolders": [
     "Bomb",
+    "CheekyThreePiece",
+    "FiveNoteAmpSide",
     "FiveNoteMidlineAmpSide",
     "FourNoteCenter",
     "FourNoteSourceSide",
-    "FiveNoteAmpSide",
     "ReverseFiveNoteMidlineAmpSide",
     "ReverseSixNoteA",
     "SixNoteAmpSide"

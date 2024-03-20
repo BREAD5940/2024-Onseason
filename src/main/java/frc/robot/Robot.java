@@ -29,12 +29,12 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath fourNoteCenterC;
   public static PathPlannerPath fourNoteCenterD;
 
+  public static PathPlannerPath cheekyThreePieceA;
+  public static PathPlannerPath cheekyThreePieceB;
+
   public static PathPlannerPath fourNoteSourceSideA;
   public static PathPlannerPath fourNoteSourceSideB;
   public static PathPlannerPath fourNoteSourceSideC;
-  public static PathPlannerPath fourNoteSourceSideD;
-  public static PathPlannerPath fourNoteSourceSideE;
-  public static PathPlannerPath fourNoteSourceSideF;
 
   public static PathPlannerPath sixNoteAmpSideA;
   public static PathPlannerPath sixNoteAmpSideB;
@@ -107,12 +107,8 @@ public class Robot extends LoggedRobot {
     fourNoteCenterC = PathPlannerPath.fromPathFile("Four Note Center C");
     fourNoteCenterD = PathPlannerPath.fromPathFile("Four Note Center D");
 
-    fourNoteSourceSideA = PathPlannerPath.fromPathFile("Four Note Source A");
-    fourNoteSourceSideB = PathPlannerPath.fromPathFile("Four Note Source B");
-    fourNoteSourceSideC = PathPlannerPath.fromPathFile("Four Note Source C");
-    fourNoteSourceSideD = PathPlannerPath.fromPathFile("Four Note Source D");
-    fourNoteSourceSideE = PathPlannerPath.fromPathFile("Four Note Source E");
-    fourNoteSourceSideF = PathPlannerPath.fromPathFile("Four Note Source F");
+    cheekyThreePieceA = PathPlannerPath.fromPathFile("Cheeky Three Piece A");
+    cheekyThreePieceB = PathPlannerPath.fromPathFile("Cheeky Three Piece B");
 
     sixNoteAmpSideA = PathPlannerPath.fromPathFile("Six Note A");
     sixNoteAmpSideB = PathPlannerPath.fromPathFile("Six Note B");
@@ -144,6 +140,10 @@ public class Robot extends LoggedRobot {
     fiveNoteAmpSideC = PathPlannerPath.fromPathFile("Five Note Amp Side C");
     fiveNoteAmpSideD = PathPlannerPath.fromPathFile("Five Note Amp Side D");
     fiveNoteAmpSideAlternate = PathPlannerPath.fromPathFile("Five Note Amp Side Alternate");
+
+    fourNoteSourceSideA = PathPlannerPath.fromPathFile("Four Note Source Side A");
+    fourNoteSourceSideB = PathPlannerPath.fromPathFile("Four Note Source Side B");
+    fourNoteSourceSideC = PathPlannerPath.fromPathFile("Four Note Source Side C");
 
     m_robotContainer.configureAutonomousSelector();
   }

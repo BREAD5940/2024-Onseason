@@ -15,8 +15,8 @@ import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.TrajectoryFollowerCommand;
 
-public class FourNoteSourceSide extends SequentialCommandGroup {
-  public FourNoteSourceSide(
+public class CheekyThreePiece extends SequentialCommandGroup {
+  public CheekyThreePiece(
       Superstructure superstructure, Swerve swerve, Shooter shooter, Intake intake) {
     addRequirements(superstructure, swerve, shooter, intake);
     addCommands(
@@ -25,15 +25,14 @@ public class FourNoteSourceSide extends SequentialCommandGroup {
         new InstantCommand(() -> superstructure.requestIntake(false)),
         new InstantCommand(
             () -> {
-              PathPlannerPath path = Robot.fourNoteSourceSideA;
+              PathPlannerPath path = Robot.cheekyThreePieceA;
               if (DriverStation.getAlliance().get() == Alliance.Red) {
                 path = path.flipPath();
               }
               swerve.resetPose(path.getPreviewStartingHolonomicPose());
             }),
         new FenderShotCommand(swerve, superstructure, shooter).withTimeout(3),
-        new TrajectoryFollowerCommand(
-                Robot.fourNoteSourceSideA, swerve, () -> superstructure.hasPiece())
+        new TrajectoryFollowerCommand(Robot.cheekyThreePieceA, swerve, () -> false)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
@@ -41,17 +40,7 @@ public class FourNoteSourceSide extends SequentialCommandGroup {
                   superstructure.requestVisionSpeaker(false, false, false);
                 }),
         new StationaryShootCommand(swerve, superstructure, shooter),
-        new TrajectoryFollowerCommand(
-                Robot.fourNoteSourceSideB, swerve, () -> superstructure.hasPiece())
-            .beforeStarting(
-                () -> {
-                  intake.requestIntake();
-                  superstructure.requestIntake(true);
-                  superstructure.requestVisionSpeaker(false, false, false);
-                }),
-        new StationaryShootCommand(swerve, superstructure, shooter),
-        new TrajectoryFollowerCommand(
-                Robot.fourNoteSourceSideC, swerve, () -> superstructure.hasPiece())
+        new TrajectoryFollowerCommand(Robot.cheekyThreePieceB, swerve, () -> false)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();

@@ -1,0 +1,68 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 4.218307095672678,
+        "y": 5.070792224323394
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 5.08490900006051,
+        "y": 4.543804579763226
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.778401405590257,
+        "y": 4.1690578102982165
+      },
+      "prevControl": {
+        "x": 5.611896644620678,
+        "y": 4.368142031576503
+      },
+      "nextControl": {
+        "x": 9.944906166559834,
+        "y": 3.96997358901993
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 4.218307095672678,
+        "y": 5.070792224323394
+      },
+      "prevControl": {
+        "x": 4.862403105690662,
+        "y": 4.286166175756033
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 4.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 170.38027220030122,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "FourNoteSourceSide",
+  "previewStartingState": {
+    "rotation": 167.1249984403876,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}
