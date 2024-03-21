@@ -54,8 +54,9 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath reverseSixNoteA;
   public static PathPlannerPath reverseSixNoteB;
   public static PathPlannerPath reverseSixNoteC;
-  public static PathPlannerPath reverseSixNoteD;
-  public static PathPlannerPath reverseSixNoteE;
+
+  public static PathPlannerPath reverseSixNoteAlternateA;
+  public static PathPlannerPath reverseSixNoteAlternateB;
 
   public static PathPlannerPath bombA;
   public static PathPlannerPath bombB;
@@ -128,8 +129,9 @@ public class Robot extends LoggedRobot {
     reverseSixNoteA = PathPlannerPath.fromPathFile("Reverse Six Note A");
     reverseSixNoteB = PathPlannerPath.fromPathFile("Reverse Six Note B");
     reverseSixNoteC = PathPlannerPath.fromPathFile("Reverse Six Note C");
-    reverseSixNoteD = PathPlannerPath.fromPathFile("Reverse Six Note D");
-    reverseSixNoteE = PathPlannerPath.fromPathFile("Reverse Six Note E");
+
+    reverseSixNoteAlternateA = PathPlannerPath.fromPathFile("Reverse Six Note Alternate A");
+    reverseSixNoteAlternateB = PathPlannerPath.fromPathFile("Reverse Six Note Alternate B");
 
     bombA = PathPlannerPath.fromPathFile("Bomb A");
     bombB = PathPlannerPath.fromPathFile("Bomb B");
@@ -213,6 +215,8 @@ public class Robot extends LoggedRobot {
     alliance = DriverStation.getAlliance().get();
     RobotContainer.shooter.requestIdle();
     RobotController.setBrownoutVoltage(5.75);
+
+    RobotContainer.superstructure.requestVisionSpeaker(false, false, false);
   }
 
   @Override

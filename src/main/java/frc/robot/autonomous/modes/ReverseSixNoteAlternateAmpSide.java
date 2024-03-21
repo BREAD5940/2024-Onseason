@@ -15,9 +15,9 @@ import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.TrajectoryFollowerCommand;
 
-public class ReverseSixNoteAmpSide extends SequentialCommandGroup {
+public class ReverseSixNoteAlternateAmpSide extends SequentialCommandGroup {
 
-  public ReverseSixNoteAmpSide(
+  public ReverseSixNoteAlternateAmpSide(
       Superstructure superstructure, Swerve swerve, Shooter shooter, Intake intake) {
     addRequirements(superstructure, swerve, shooter, intake);
     addCommands(
@@ -26,20 +26,14 @@ public class ReverseSixNoteAmpSide extends SequentialCommandGroup {
         new InstantCommand(() -> superstructure.requestIntake(false)),
         new InstantCommand(
             () -> {
-              shooter.requestVisionSpeaker(true);
-              superstructure.requestVisionSpeaker(true, false, false);
-            }),
-        new InstantCommand(
-            () -> {
-              PathPlannerPath path = Robot.reverseSixNoteA;
+              PathPlannerPath path = Robot.reverseSixNoteAlternateA;
               if (DriverStation.getAlliance().get() == Alliance.Red) {
                 path = path.flipPath();
               }
               swerve.resetPose(path.getPreviewStartingHolonomicPose());
             }),
-        new WaitCommand(0.2),
         new TrajectoryFollowerCommand(
-                Robot.reverseSixNoteA, swerve, () -> superstructure.hasPiece())
+                Robot.reverseSixNoteAlternateA, swerve, () -> superstructure.hasPiece())
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
@@ -54,17 +48,23 @@ public class ReverseSixNoteAmpSide extends SequentialCommandGroup {
                         () -> superstructure.requestVisionSpeaker(true, false, false)))),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(1.0),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.reverseSixNoteB, swerve, () -> true)
+        new TrajectoryFollowerCommand(Robot.reverseSixNoteAlternateB, swerve, () -> false)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
                   superstructure.requestIntake(true);
                   superstructure.requestVisionSpeaker(true, false, false);
-                })
-            .alongWith(
-                new SequentialCommandGroup(
-                    new WaitCommand(4.28),
-                    new InstantCommand(
-                        () -> superstructure.requestVisionSpeaker(true, true, false)))));
+                }),
+        new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(1.0),
+        new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
+        new TrajectoryFollowerCommand(Robot.reverseSixNoteC, swerve, () -> true)
+            .beforeStarting(
+                () -> {
+                  intake.requestIntake();
+                  superstructure.requestIntake(true);
+                  superstructure.requestVisionSpeaker(true, false, false);
+                }),
+        new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(1.0),
+        new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2));
   }
 }

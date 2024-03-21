@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.commons.AllianceFlipUtil;
+import frc.robot.commons.LoggedTunableNumber;
 import frc.robot.subsystems.shooter.InterpolatingTableDtech;
 import frc.robot.subsystems.shooter.SODInterpolatingTableBlue;
 import frc.robot.subsystems.shooter.SODInterpolatingTableRed;
@@ -19,8 +20,10 @@ import org.littletonrobotics.junction.Logger;
 public class VisionSupplier extends SubsystemBase {
 
   /* Constants */
-  private static double TANGENTIAL_NOTE_FLIGHT_TIME = 0.2;
-  private static double RADIAL_NOTE_FLIGHT_TIME = 0.1;
+  private static LoggedTunableNumber TANGENTIAL_NOTE_FLIGHT_TIME =
+      new LoggedTunableNumber("SOTM/TangentialNoteFlightTime", 0.4);
+  private static LoggedTunableNumber RADIAL_NOTE_FLIGHT_TIME =
+      new LoggedTunableNumber("SOTM/RadialNoteFlightTime", 0.3);
 
   /* Speaker Results */
   private Rotation2d yaw;
@@ -82,7 +85,7 @@ public class VisionSupplier extends SubsystemBase {
             .getTranslation()
             .plus(
                 fieldRelativeRobotVelocity
-                    .times(TANGENTIAL_NOTE_FLIGHT_TIME)
+                    .times(TANGENTIAL_NOTE_FLIGHT_TIME.get())
                     .rotateBy(Rotation2d.fromDegrees(180.0)));
 
     Translation2d radialVirtualTarget =
@@ -90,7 +93,7 @@ public class VisionSupplier extends SubsystemBase {
             .getTranslation()
             .plus(
                 fieldRelativeRobotVelocity
-                    .times(RADIAL_NOTE_FLIGHT_TIME)
+                    .times(RADIAL_NOTE_FLIGHT_TIME.get())
                     .rotateBy(Rotation2d.fromDegrees(180.0)));
 
     Translation2d robotToTangentialVirtualTarget =

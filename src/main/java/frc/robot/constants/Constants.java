@@ -396,9 +396,9 @@ public class Constants {
 
         ELEVATOR_HOMING_VOLTAGE = -1;
 
-        ELEVATOR_IDLE_HEIGHT = 0.12;
+        ELEVATOR_IDLE_HEIGHT = 0.094;
 
-        ELEVATOR_INTAKE_HEIGHT = 0.12;
+        ELEVATOR_INTAKE_HEIGHT = 0.094;
 
         ELEVATOR_SPIT_HEIGHT = 0.2;
 
@@ -440,7 +440,7 @@ public class Constants {
 
         ELEVATOR_IDLE_HEIGHT = 0.125;
 
-        ELEVATOR_INTAKE_HEIGHT = 0.125;
+        ELEVATOR_INTAKE_HEIGHT = 0.094;
 
         ELEVATOR_SPIT_HEIGHT = 0.2;
 
@@ -542,7 +542,7 @@ public class Constants {
 
         PIVOT_INTAKE_ANGLE = Rotation2d.fromDegrees(-22);
 
-        PIVOT_SPIT_ANGLE = Rotation2d.fromDegrees(0.0);
+        PIVOT_SPIT_ANGLE = Rotation2d.fromDegrees(10.0);
 
         PIVOT_AMP_ANGLE = Rotation2d.fromDegrees(24.0);
 

@@ -49,6 +49,7 @@ public class Superstructure extends SubsystemBase {
   private boolean requestAmp = false;
   private boolean requestNextClimbState = false;
   private boolean requestPrevClimbState = false;
+  private boolean requestVisionSpeakerIntake = false;
   private boolean requestPass = false;
 
   private boolean wantsShoot = false;
@@ -74,7 +75,8 @@ public class Superstructure extends SubsystemBase {
     TRAP,
     TRAP_SCORED,
     POST_TRAP,
-    PASS
+    PASS,
+    VISION_SPEAKER_INTAKE
   }
 
   /* Take in io objects and construct subsystems */
@@ -136,6 +138,8 @@ public class Superstructure extends SubsystemBase {
         nextSystemState = SuperstructureState.PRE_CLIMB;
       } else if (requestPass) {
         nextSystemState = SuperstructureState.PASS;
+      } else if (requestVisionSpeakerIntake) {
+        nextSystemState = SuperstructureState.VISION_SPEAKER_INTAKE;
       }
     } else if (systemState == SuperstructureState.INTAKE) {
       feeder.requestIntake();
@@ -272,7 +276,7 @@ public class Superstructure extends SubsystemBase {
       feeder.requestPreTrap();
       elevatorPivot.requestPursueSetpoint(PIVOT_PRE_CLIMB_ANGLE, ELEVATOR_PRE_CLIMB_HEIGHT);
 
-      if (requestNextClimbState && elevatorPivot.atSetpoint()) {
+      if (requestNextClimbState) {
         nextSystemState = SuperstructureState.CLIMB;
         requestNextClimbState = false;
       } else if (requestPrevClimbState) {
@@ -308,6 +312,7 @@ public class Superstructure extends SubsystemBase {
     } else if (systemState == SuperstructureState.TRAP_SCORED) {
       elevatorPivot.requestPursueSetpoint(PIVOT_TRAP_ANGLE, ELEVATOR_TRAP_HEIGHT);
       feeder.requestSpit(true);
+      RobotContainer.shooter.requestTrap();
 
       if (requestNextClimbState && elevatorPivot.atSetpoint()) {
         nextSystemState = SuperstructureState.POST_TRAP;
@@ -356,6 +361,38 @@ public class Superstructure extends SubsystemBase {
         shouldShoot = false;
         nextSystemState = SuperstructureState.IDLE;
       }
+    } else if (systemState == SuperstructureState.VISION_SPEAKER_INTAKE) {
+      ShotParameter shot = RobotContainer.visionSupplier.robotToSpeakerShot();
+
+      if (!feeder.hasPiece()) {
+        feeder.requestIntake();
+      } else {
+        feeder.requestShoot();
+      }
+
+      elevatorPivot.requestPursueSetpoint(
+          Rotation2d.fromDegrees((shot.pivotAngleDeg + angleAddition.get())), shot.elevatorHeight);
+
+      if ((wantsShoot)
+          && elevatorPivot.atSetpoint()
+          && RobotContainer.shooter.atSetpoint()
+          && feeder.hasPiece()) {
+        shouldShoot = true;
+      }
+
+      if (requestHome) {
+        shouldShoot = false;
+        nextSystemState = SuperstructureState.HOMING;
+      } else if (requestSpit) {
+        shouldShoot = false;
+        nextSystemState = SuperstructureState.SPIT;
+      } else if (!requestVisionSpeakerIntake && !shouldShoot) {
+        shouldShoot = false;
+        nextSystemState = SuperstructureState.IDLE;
+      } else if (!feeder.hasPiece() && shouldShoot) {
+        shouldShoot = false;
+        nextSystemState = SuperstructureState.IDLE;
+      }
     }
 
     if (systemState != nextSystemState) {
@@ -374,6 +411,11 @@ public class Superstructure extends SubsystemBase {
 
   public void requestPrevClimbState() {
     requestPrevClimbState = true;
+  }
+
+  public void requestVisionSpeakerIntake(boolean set, boolean wantsShoot) {
+    requestVisionSpeakerIntake = set;
+    this.wantsShoot = wantsShoot;
   }
 
   public void requestSpit(boolean set) {
