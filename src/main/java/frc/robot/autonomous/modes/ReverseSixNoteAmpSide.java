@@ -22,7 +22,7 @@ public class ReverseSixNoteAmpSide extends SequentialCommandGroup {
     addRequirements(superstructure, swerve, shooter, intake);
     addCommands(
         new InstantCommand(() -> superstructure.requestIntake(true)),
-        new WaitUntilCommand(() -> superstructure.hasPiece()),
+        new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
         new InstantCommand(() -> superstructure.requestIntake(false)),
         new InstantCommand(
             () -> {
@@ -34,7 +34,7 @@ public class ReverseSixNoteAmpSide extends SequentialCommandGroup {
               PathPlannerPath path =
                   DriverStation.getAlliance().get() == Alliance.Red
                       ? Robot.reverseSixNoteARed
-                      : Robot.reverseSixNoteABlue;
+                      : Robot.reverseSixNoteARed;
               if (DriverStation.getAlliance().get() == Alliance.Red) {
                 path = path.flipPath();
               }
@@ -44,7 +44,7 @@ public class ReverseSixNoteAmpSide extends SequentialCommandGroup {
         new TrajectoryFollowerCommand(
                 DriverStation.getAlliance().get() == Alliance.Red
                     ? Robot.reverseSixNoteARed
-                    : Robot.reverseSixNoteABlue,
+                    : Robot.reverseSixNoteARed,
                 swerve,
                 () -> superstructure.hasPiece())
             .beforeStarting(
@@ -64,7 +64,7 @@ public class ReverseSixNoteAmpSide extends SequentialCommandGroup {
         new TrajectoryFollowerCommand(
                 DriverStation.getAlliance().get() == Alliance.Red
                     ? Robot.reverseSixNoteBRed
-                    : Robot.reverseSixNoteBBlue,
+                    : Robot.reverseSixNoteBRed,
                 swerve,
                 () -> superstructure.hasPiece())
             .beforeStarting(
@@ -77,6 +77,9 @@ public class ReverseSixNoteAmpSide extends SequentialCommandGroup {
                 new SequentialCommandGroup(
                     new WaitCommand(4.28),
                     new InstantCommand(
-                        () -> superstructure.requestVisionSpeaker(true, true, false)))));
+                        () -> superstructure.requestVisionSpeaker(true, true, false)))),
+        new WaitUntilCommand(() -> superstructure.hasPiece())
+            .beforeStarting(() -> superstructure.requestVisionSpeaker(false, false, false)),
+        new StationaryShootCommand(swerve, superstructure, shooter));
   }
 }
