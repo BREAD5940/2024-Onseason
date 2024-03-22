@@ -51,9 +51,13 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath fiveNoteMidlineAmpSideE;
   public static PathPlannerPath fiveNoteMidlineAmpSideF;
 
-  public static PathPlannerPath reverseSixNoteA;
-  public static PathPlannerPath reverseSixNoteB;
-  public static PathPlannerPath reverseSixNoteC;
+  public static PathPlannerPath reverseSixNoteARed;
+  public static PathPlannerPath reverseSixNoteBRed;
+  public static PathPlannerPath reverseSixNoteCRed;
+
+  public static PathPlannerPath reverseSixNoteABlue;
+  public static PathPlannerPath reverseSixNoteBBlue;
+  public static PathPlannerPath reverseSixNoteCBlue;
 
   public static PathPlannerPath reverseSixNoteAlternateA;
   public static PathPlannerPath reverseSixNoteAlternateB;
@@ -126,9 +130,11 @@ public class Robot extends LoggedRobot {
     fiveNoteMidlineAmpSideE = PathPlannerPath.fromPathFile("Five Note Midline E");
     fiveNoteMidlineAmpSideF = PathPlannerPath.fromPathFile("Five Note Midline F");
 
-    reverseSixNoteA = PathPlannerPath.fromPathFile("Reverse Six Note A");
-    reverseSixNoteB = PathPlannerPath.fromPathFile("Reverse Six Note B");
-    reverseSixNoteC = PathPlannerPath.fromPathFile("Reverse Six Note C");
+    reverseSixNoteARed = PathPlannerPath.fromPathFile("Reverse Six Note A Red");
+    reverseSixNoteBRed = PathPlannerPath.fromPathFile("Reverse Six Note B Red");
+
+    reverseSixNoteABlue = PathPlannerPath.fromPathFile("Reverse Six Note A Blue");
+    reverseSixNoteBBlue = PathPlannerPath.fromPathFile("Reverse Six Note B Blue");
 
     reverseSixNoteAlternateA = PathPlannerPath.fromPathFile("Reverse Six Note Alternate A");
     reverseSixNoteAlternateB = PathPlannerPath.fromPathFile("Reverse Six Note Alternate B");

@@ -31,7 +31,10 @@ public class ReverseSixNoteAmpSide extends SequentialCommandGroup {
             }),
         new InstantCommand(
             () -> {
-              PathPlannerPath path = Robot.reverseSixNoteA;
+              PathPlannerPath path =
+                  DriverStation.getAlliance().get() == Alliance.Red
+                      ? Robot.reverseSixNoteARed
+                      : Robot.reverseSixNoteABlue;
               if (DriverStation.getAlliance().get() == Alliance.Red) {
                 path = path.flipPath();
               }
@@ -39,7 +42,11 @@ public class ReverseSixNoteAmpSide extends SequentialCommandGroup {
             }),
         new WaitCommand(0.2),
         new TrajectoryFollowerCommand(
-                Robot.reverseSixNoteA, swerve, () -> superstructure.hasPiece())
+                DriverStation.getAlliance().get() == Alliance.Red
+                    ? Robot.reverseSixNoteARed
+                    : Robot.reverseSixNoteABlue,
+                swerve,
+                () -> superstructure.hasPiece())
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
@@ -54,7 +61,12 @@ public class ReverseSixNoteAmpSide extends SequentialCommandGroup {
                         () -> superstructure.requestVisionSpeaker(true, false, false)))),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(1.0),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.reverseSixNoteB, swerve, () -> true)
+        new TrajectoryFollowerCommand(
+                DriverStation.getAlliance().get() == Alliance.Red
+                    ? Robot.reverseSixNoteBRed
+                    : Robot.reverseSixNoteBBlue,
+                swerve,
+                () -> superstructure.hasPiece())
             .beforeStarting(
                 () -> {
                   intake.requestIntake();

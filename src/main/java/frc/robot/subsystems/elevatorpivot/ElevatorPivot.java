@@ -169,9 +169,11 @@ public class ElevatorPivot {
 
   /* Returns whether or not the pivot is at its setpoint */
   public boolean atPivotSetpoint(Rotation2d setpoint) {
-    Logger.recordOutput("Allowing Jiggle", false);
-    if (RobotContainer.visionSupplier.getDistance() > 4.0
-        && RobotContainer.superstructure.getSystemState() == SuperstructureState.VISION_SPEAKER) {
+    if ((RobotContainer.visionSupplier.getDistance() > 4.0
+            && RobotContainer.superstructure.getSystemState() == SuperstructureState.VISION_SPEAKER)
+        || (RobotContainer.superstructure.getSystemState() == SuperstructureState.VISION_SPEAKER
+            && RobotContainer.superstructure.wantsShootOverDefense())) {
+      Logger.recordOutput("Allowing Jiggle", false);
       return BreadUtil.atReference(
               pivotInputs.angleRads, setpoint.getRadians(), PIVOT_SETPOINT_TOLERANCE_RADS, true)
           && Math.abs(pivotInputs.deltaError) < PIVOT_DELTA_ERROR_TOLERANCE;

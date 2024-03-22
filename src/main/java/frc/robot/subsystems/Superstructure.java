@@ -473,4 +473,8 @@ public class Superstructure extends SubsystemBase {
   public boolean hasPiece() {
     return feeder.hasPiece();
   }
+
+  public boolean wantsShootOverDefense() {
+    return wantsShootOverDefense;
+  }
 }

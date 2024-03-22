@@ -13,7 +13,6 @@ import frc.robot.autonomous.modes.FourNoteAmpSide;
 import frc.robot.autonomous.modes.FourNoteCenter;
 import frc.robot.autonomous.modes.FourNoteSourceSide;
 import frc.robot.autonomous.modes.Preload;
-import frc.robot.autonomous.modes.ReverseSixNoteAlternateAmpSide;
 import frc.robot.autonomous.modes.ReverseSixNoteAmpSide;
 import frc.robot.autonomous.modes.SixNoteAmpSide;
 import frc.robot.autonomous.modes.ThreeNoteCenter;
@@ -56,9 +55,6 @@ public class AutonomousSelector {
         "FOUR_NOTE_SOURCE_SIDE", new FourNoteSourceSide(superstructure, swerve, shooter, intake));
     autonomousSelector.addOption(
         "REVERSE_SIX_NOTE", new ReverseSixNoteAmpSide(superstructure, swerve, shooter, intake));
-    autonomousSelector.addOption(
-        "REVERSE_SIX_NOTE_ALTERNATE",
-        new ReverseSixNoteAlternateAmpSide(superstructure, swerve, shooter, intake));
 
     SmartDashboard.putData("Autonomus Selector", autonomousSelector);
   }
