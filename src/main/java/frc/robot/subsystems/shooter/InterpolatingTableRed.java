@@ -16,34 +16,34 @@ public class InterpolatingTableRed {
           Map.ofEntries(
               // SFR RED
               entry(
-                  Units.inchesToMeters(50.7),
+                  Units.inchesToMeters(50.8),
                   new ShotParameter(-54.0, 1700, 1200, 0.33)), // (first) 3 feet
               entry(
-                  Units.inchesToMeters(73.0),
+                  Units.inchesToMeters(71.8),
                   new ShotParameter(-44.5, 1850.000000, 1350.000000, 0.3)), // 5 feet
               entry(
-                  Units.inchesToMeters(96.0),
+                  Units.inchesToMeters(95.6),
                   new ShotParameter(-39.0, 2000.000000, 1400.000000, 0.23)), // 7 feet
               entry(
-                  Units.inchesToMeters(119),
+                  Units.inchesToMeters(119.4),
                   new ShotParameter(-33.500000, 2250.000000, 1450.000000, 0.2)), // 9 feet
               entry(
                   Units.inchesToMeters(144.5),
                   new ShotParameter(-30.000000, 2650.000000, 1800.000000, 0.175)), // 11 feet
               entry(
-                  Units.inchesToMeters(167),
+                  Units.inchesToMeters(166.0),
                   new ShotParameter(-28.000000, 2650.000000, 1800.000000, 0.15)), // 13 feet
               entry(
-                  Units.inchesToMeters(189),
+                  Units.inchesToMeters(192.0),
                   new ShotParameter(-26.700000, 2650.000000, 1800.000000, 0.125)), // 15 feet
               entry(
-                  Units.inchesToMeters(213),
+                  Units.inchesToMeters(215.0),
                   new ShotParameter(-23.000000, 2650.000000, 1800.000000, 0.125)), // 17 feet
               entry(
-                  Units.inchesToMeters(238),
+                  Units.inchesToMeters(238.0),
                   new ShotParameter(-22.300000, 2700.000000, 1850.000000, 0.125)), // 19 feet
               entry(
-                  Units.inchesToMeters(262),
+                  Units.inchesToMeters(264.0),
                   new ShotParameter(-21.400000, 2750.000000, 1900.000000, 0.125)) // 21 feet
               ));
 
