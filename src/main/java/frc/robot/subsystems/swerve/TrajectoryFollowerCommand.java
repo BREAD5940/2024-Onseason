@@ -66,7 +66,8 @@ public class TrajectoryFollowerCommand extends Command {
       swerve.resetPose(path.getPreviewStartingHolonomicPose());
     } else {
       trajectory =
-          path.getTrajectory(new ChassisSpeeds(), RobotContainer.swerve.getPose().getRotation());
+          path.getTrajectory(
+              new ChassisSpeeds(), RobotContainer.swerve.getPoseAuto().getRotation());
     }
     timer.reset();
     timer.start();
@@ -80,7 +81,7 @@ public class TrajectoryFollowerCommand extends Command {
             ? RobotContainer.visionSupplier.robotToSpeakerAngle()
             : goal.targetHolonomicRotation;
     ChassisSpeeds adjustedSpeeds =
-        autonomusController.calculate(RobotContainer.swerve.getPose(), goal);
+        autonomusController.calculate(RobotContainer.swerve.getPoseAuto(), goal);
     swerve.requestVelocity(adjustedSpeeds, false);
 
     Logger.recordOutput(

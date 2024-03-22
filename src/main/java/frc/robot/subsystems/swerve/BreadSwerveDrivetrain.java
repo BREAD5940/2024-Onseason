@@ -66,6 +66,7 @@ public class BreadSwerveDrivetrain {
 
   protected SwerveDriveKinematics m_kinematics;
   protected SwerveDrivePoseEstimator m_odometry;
+  protected SwerveDrivePoseEstimator m_odometryAuto;
   protected SwerveModulePosition[] m_modulePositions;
   protected SwerveModuleState[] m_moduleStates;
   protected Translation2d[] m_moduleLocations;
@@ -100,6 +101,8 @@ public class BreadSwerveDrivetrain {
     public SwerveModuleState[] ModuleTargets;
     /** The measured odometry update period, in seconds */
     public double OdometryPeriod;
+    /** The current pose of the robot (for auto) */
+    public Pose2d PoseAuto;
   }
 
   protected Consumer<SwerveDriveState> m_telemetryFunction = null;
@@ -216,7 +219,8 @@ public class BreadSwerveDrivetrain {
               BaseStatusSignal.getLatencyCompensatedValue(m_yawGetter, m_angularVelocity);
 
           /* Keep track of previous and current pose to account for the carpet vector */
-          m_odometry.update(Rotation2d.fromDegrees(yawDegrees), m_modulePositions);
+          // m_odometry.update(Rotation2d.fromDegrees(yawDegrees), m_modulePositions);
+          m_odometryAuto.update(Rotation2d.fromDegrees(yawDegrees), m_modulePositions);
 
           ChassisSpeeds speeds = m_kinematics.toChassisSpeeds(m_moduleStates);
 
@@ -236,6 +240,7 @@ public class BreadSwerveDrivetrain {
           m_cachedState.FailedDaqs = FailedDaqs;
           m_cachedState.SuccessfulDaqs = SuccessfulDaqs;
           m_cachedState.Pose = m_odometry.getEstimatedPosition();
+          m_cachedState.PoseAuto = m_odometryAuto.getEstimatedPosition();
           m_cachedState.speeds = speeds;
           m_cachedState.OdometryPeriod = averageLoopTime;
 
@@ -379,6 +384,14 @@ public class BreadSwerveDrivetrain {
             new Pose2d(),
             odometryStandardDeviation,
             visionStandardDeviation);
+    m_odometryAuto =
+        new SwerveDrivePoseEstimator(
+            m_kinematics,
+            new Rotation2d(),
+            m_modulePositions,
+            new Pose2d(),
+            odometryStandardDeviation,
+            visionStandardDeviation);
 
     m_fieldRelativeOffset = new Rotation2d();
     m_operatorForwardDirection = new Rotation2d();
@@ -446,6 +459,8 @@ public class BreadSwerveDrivetrain {
       }
       m_odometry.resetPosition(
           Rotation2d.fromDegrees(m_yawGetter.getValue()), m_modulePositions, new Pose2d());
+      m_odometryAuto.resetPosition(
+          Rotation2d.fromDegrees(m_yawGetter.getValue()), m_modulePositions, new Pose2d());
     } finally {
       m_stateLock.writeLock().unlock();
     }
@@ -489,8 +504,11 @@ public class BreadSwerveDrivetrain {
 
       m_odometry.resetPosition(
           Rotation2d.fromDegrees(m_yawGetter.getValue()), m_modulePositions, location);
+      m_odometryAuto.resetPosition(
+          Rotation2d.fromDegrees(m_yawGetter.getValue()), m_modulePositions, location);
       /* We need to update our cached pose immediately so that race conditions don't happen */
       m_cachedState.Pose = location;
+      m_cachedState.PoseAuto = location;
     } finally {
       m_stateLock.writeLock().unlock();
     }
@@ -582,6 +600,20 @@ public class BreadSwerveDrivetrain {
     try {
       m_stateLock.writeLock().lock();
       m_odometry.addVisionMeasurement(
+          visionRobotPoseMeters, timestampSeconds, visionMeasurementStdDevs);
+    } finally {
+      m_stateLock.writeLock().unlock();
+    }
+  }
+
+  /* Seperate method for adding vision measurements to the auto pose estimator */
+  public void addVisionMeasurementAuto(
+      Pose2d visionRobotPoseMeters,
+      double timestampSeconds,
+      Matrix<N3, N1> visionMeasurementStdDevs) {
+    try {
+      m_stateLock.writeLock().lock();
+      m_odometryAuto.addVisionMeasurement(
           visionRobotPoseMeters, timestampSeconds, visionMeasurementStdDevs);
     } finally {
       m_stateLock.writeLock().unlock();

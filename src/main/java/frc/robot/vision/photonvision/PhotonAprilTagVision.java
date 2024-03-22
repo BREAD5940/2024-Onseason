@@ -5,11 +5,7 @@ import static frc.robot.constants.FieldConstants.aprilTags;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commons.GeomUtil;
@@ -18,7 +14,7 @@ import frc.robot.commons.TimestampedVisionUpdate;
 import frc.robot.constants.FieldConstants;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.PhotonCamera;
@@ -28,21 +24,20 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 public class PhotonAprilTagVision extends SubsystemBase {
   private PhotonCamera[] cameras;
   private static final double fieldBorderMargin = 0.5;
-  private double xyStdDevCoefficient = 0.0006;
-  private double thetaStdDevCoefficient = 0.0002;
-  private Consumer<List<TimestampedVisionUpdate>> visionConsumer = x -> {};
+  private BiConsumer<List<TimestampedVisionUpdate>, List<TimestampedVisionUpdate>> visionConsumer =
+      (x, y) -> {};
   private List<TimestampedVisionUpdate> visionUpdates;
+  private List<TimestampedVisionUpdate> visionUpdatesAuto;
   private Supplier<Pose2d> poseSupplier = () -> new Pose2d();
-  private double stdDevScalar = 1.0;
 
-  private double speakerTagTimestamp = 0.0;
-  private Pose3d lastRobotToSpeakerTagPose = new Pose3d();
-  private boolean seesTag4 = false;
+  /* For shooting vs. path following in auto */
+  private double stdDevScalarAuto = 5.0;
+  private double xyStdDevCoefficientAuto = 0.006;
+  private double thetaStdDevCoefficientAuto = 0.002;
 
-  public enum StdDevMode {
-    AUTONOMOUS,
-    TELEOP
-  }
+  private double stdDevScalarShooting = 0.1;
+  private double xyStdDevCoefficientShooting = 0.0006;
+  private double thetaStdDevCoefficientShooting = 0.0002;
 
   private PolynomialRegression xyStdDevModel =
       new PolynomialRegression(
@@ -106,7 +101,8 @@ public class PhotonAprilTagVision extends SubsystemBase {
   }
 
   public void setDataInterfaces(
-      Supplier<Pose2d> poseSupplier, Consumer<List<TimestampedVisionUpdate>> visionConsumer) {
+      Supplier<Pose2d> poseSupplier,
+      BiConsumer<List<TimestampedVisionUpdate>, List<TimestampedVisionUpdate>> visionConsumer) {
     this.poseSupplier = poseSupplier;
     this.visionConsumer = visionConsumer;
   }
@@ -116,6 +112,7 @@ public class PhotonAprilTagVision extends SubsystemBase {
 
     Pose2d currentPose = poseSupplier.get();
     visionUpdates = new ArrayList<>();
+    visionUpdatesAuto = new ArrayList<>();
 
     // Loop through all the cameras
     for (int instanceIndex = 0; instanceIndex < cameras.length; instanceIndex++) {
@@ -136,11 +133,6 @@ public class PhotonAprilTagVision extends SubsystemBase {
 
       double timestamp = latestCameraResult.getTimestampSeconds();
       Logger.recordOutput("Photon/Camera " + instanceIndex + " Timestamp", timestamp);
-
-      // Handle speaker distance and angle calculations
-      if (instanceIndex == 0) {
-        seesTag4 = handleSpeakerVisionCalcs(latestCameraResult.targets, timestamp);
-      }
 
       boolean shouldUseMultiTag = latestCameraResult.getMultiTagResult().estimatedPose.isPresent;
 
@@ -226,147 +218,54 @@ public class PhotonAprilTagVision extends SubsystemBase {
       double thetaStdDev = 0.0;
 
       if (shouldUseMultiTag) {
-        xyStdDev =
-            stdDevScalar * xyStdDevCoefficient * Math.pow(avgDistance, 2.0) / tagPose3ds.size();
-        thetaStdDev =
-            stdDevScalar * thetaStdDevCoefficient * Math.pow(avgDistance, 2.0) / tagPose3ds.size();
+        xyStdDev = Math.pow(avgDistance, 2.0) / tagPose3ds.size();
+        thetaStdDev = Math.pow(avgDistance, 2.0) / tagPose3ds.size();
       } else {
-        xyStdDev = xyStdDevModel.predict(avgDistance) * stdDevScalar;
-        thetaStdDev = thetaStdDevModel.predict(avgDistance) * stdDevScalar;
+        xyStdDev = xyStdDevModel.predict(avgDistance);
+        thetaStdDev = thetaStdDevModel.predict(avgDistance);
       }
 
-      visionUpdates.add(
-          new TimestampedVisionUpdate(
-              robotPose, timestamp, VecBuilder.fill(xyStdDev, xyStdDev, thetaStdDev)));
+      if (shouldUseMultiTag) {
+        visionUpdates.add(
+            new TimestampedVisionUpdate(
+                robotPose,
+                timestamp,
+                VecBuilder.fill(
+                    stdDevScalarShooting * thetaStdDevCoefficientShooting * xyStdDev,
+                    stdDevScalarShooting * thetaStdDevCoefficientShooting * xyStdDev,
+                    stdDevScalarShooting * thetaStdDevCoefficientShooting * thetaStdDev)));
+        visionUpdatesAuto.add(
+            new TimestampedVisionUpdate(
+                robotPose,
+                timestamp,
+                VecBuilder.fill(
+                    stdDevScalarAuto * thetaStdDevCoefficientAuto * xyStdDev,
+                    stdDevScalarAuto * thetaStdDevCoefficientAuto * xyStdDev,
+                    stdDevScalarAuto * thetaStdDevCoefficientAuto * thetaStdDev)));
+      } else {
+        visionUpdates.add(
+            new TimestampedVisionUpdate(
+                robotPose,
+                timestamp,
+                VecBuilder.fill(
+                    xyStdDev * stdDevScalarShooting,
+                    xyStdDev * stdDevScalarShooting,
+                    thetaStdDev * stdDevScalarShooting)));
+        visionUpdatesAuto.add(
+            new TimestampedVisionUpdate(
+                robotPose,
+                timestamp,
+                VecBuilder.fill(
+                    xyStdDev * stdDevScalarAuto,
+                    xyStdDev * stdDevScalarAuto,
+                    thetaStdDev * stdDevScalarAuto)));
+      }
 
       Logger.recordOutput("VisionData/" + instanceIndex, robotPose);
       Logger.recordOutput("Photon/Tags Used " + instanceIndex, tagPose3ds.size());
-      Logger.recordOutput("Photon/LastRobotToSpeakerTag", lastRobotToSpeakerTagPose);
-      Logger.recordOutput("Photon/SpeakerTagTimestamp", getSpeakerTagTimestamp());
-      Logger.recordOutput(
-          "Photon/RobotToSpeakerTagDistance",
-          aprilTags
-              .getTagPose(4)
-              .get()
-              .toPose2d()
-              .relativeTo(lastRobotToSpeakerTagPose.toPose2d()));
     }
 
     // Apply all vision updates to pose estimator
-    visionConsumer.accept(visionUpdates);
-  }
-
-  public void setStdDevMode(StdDevMode mode) {
-    if (mode == StdDevMode.AUTONOMOUS) {
-      // stdDevScalar = 20.0;
-      stdDevScalar = 5.0;
-      xyStdDevCoefficient = 0.006;
-      thetaStdDevCoefficient = 0.002;
-    } else if (mode == StdDevMode.TELEOP) {
-      // stdDevScalar = 10.0;
-      stdDevScalar = 0.1;
-      xyStdDevCoefficient = 0.0006;
-      thetaStdDevCoefficient = 0.0002;
-    }
-  }
-
-  private boolean handleSpeakerVisionCalcs(List<PhotonTrackedTarget> targets, double timestamp) {
-    for (PhotonTrackedTarget target : targets) {
-      if (target.getFiducialId() == 4) { // TODO hard-coded for now but change later if works
-        lastRobotToSpeakerTagPose =
-            getRobotToSpeakerTag(
-                aprilTags.getTagPose(4).get().getTranslation(),
-                new Pose3d(poseSupplier.get()),
-                target);
-        speakerTagTimestamp = timestamp;
-        return true;
-      }
-    }
-    return false;
-  }
-
-  private double getXYDistanceToTarget(
-      PhotonTrackedTarget detection, double targetHeightOffGround) {
-
-    Transform3d robotToCamera =
-        new Transform3d(
-            cameraPoses[0].getTranslation(),
-            new Rotation3d(
-                cameraPoses[0].getRotation().getX(),
-                cameraPoses[0].getRotation().getY(),
-                cameraPoses[0].getRotation().getZ()));
-
-    // Define the vector
-    double x = 1.0 * Math.tan(Units.degreesToRadians(-detection.getYaw()));
-    double y = 1.0 * Math.tan(Units.degreesToRadians(-detection.getPitch()));
-    double z = 1.0;
-    double norm = Math.sqrt(x * x + y * y + z * z);
-    x /= norm;
-    y /= norm;
-    z /= norm;
-
-    // Rotate the vector by the camera pitch
-    double xPrime = x;
-    Translation2d yzPrime =
-        new Translation2d(y, z).rotateBy(new Rotation2d(robotToCamera.getRotation().getY()));
-    double yPrime = yzPrime.getX();
-    double zPrime = yzPrime.getY();
-
-    // Solve for the intersection
-    double angleToTargetRadians = Math.asin(yPrime);
-    double diffHeight = targetHeightOffGround - robotToCamera.getZ();
-    double distance = diffHeight / Math.tan(angleToTargetRadians);
-
-    Logger.recordOutput("Photon/SpeakerDistance", distance);
-    return distance;
-  }
-
-  private Pose3d getRobotToSpeakerTag(
-      Translation3d target, Pose3d robotPose, PhotonTrackedTarget detection) {
-    Transform3d robotToCamera =
-        new Transform3d(
-            cameraPoses[0].getTranslation(),
-            new Rotation3d(
-                cameraPoses[0].getRotation().getX(),
-                cameraPoses[0].getRotation().getY(),
-                cameraPoses[0].getRotation().getZ()));
-
-    double targetHeightOffGround = target.getZ();
-    double xyDistanceToTarget = getXYDistanceToTarget(detection, targetHeightOffGround);
-    double distanceToTarget =
-        Math.hypot(xyDistanceToTarget, targetHeightOffGround - robotToCamera.getZ());
-
-    Pose3d estimatedCameraPose = robotPose.transformBy(robotToCamera);
-
-    Logger.recordOutput("Photon/EstimatedCameraPose (Speaker Tag)", estimatedCameraPose);
-
-    Translation3d cameraToTargetTranslation =
-        new Translation3d(
-            distanceToTarget,
-            new Rotation3d(
-                0.0,
-                Units.degreesToRadians(-detection.getPitch()),
-                Units.degreesToRadians(-detection.getYaw())));
-    cameraToTargetTranslation =
-        cameraToTargetTranslation.rotateBy(estimatedCameraPose.getRotation());
-
-    Translation3d cameraTranslation = target.minus(cameraToTargetTranslation);
-    Pose3d cameraPose = new Pose3d(cameraTranslation, estimatedCameraPose.getRotation());
-
-    Pose3d estimatedRobotPose = cameraPose.transformBy(robotToCamera.inverse());
-
-    return estimatedRobotPose;
-  }
-
-  public Pose2d getRobotToSpeakerTag() {
-    return lastRobotToSpeakerTagPose.toPose2d();
-  }
-
-  public double getSpeakerTagTimestamp() {
-    return speakerTagTimestamp;
-  }
-
-  public boolean seesTag4() {
-    return seesTag4;
+    visionConsumer.accept(visionUpdates, visionUpdatesAuto);
   }
 }

@@ -23,7 +23,7 @@ public class ReverseSixNoteAmpSide extends SequentialCommandGroup {
     addCommands(
         new InstantCommand(() -> superstructure.requestIntake(true)),
         new WaitUntilCommand(() -> superstructure.hasPiece()),
-        new InstantCommand(() -> superstructure.requestIntake(false)),
+        new InstantCommand(() -> superstructure.requestIntake(false)).withTimeout(2),
         new InstantCommand(
             () -> {
               shooter.requestVisionSpeaker(true);

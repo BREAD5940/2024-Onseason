@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commons.LoggedTunableNumber;
-import frc.robot.vision.photonvision.PhotonAprilTagVision.StdDevMode;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -200,9 +199,7 @@ public class Robot extends LoggedRobot {
   }
 
   @Override
-  public void autonomousPeriodic() {
-    RobotContainer.aprilTagVision.setStdDevMode(StdDevMode.AUTONOMOUS);
-  }
+  public void autonomousPeriodic() {}
 
   @Override
   public void autonomousExit() {}
@@ -227,7 +224,6 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void teleopPeriodic() {
-    RobotContainer.aprilTagVision.setStdDevMode(StdDevMode.TELEOP);
     /* Intake requests */
     if (RobotContainer.driver.getRightTriggerAxis() > 0.1) {
       RobotContainer.intake.requestIntake();

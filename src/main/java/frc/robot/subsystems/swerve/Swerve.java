@@ -63,6 +63,7 @@ public class Swerve extends SubsystemBase {
     SwerveModuleState[] targets = drivetrain.getState().ModuleTargets;
     SwerveModuleState[] states = drivetrain.getState().ModuleStates;
     Logger.recordOutput("Odometry/PoseEstimatorEstimate", pose);
+    Logger.recordOutput("Odometry/PoseEstimatorEstimatorAuto", getPoseAuto());
     Logger.recordOutput("Swerve/Targets", targets);
     Logger.recordOutput("Swerve/Achieved", states);
     drivetrain.logCurrents();
@@ -163,9 +164,14 @@ public class Swerve extends SubsystemBase {
   }
 
   /* Adds vision data to the pose estimator built into the drivetrain class */
-  public void addVisionData(List<TimestampedVisionUpdate> visionUpdates) {
+  public void addVisionData(
+      List<TimestampedVisionUpdate> visionUpdates,
+      List<TimestampedVisionUpdate> visionUpdatesAuto) {
     for (TimestampedVisionUpdate update : visionUpdates) {
       drivetrain.addVisionMeasurement(update.pose(), update.timestamp(), update.stdDevs());
+    }
+    for (TimestampedVisionUpdate update : visionUpdatesAuto) {
+      drivetrain.addVisionMeasurementAuto(update.pose(), update.timestamp(), update.stdDevs());
     }
   }
 
@@ -177,6 +183,11 @@ public class Swerve extends SubsystemBase {
   /* Returns the current pose estimate of the robot */
   public Pose2d getPose() {
     return drivetrain.getState().Pose;
+  }
+
+  /* Returns the current pose estimator of the robot (auto for path following) */
+  public Pose2d getPoseAuto() {
+    return drivetrain.getState().PoseAuto;
   }
 
   /* Returns the robot relative speeds of the robot */
