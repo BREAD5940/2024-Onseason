@@ -2,6 +2,8 @@ package frc.robot.vision;
 
 import static frc.robot.constants.FieldConstants.*;
 
+import java.util.Optional;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -11,7 +13,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.commons.AllianceFlipUtil;
 import frc.robot.commons.LoggedTunableNumber;
-import frc.robot.subsystems.shooter.InterpolatingTableDtech;
+import frc.robot.subsystems.shooter.InterpolatingTableBlue;
+import frc.robot.subsystems.shooter.InterpolatingTableRed;
 import frc.robot.subsystems.shooter.SODInterpolatingTableBlue;
 import frc.robot.subsystems.shooter.SODInterpolatingTableRed;
 import frc.robot.subsystems.shooter.ShotParameter;
@@ -105,14 +108,21 @@ public class VisionSupplier extends SubsystemBase {
         new Rotation2d(
             robotToTangentialVirtualTarget.getX(), robotToTangentialVirtualTarget.getY());
 
-    if (DriverStation.getAlliance().get() == Alliance.Blue) {
-      shot = InterpolatingTableDtech.get(robotToRadialVirtualTarget.getNorm());
+    Optional<Alliance> allianceColor = DriverStation.getAlliance();
+    if (allianceColor.isPresent()) {
+      if (allianceColor.get() == Alliance.Blue) {
+        shot = InterpolatingTableBlue.get(robotToRadialVirtualTarget.getNorm());
+        shotSOD = SODInterpolatingTableBlue.get(robotToRadialVirtualTarget.getNorm());
+        Logger.recordOutput("Using Blue Table", true);
+      } else {
+        shot = InterpolatingTableRed.get(robotToRadialVirtualTarget.getNorm());
+        shotSOD = SODInterpolatingTableRed.get(robotToRadialVirtualTarget.getNorm());
+        Logger.recordOutput("Using Blue Table", false);
+      }
+    } else {
+      shot = InterpolatingTableBlue.get(robotToRadialVirtualTarget.getNorm());
       shotSOD = SODInterpolatingTableBlue.get(robotToRadialVirtualTarget.getNorm());
       Logger.recordOutput("Using Blue Table", true);
-    } else {
-      shot = InterpolatingTableDtech.get(robotToRadialVirtualTarget.getNorm());
-      shotSOD = SODInterpolatingTableRed.get(robotToRadialVirtualTarget.getNorm());
-      Logger.recordOutput("Using Blue Table", false);
     }
 
     distance = robotToRadialVirtualTarget.getNorm();

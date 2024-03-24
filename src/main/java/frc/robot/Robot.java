@@ -4,12 +4,14 @@ import com.ctre.phoenix.led.CANdle;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commons.LoggedTunableNumber;
+import frc.robot.subsystems.Superstructure.SuperstructureState;
 import frc.robot.vision.photonvision.PhotonAprilTagVision.StdDevMode;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -163,12 +165,24 @@ public class Robot extends LoggedRobot {
     // LED colors
 
     // g r b
-    if (RobotContainer.intake.hasPiece()) {
+    // if (RobotContainer.intake.hasPiece() && RobotContainer.superstructure.hasPiece()) {
+    //   leds.setLEDs(255, 255, 0, 0, 0, 60);
+    // } else if (RobotContainer.intake.hasPiece()) {
+    //   leds.setLEDs(255, 0, 0, 0, 0, 60);
+    // } else if (RobotContainer.superstructure.hasPiece()) {
+    //   leds.setLEDs(0, 255, 0, 0, 0, 60);
+    // } else {
+    //   leds.setLEDs(0, 0, 0, 0, 0, 60);
+    // }
+    if (RobotContainer.superstructure.getSystemState() == SuperstructureState.PRE_CLIMB) {
       leds.setLEDs(255, 0, 0, 0, 0, 60);
+      RobotContainer.driver.setRumble(RumbleType.kBothRumble, 0);
     } else if (RobotContainer.superstructure.hasPiece()) {
       leds.setLEDs(0, 255, 0, 0, 0, 60);
+      RobotContainer.driver.setRumble(RumbleType.kBothRumble, 0.25);
     } else {
       leds.setLEDs(0, 0, 0, 0, 0, 60);
+      RobotContainer.driver.setRumble(RumbleType.kBothRumble, 0);
     }
   }
 

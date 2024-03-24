@@ -6,6 +6,8 @@ import static frc.robot.constants.Constants.Pivot.*;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.commons.BreadUtil;
@@ -22,8 +24,11 @@ import org.littletonrobotics.junction.Logger;
 /* Superstructure class for handling the interaction between all the subsystems minus swerve */
 public class Superstructure extends SubsystemBase {
   // For on-the-fly adjustments
-  static LoggedTunableNumber angleAddition =
-      new LoggedTunableNumber("On-the-fly/angleAddition", 0.0);
+  static LoggedTunableNumber angleAdditionBlue =
+      new LoggedTunableNumber("On-the-fly/angleAdditionBlue", 1.0); // degrees
+
+  static LoggedTunableNumber angleAdditionRed =
+      new LoggedTunableNumber("On-the-fly/angleAdditionRed", 1.0); // degrees
 
   static LoggedTunableNumber angleMultiplication =
       new LoggedTunableNumber("On-the-fly/distanceScaledAddition", 0.0);
@@ -214,8 +219,13 @@ public class Superstructure extends SubsystemBase {
         feeder.requestIdle();
       }
 
+      double angleAddition =
+          (DriverStation.getAlliance().get() == Alliance.Red)
+              ? angleAdditionRed.get()
+              : angleAdditionBlue.get();
+
       elevatorPivot.requestPursueSetpoint(
-          Rotation2d.fromDegrees((shot.pivotAngleDeg + angleAddition.get())), shot.elevatorHeight);
+          Rotation2d.fromDegrees((shot.pivotAngleDeg + angleAddition)), shot.elevatorHeight);
 
       Logger.recordOutput("Vision/Shot/ElevatorHeight", shot.elevatorHeight);
       Logger.recordOutput("Vision/Shot/PivotAngleDeg", shot.pivotAngleDeg);
@@ -291,7 +301,7 @@ public class Superstructure extends SubsystemBase {
         nextSystemState = SuperstructureState.TRAP;
         requestNextClimbState = false;
       } else if (requestPrevClimbState) {
-        nextSystemState = SuperstructureState.IDLE;
+        nextSystemState = SuperstructureState.PRE_CLIMB;
         requestPrevClimbState = false;
       }
     } else if (systemState == SuperstructureState.TRAP) {
@@ -370,8 +380,13 @@ public class Superstructure extends SubsystemBase {
         feeder.requestShoot();
       }
 
+      double angleAddition =
+          (DriverStation.getAlliance().get() == Alliance.Red)
+              ? angleAdditionRed.get()
+              : angleAdditionBlue.get();
+
       elevatorPivot.requestPursueSetpoint(
-          Rotation2d.fromDegrees((shot.pivotAngleDeg + angleAddition.get())), shot.elevatorHeight);
+          Rotation2d.fromDegrees((shot.pivotAngleDeg + angleAddition)), shot.elevatorHeight);
 
       if ((wantsShoot)
           && elevatorPivot.atSetpoint()
