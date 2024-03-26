@@ -89,7 +89,7 @@ public class Feeder {
       if (!requestShoot) {
         nextSystemState = FeederState.IDLE;
       }
-      if (!inputs.beamBreakTriggered && shootingTimer.get() > 2.0) {
+      if (!inputs.beamBreakTriggered) {
         hasPiece = false;
         nextSystemState = FeederState.IDLE;
       }
@@ -145,5 +145,9 @@ public class Feeder {
     requestSpit = false;
     requestShoot = false;
     requestPreTrap = false;
+  }
+
+  public void registerAutoPreload() {
+    hasPiece = true;
   }
 }

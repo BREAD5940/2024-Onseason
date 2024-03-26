@@ -197,6 +197,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void autonomousInit() {
+    RobotContainer.superstructure.registerAutoPreload();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     if (!requestedHome) {

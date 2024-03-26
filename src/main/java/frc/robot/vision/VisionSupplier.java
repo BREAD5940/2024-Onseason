@@ -2,8 +2,6 @@ package frc.robot.vision;
 
 import static frc.robot.constants.FieldConstants.*;
 
-import java.util.Optional;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -18,6 +16,7 @@ import frc.robot.subsystems.shooter.InterpolatingTableRed;
 import frc.robot.subsystems.shooter.SODInterpolatingTableBlue;
 import frc.robot.subsystems.shooter.SODInterpolatingTableRed;
 import frc.robot.subsystems.shooter.ShotParameter;
+import java.util.Optional;
 import org.littletonrobotics.junction.Logger;
 
 public class VisionSupplier extends SubsystemBase {

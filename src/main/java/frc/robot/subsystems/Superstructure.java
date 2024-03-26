@@ -492,4 +492,8 @@ public class Superstructure extends SubsystemBase {
   public boolean wantsShootOverDefense() {
     return wantsShootOverDefense;
   }
+
+  public void registerAutoPreload() {
+    feeder.registerAutoPreload();
+  }
 }
