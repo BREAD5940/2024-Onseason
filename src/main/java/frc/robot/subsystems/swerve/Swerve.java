@@ -41,7 +41,7 @@ public class Swerve extends SubsystemBase {
     this.drivetrain =
         new BreadSwerveDrivetrain(
             drivetrainConstants,
-            251,
+            250,
             VecBuilder.fill(0.01, 0.01, 0.002),
             VecBuilder.fill(0.01, 0.01, 0.002),
             moduleConstants);
@@ -60,9 +60,11 @@ public class Swerve extends SubsystemBase {
   /* Telemetry function */
   private void handleTelemetry() {
     Pose2d pose = getPose();
+    Pose2d autoPose = getAutoPose();
     SwerveModuleState[] targets = drivetrain.getState().ModuleTargets;
     SwerveModuleState[] states = drivetrain.getState().ModuleStates;
     Logger.recordOutput("Odometry/PoseEstimatorEstimate", pose);
+    Logger.recordOutput("Odometry/PoseEstimatorEstimateAuto", autoPose);
     Logger.recordOutput("Swerve/Targets", targets);
     Logger.recordOutput("Swerve/Achieved", states);
     drivetrain.logCurrents();
@@ -163,9 +165,16 @@ public class Swerve extends SubsystemBase {
   }
 
   /* Adds vision data to the pose estimator built into the drivetrain class */
-  public void addVisionData(List<TimestampedVisionUpdate> visionUpdates) {
-    for (TimestampedVisionUpdate update : visionUpdates) {
-      drivetrain.addVisionMeasurement(update.pose(), update.timestamp(), update.stdDevs());
+  public void addVisionData(
+      List<TimestampedVisionUpdate> shotVisionUpdates,
+      List<TimestampedVisionUpdate> autoVisionUpdates) {
+    for (TimestampedVisionUpdate shotUpdate : shotVisionUpdates) {
+      drivetrain.addShotVisionMeasurement(
+          shotUpdate.pose(), shotUpdate.timestamp(), shotUpdate.stdDevs());
+    }
+    for (TimestampedVisionUpdate autoUpdate : autoVisionUpdates) {
+      drivetrain.addAutoVisionMeasurement(
+          autoUpdate.pose(), autoUpdate.timestamp(), autoUpdate.stdDevs());
     }
   }
 
@@ -174,9 +183,14 @@ public class Swerve extends SubsystemBase {
     drivetrain.seedFieldRelative(newPose);
   }
 
-  /* Returns the current pose estimate of the robot */
+  /* Returns the current pose estimate of the robot for path following */
   public Pose2d getPose() {
-    return drivetrain.getState().Pose;
+    return drivetrain.getState().ShotPose;
+  }
+
+  /* Returns the current pose estimate of the robot for shooting */
+  public Pose2d getAutoPose() {
+    return drivetrain.getState().AutoPose;
   }
 
   /* Returns the robot relative speeds of the robot */

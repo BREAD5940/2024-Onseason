@@ -1,9 +1,6 @@
 package frc.robot.autonomous.modes;
 
-import static frc.robot.constants.Constants.AutoShots.*;
-
 import com.pathplanner.lib.path.PathPlannerPath;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -30,7 +27,7 @@ public class FiveNoteAmpSide extends SequentialCommandGroup {
         new InstantCommand(
             () -> {
               PathPlannerPath path = Robot.fiveNoteAmpSideA;
-              if (DriverStation.getAlliance().get() == Alliance.Red) {
+              if (Robot.alliance == Alliance.Red) {
                 path = path.flipPath();
               }
               swerve.resetPose(path.getPreviewStartingHolonomicPose());

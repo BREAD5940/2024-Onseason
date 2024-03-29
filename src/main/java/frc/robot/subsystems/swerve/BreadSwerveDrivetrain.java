@@ -65,7 +65,9 @@ public class BreadSwerveDrivetrain {
   protected final StatusSignal<Double> m_angularVelocity;
 
   protected SwerveDriveKinematics m_kinematics;
-  protected SwerveDrivePoseEstimator m_odometry;
+  protected SwerveDrivePoseEstimator m_AutoOdometry;
+  protected SwerveDrivePoseEstimator m_ShotOdometry;
+
   protected SwerveModulePosition[] m_modulePositions;
   protected SwerveModuleState[] m_moduleStates;
   protected Translation2d[] m_moduleLocations;
@@ -90,8 +92,10 @@ public class BreadSwerveDrivetrain {
     public int SuccessfulDaqs;
     /** Number of failed data acquisitions */
     public int FailedDaqs;
-    /** The current pose of the robot */
-    public Pose2d Pose;
+    /** The current pose of the robot for taking shots */
+    public Pose2d ShotPose;
+    /** The current pose of the robot for following paths */
+    public Pose2d AutoPose;
     /** The current velocity of the robot */
     public ChassisSpeeds speeds;
     /** The current module states */
@@ -100,6 +104,8 @@ public class BreadSwerveDrivetrain {
     public SwerveModuleState[] ModuleTargets;
     /** The measured odometry update period, in seconds */
     public double OdometryPeriod;
+    /** The current module positions */
+    public SwerveModulePosition[] ModulePositions;
   }
 
   protected Consumer<SwerveDriveState> m_telemetryFunction = null;
@@ -216,13 +222,16 @@ public class BreadSwerveDrivetrain {
               BaseStatusSignal.getLatencyCompensatedValue(m_yawGetter, m_angularVelocity);
 
           /* Keep track of previous and current pose to account for the carpet vector */
-          m_odometry.update(Rotation2d.fromDegrees(yawDegrees), m_modulePositions);
+          m_ShotOdometry.update(Rotation2d.fromDegrees(yawDegrees), m_modulePositions);
+          m_AutoOdometry.update(Rotation2d.fromDegrees(yawDegrees), m_modulePositions);
 
           ChassisSpeeds speeds = m_kinematics.toChassisSpeeds(m_moduleStates);
 
           /* And now that we've got the new odometry, update the controls */
           m_requestParameters.currentPose =
-              m_odometry.getEstimatedPosition().relativeTo(new Pose2d(0, 0, m_fieldRelativeOffset));
+              m_ShotOdometry
+                  .getEstimatedPosition()
+                  .relativeTo(new Pose2d(0, 0, m_fieldRelativeOffset));
           m_requestParameters.kinematics = m_kinematics;
           m_requestParameters.swervePositions = m_moduleLocations;
           m_requestParameters.currentChassisSpeed = speeds;
@@ -235,9 +244,11 @@ public class BreadSwerveDrivetrain {
           /* Update our cached state with the newly updated data */
           m_cachedState.FailedDaqs = FailedDaqs;
           m_cachedState.SuccessfulDaqs = SuccessfulDaqs;
-          m_cachedState.Pose = m_odometry.getEstimatedPosition();
+          m_cachedState.ShotPose = m_ShotOdometry.getEstimatedPosition();
+          m_cachedState.AutoPose = m_AutoOdometry.getEstimatedPosition();
           m_cachedState.speeds = speeds;
           m_cachedState.OdometryPeriod = averageLoopTime;
+          m_cachedState.ModulePositions = m_modulePositions;
 
           if (m_cachedState.ModuleStates == null) {
             m_cachedState.ModuleStates = new SwerveModuleState[Modules.length];
@@ -371,7 +382,15 @@ public class BreadSwerveDrivetrain {
       iteration++;
     }
     m_kinematics = new SwerveDriveKinematics(m_moduleLocations);
-    m_odometry =
+    m_ShotOdometry =
+        new SwerveDrivePoseEstimator(
+            m_kinematics,
+            new Rotation2d(),
+            m_modulePositions,
+            new Pose2d(),
+            odometryStandardDeviation,
+            visionStandardDeviation);
+    m_AutoOdometry =
         new SwerveDrivePoseEstimator(
             m_kinematics,
             new Rotation2d(),
@@ -444,7 +463,9 @@ public class BreadSwerveDrivetrain {
         Modules[i].resetPosition();
         m_modulePositions[i] = Modules[i].getPosition(true);
       }
-      m_odometry.resetPosition(
+      m_ShotOdometry.resetPosition(
+          Rotation2d.fromDegrees(m_yawGetter.getValue()), m_modulePositions, new Pose2d());
+      m_AutoOdometry.resetPosition(
           Rotation2d.fromDegrees(m_yawGetter.getValue()), m_modulePositions, new Pose2d());
     } finally {
       m_stateLock.writeLock().unlock();
@@ -458,7 +479,7 @@ public class BreadSwerveDrivetrain {
     try {
       m_stateLock.writeLock().lock();
 
-      m_fieldRelativeOffset = getState().Pose.getRotation();
+      m_fieldRelativeOffset = getState().ShotPose.getRotation();
     } finally {
       m_stateLock.writeLock().unlock();
     }
@@ -487,10 +508,15 @@ public class BreadSwerveDrivetrain {
     try {
       m_stateLock.writeLock().lock();
 
-      m_odometry.resetPosition(
+      m_ShotOdometry.resetPosition(
           Rotation2d.fromDegrees(m_yawGetter.getValue()), m_modulePositions, location);
       /* We need to update our cached pose immediately so that race conditions don't happen */
-      m_cachedState.Pose = location;
+      m_cachedState.ShotPose = location;
+
+      m_AutoOdometry.resetPosition(
+          Rotation2d.fromDegrees(m_yawGetter.getValue()), m_modulePositions, location);
+      /* We need to update our cached pose immediately so that race conditions don't happen */
+      m_cachedState.AutoPose = location;
     } finally {
       m_stateLock.writeLock().unlock();
     }
@@ -575,13 +601,26 @@ public class BreadSwerveDrivetrain {
    *     in meters, y position in meters, and heading in radians). Increase these numbers to trust
    *     the vision pose measurement less.
    */
-  public void addVisionMeasurement(
+  public void addShotVisionMeasurement(
       Pose2d visionRobotPoseMeters,
       double timestampSeconds,
       Matrix<N3, N1> visionMeasurementStdDevs) {
     try {
       m_stateLock.writeLock().lock();
-      m_odometry.addVisionMeasurement(
+      m_ShotOdometry.addVisionMeasurement(
+          visionRobotPoseMeters, timestampSeconds, visionMeasurementStdDevs);
+    } finally {
+      m_stateLock.writeLock().unlock();
+    }
+  }
+
+  public void addAutoVisionMeasurement(
+      Pose2d visionRobotPoseMeters,
+      double timestampSeconds,
+      Matrix<N3, N1> visionMeasurementStdDevs) {
+    try {
+      m_stateLock.writeLock().lock();
+      m_AutoOdometry.addVisionMeasurement(
           visionRobotPoseMeters, timestampSeconds, visionMeasurementStdDevs);
     } finally {
       m_stateLock.writeLock().unlock();
@@ -608,10 +647,10 @@ public class BreadSwerveDrivetrain {
    *     you should use {@link edu.wpi.first.wpilibj.Timer#getFPGATimestamp()} as your time source
    *     or sync the epochs.
    */
-  public void addVisionMeasurement(Pose2d visionRobotPoseMeters, double timestampSeconds) {
+  public void addShotVisionMeasurement(Pose2d visionRobotPoseMeters, double timestampSeconds) {
     try {
       m_stateLock.writeLock().lock();
-      m_odometry.addVisionMeasurement(visionRobotPoseMeters, timestampSeconds);
+      m_ShotOdometry.addVisionMeasurement(visionRobotPoseMeters, timestampSeconds);
     } finally {
       m_stateLock.writeLock().unlock();
     }
@@ -629,7 +668,7 @@ public class BreadSwerveDrivetrain {
   public void setVisionMeasurementStdDevs(Matrix<N3, N1> visionMeasurementStdDevs) {
     try {
       m_stateLock.writeLock().lock();
-      m_odometry.setVisionMeasurementStdDevs(visionMeasurementStdDevs);
+      m_ShotOdometry.setVisionMeasurementStdDevs(visionMeasurementStdDevs);
     } finally {
       m_stateLock.writeLock().unlock();
     }

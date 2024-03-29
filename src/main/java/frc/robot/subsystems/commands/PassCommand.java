@@ -4,6 +4,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.commons.BreadUtil;
 import frc.robot.subsystems.Superstructure;
@@ -44,7 +45,7 @@ public class PassCommand extends Command {
     double dx;
     double dy;
 
-    if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+    if (Robot.alliance == DriverStation.Alliance.Blue) {
       dx = Math.pow(-x, 1) * 2.5;
       dy = Math.pow(-y, 1) * 2.5;
 

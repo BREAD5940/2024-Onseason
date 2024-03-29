@@ -5,10 +5,10 @@ import com.pathplanner.lib.path.PathPlannerTrajectory;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.commons.BreadHolonomicDriveController;
 import java.util.function.Supplier;
@@ -46,13 +46,13 @@ public class TrajectoryFollowerCommand extends Command {
 
   @Override
   public void initialize() {
-    Logger.recordOutput("TrajectoryFollowerCommandAlliance", DriverStation.getAlliance().get());
-    if (DriverStation.getAlliance().get() == Alliance.Red && !flippedForRed) {
+    Logger.recordOutput("TrajectoryFollowerCommandAlliance", Robot.alliance);
+    if (Robot.alliance == Alliance.Red && !flippedForRed) {
       path = path.flipPath();
       flippedForRed = true;
     }
 
-    if (DriverStation.getAlliance().get() == Alliance.Blue && flippedForRed) {
+    if (Robot.alliance == Alliance.Blue && flippedForRed) {
       path = path.flipPath();
       flippedForRed = false;
     }
@@ -66,7 +66,8 @@ public class TrajectoryFollowerCommand extends Command {
       swerve.resetPose(path.getPreviewStartingHolonomicPose());
     } else {
       trajectory =
-          path.getTrajectory(new ChassisSpeeds(), RobotContainer.swerve.getPose().getRotation());
+          path.getTrajectory(
+              new ChassisSpeeds(), RobotContainer.swerve.getAutoPose().getRotation());
     }
     timer.reset();
     timer.start();
@@ -80,7 +81,7 @@ public class TrajectoryFollowerCommand extends Command {
             ? RobotContainer.visionSupplier.robotToSpeakerAngle()
             : goal.targetHolonomicRotation;
     ChassisSpeeds adjustedSpeeds =
-        autonomusController.calculate(RobotContainer.swerve.getPose(), goal);
+        autonomusController.calculate(RobotContainer.swerve.getAutoPose(), goal);
     swerve.requestVelocity(adjustedSpeeds, false);
 
     Logger.recordOutput(

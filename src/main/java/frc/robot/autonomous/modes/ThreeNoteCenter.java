@@ -1,7 +1,6 @@
 package frc.robot.autonomous.modes;
 
 import com.pathplanner.lib.path.PathPlannerPath;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -26,7 +25,7 @@ public class ThreeNoteCenter extends SequentialCommandGroup {
         new InstantCommand(
             () -> {
               PathPlannerPath path = Robot.fourNoteCenterA;
-              if (DriverStation.getAlliance().get() == Alliance.Red) {
+              if (Robot.alliance == Alliance.Red) {
                 path = path.flipPath();
               }
               swerve.resetPose(path.getPreviewStartingHolonomicPose());

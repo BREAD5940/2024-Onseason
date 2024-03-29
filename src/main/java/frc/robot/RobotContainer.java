@@ -1,7 +1,5 @@
 package frc.robot;
 
-import static frc.robot.constants.Constants.*;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -91,10 +89,10 @@ public class RobotContainer {
               double y = BreadUtil.deadband(driver.getLeftX(), 0.1);
               double omega = BreadUtil.deadband(driver.getRightX(), 0.1);
 
-              double dx;
-              double dy;
+              double dx = 0;
+              double dy = 0;
 
-              if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+              if (Robot.alliance == DriverStation.Alliance.Blue) {
                 dx = Math.pow(-x, 1) * 6.0;
                 dy = Math.pow(-y, 1) * 6.0;
 
@@ -106,7 +104,7 @@ public class RobotContainer {
               swerve.requestPercent(new ChassisSpeeds(dx, dy, rot), true);
 
               if (driver.getRawButtonPressed(XboxController.Button.kStart.value)) {
-                if (DriverStation.getAlliance().get() == Alliance.Blue) {
+                if (Robot.alliance == Alliance.Blue) {
                   swerve.resetPose(new Pose2d());
                 } else {
                   swerve.resetPose(new Pose2d(new Translation2d(), new Rotation2d(Math.PI)));

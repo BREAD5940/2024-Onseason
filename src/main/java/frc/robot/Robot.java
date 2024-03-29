@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commons.LoggedTunableNumber;
 import frc.robot.subsystems.Superstructure.SuperstructureState;
-import frc.robot.vision.photonvision.PhotonAprilTagVision.StdDevMode;
+import java.util.Optional;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -108,6 +108,8 @@ public class Robot extends LoggedRobot {
     }
 
     Logger.start();
+    Logger.disableDeterministicTimestamps();
+    Logger.disableConsoleCapture();
 
     fourNoteCenterA = PathPlannerPath.fromPathFile("Four Note Center A");
     fourNoteCenterB = PathPlannerPath.fromPathFile("Four Note Center B");
@@ -184,6 +186,11 @@ public class Robot extends LoggedRobot {
       leds.setLEDs(0, 0, 0, 0, 0, 60);
       RobotContainer.driver.setRumble(RumbleType.kBothRumble, 0);
     }
+
+    Optional<Alliance> allianceOptional = DriverStation.getAlliance();
+    if (allianceOptional.isPresent()) {
+      alliance = allianceOptional.get();
+    }
   }
 
   @Override
@@ -208,16 +215,12 @@ public class Robot extends LoggedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-
-    alliance = DriverStation.getAlliance().get();
     RobotContainer.shooter.requestIdle();
     RobotController.setBrownoutVoltage(5.75);
   }
 
   @Override
-  public void autonomousPeriodic() {
-    RobotContainer.aprilTagVision.setStdDevMode(StdDevMode.AUTONOMOUS);
-  }
+  public void autonomousPeriodic() {}
 
   @Override
   public void autonomousExit() {}
@@ -233,7 +236,6 @@ public class Robot extends LoggedRobot {
       requestedHome = true;
     }
 
-    alliance = DriverStation.getAlliance().get();
     RobotContainer.shooter.requestIdle();
     RobotController.setBrownoutVoltage(5.75);
 
@@ -242,7 +244,6 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void teleopPeriodic() {
-    RobotContainer.aprilTagVision.setStdDevMode(StdDevMode.TELEOP);
     /* Intake requests */
     if (RobotContainer.driver.getRightTriggerAxis() > 0.1) {
       RobotContainer.intake.requestIntake();
