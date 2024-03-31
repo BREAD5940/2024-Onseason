@@ -181,8 +181,9 @@ public class Shooter extends SubsystemBase {
   }
 
   public void requestPass() {
-    desiredLeftRPM = SHOOTER_LEFT_PASS_RPM;
-    desiredRightRPM = SHOOTER_RIGHT_PASS_RPM;
+    ShotParameter shot = RobotContainer.visionSupplier.robotToPassingShot();
+    desiredLeftRPM = shot.leftRPM;
+    desiredRightRPM = shot.rightRPM;
     unsetAllRequests();
     requestPass = true;
   }

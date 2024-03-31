@@ -18,7 +18,7 @@ public class PassCommand extends Command {
   private Shooter shooter;
 
   // Feedback controllers
-  private PIDController turnPID = new PIDController(7, 0, 0);
+  private PIDController turnPID = new PIDController(7, 0, 0.2);
 
   public PassCommand(Swerve swerve, Superstructure superstructure, Shooter shooter) {
     this.swerve = swerve;
@@ -60,11 +60,15 @@ public class PassCommand extends Command {
     RobotContainer.superstructure.requestPass(
         true, RobotContainer.swerve.atAngularSetpoint(setpoint));
     RobotContainer.shooter.requestPass();
+    // RobotContainer.shooter.requestFender();
+    // RobotContainer.superstructure.requestFender(
+    //     true, RobotContainer.swerve.atAngularSetpoint(setpoint));
   }
 
   @Override
   public void end(boolean interrupted) {
     shooter.requestIdle();
     superstructure.requestPass(false, false);
+    // superstructure.requestFender(false, false);
   }
 }

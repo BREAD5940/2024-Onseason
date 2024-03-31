@@ -35,6 +35,13 @@ deploy {
                 frcStaticFileDeploy(getArtifactTypeClass('FileTreeArtifact')) {
                     files = project.fileTree('src/main/deploy')
                     directory = '/home/lvuser/deploy'
+                    postdeploy << { ctx ->
+                        ctx.execute('mv /home/lvuser/deploy/timing/ptp4linit /etc/init.d/ptp4linit')
+                        ctx.execute('chmod +x /etc/init.d/ptp4linit')
+                        ctx.execute('chmod +x /home/lvuser/deploy/timing/ptp4l')
+                        ctx.execute('chmod +x /home/lvuser/deploy/timing/pmc')
+                        ctx.execute('sudo update-rc.d ptp4linit defaults')
+                    }
                 }
             }
         }

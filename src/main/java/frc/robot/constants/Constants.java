@@ -331,16 +331,19 @@ public class Constants {
     public static final double SWERVE_COAST_TRESHOLD_MPS;
     public static final double SWERVE_COAST_TRESHOLD_SEC;
     public static final double SWERVE_ANGULAR_ERROR_TOLERANCE_RAD;
+    public static final double SWERVE_ANGULAR_ERROR_TOLERANCE_RAD_P_S;
 
     static {
       if (robot == RobotType.BETA) {
         SWERVE_COAST_TRESHOLD_MPS = 0.05;
         SWERVE_COAST_TRESHOLD_SEC = 5.0;
         SWERVE_ANGULAR_ERROR_TOLERANCE_RAD = Units.degreesToRadians(7);
+        SWERVE_ANGULAR_ERROR_TOLERANCE_RAD_P_S = Units.degreesToRadians(20.0);
       } else {
         SWERVE_COAST_TRESHOLD_MPS = 0.05;
         SWERVE_COAST_TRESHOLD_SEC = 5.0;
         SWERVE_ANGULAR_ERROR_TOLERANCE_RAD = Units.degreesToRadians(7);
+        SWERVE_ANGULAR_ERROR_TOLERANCE_RAD_P_S = Units.degreesToRadians(20.0);
       }
     }
   }

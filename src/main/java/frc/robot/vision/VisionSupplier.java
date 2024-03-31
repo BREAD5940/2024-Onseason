@@ -12,6 +12,7 @@ import frc.robot.RobotContainer;
 import frc.robot.commons.AllianceFlipUtil;
 import frc.robot.commons.LoggedTunableNumber;
 import frc.robot.subsystems.shooter.InterpolatingTableBlue;
+import frc.robot.subsystems.shooter.InterpolatingTablePassing;
 import frc.robot.subsystems.shooter.InterpolatingTableRed;
 import frc.robot.subsystems.shooter.SODInterpolatingTableBlue;
 import frc.robot.subsystems.shooter.SODInterpolatingTableRed;
@@ -33,12 +34,17 @@ public class VisionSupplier extends SubsystemBase {
   private Rotation2d robotToAmpAngle;
   private double distance;
   private Rotation2d robotToPassingAngle;
+  private ShotParameter robotToPassingShot;
 
   private Rotation2d robotToNoteAngle;
   private Translation2d notePose;
 
   public Rotation2d robotToPassingAngle() {
     return robotToPassingAngle;
+  }
+
+  public ShotParameter robotToPassingShot() {
+    return robotToPassingShot;
   }
 
   public Rotation2d robotToNoteAngle() {
@@ -130,8 +136,11 @@ public class VisionSupplier extends SubsystemBase {
     Translation2d flippedPassingTarget = AllianceFlipUtil.apply(passingTarget);
     Translation2d robotToPassingPose = flippedPassingTarget.minus(robotPose.getTranslation());
     robotToPassingAngle = new Rotation2d(robotToPassingPose.getX(), robotToPassingPose.getY());
+    double robotToPassingDistance = robotToPassingPose.getNorm();
+    robotToPassingShot = InterpolatingTablePassing.get(robotToPassingDistance);
 
     // Logs
+    Logger.recordOutput("Robot To Passing Distance", robotToPassingDistance);
     Logger.recordOutput("Vision/DistanceToTarget", robotToRadialVirtualTarget.getNorm());
     Logger.recordOutput("Vision/TargetPose", targetPose);
     Logger.recordOutput(

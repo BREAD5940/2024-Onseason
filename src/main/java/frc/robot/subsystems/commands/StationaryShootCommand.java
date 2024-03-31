@@ -16,7 +16,6 @@ public class StationaryShootCommand extends Command {
   private Swerve swerve;
   private Superstructure superstructure;
   private Shooter shooter;
-  private boolean converged = false;
 
   // Feedback controllers
   private PIDController turnPID = new PIDController(10, 0, 0);
@@ -32,11 +31,6 @@ public class StationaryShootCommand extends Command {
   }
 
   @Override
-  public void initialize() {
-    converged = false;
-  }
-
-  @Override
   public void execute() {
     // Calculuate swerve output
     double turnSetpoint = RobotContainer.visionSupplier.robotToSpeakerAngle().getRadians();
@@ -48,7 +42,7 @@ public class StationaryShootCommand extends Command {
     swerve.requestVelocity(new ChassisSpeeds(0, 0, thetaOutput), true);
 
     shooter.requestVisionSpeaker(false);
-    superstructure.requestVisionSpeaker(true, swerve.atAngularSetpoint(turnSetpoint), false);
+    superstructure.requestVisionSpeaker(true, true, false);
 
     Logger.recordOutput(
         "AimAtSpeakerCommand/MeasurementDegrees>", Units.radiansToDegrees(currentRotation));

@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Robot;
 import frc.robot.subsystems.Superstructure;
@@ -34,7 +33,6 @@ public class SixNoteAmpSide extends SequentialCommandGroup {
               shooter.requestVisionSpeaker(false);
               superstructure.requestVisionSpeaker(true, true, false);
             }),
-        new WaitCommand(0.5),
         new TrajectoryFollowerCommand(Robot.sixNoteAmpSideA, swerve, false, () -> true)
             .beforeStarting(
                 () -> {
@@ -42,6 +40,8 @@ public class SixNoteAmpSide extends SequentialCommandGroup {
                   superstructure.requestIntake(true);
                   superstructure.requestVisionSpeaker(true, true, false);
                 })
+            .deadlineWith(new RunCommand(() -> shooter.requestVisionSpeaker(false))),
+        new WaitUntilCommand(() -> !superstructure.hasPiece())
             .deadlineWith(new RunCommand(() -> shooter.requestVisionSpeaker(false))),
         new TrajectoryFollowerCommand(Robot.sixNoteAmpSideB, swerve, false, () -> true)
             .beforeStarting(
@@ -59,9 +59,17 @@ public class SixNoteAmpSide extends SequentialCommandGroup {
                   superstructure.requestVisionSpeaker(true, true, false);
                 })
             .deadlineWith(new RunCommand(() -> shooter.requestVisionSpeaker(false))),
+        new TrajectoryFollowerCommand(Robot.sixNoteAmpSideD, swerve, false, () -> true)
+            .beforeStarting(
+                () -> {
+                  intake.requestIntake();
+                  superstructure.requestIntake(true);
+                  superstructure.requestVisionSpeaker(true, true, false);
+                })
+            .deadlineWith(new RunCommand(() -> shooter.requestVisionSpeaker(false))),
         new WaitUntilCommand(() -> !superstructure.hasPiece()).withTimeout(1.0),
         new TrajectoryFollowerCommand(
-                Robot.sixNoteAmpSideD, swerve, false, () -> superstructure.hasPiece())
+                Robot.sixNoteAmpSideE, swerve, false, () -> superstructure.hasPiece())
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
@@ -71,7 +79,7 @@ public class SixNoteAmpSide extends SequentialCommandGroup {
             .deadlineWith(new RunCommand(() -> shooter.requestVisionSpeaker(false))),
         new StationaryShootCommand(swerve, superstructure, shooter),
         new TrajectoryFollowerCommand(
-                Robot.sixNoteAmpSideE, swerve, false, () -> superstructure.hasPiece())
+                Robot.sixNoteAmpSideF, swerve, false, () -> superstructure.hasPiece())
             .beforeStarting(
                 () -> {
                   intake.requestIntake();

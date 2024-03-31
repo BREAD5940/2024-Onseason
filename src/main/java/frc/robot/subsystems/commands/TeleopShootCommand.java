@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.commons.BreadUtil;
+import frc.robot.commons.LoggedTunableNumber;
 import frc.robot.subsystems.swerve.Swerve;
 import org.littletonrobotics.junction.Logger;
 
@@ -17,7 +18,9 @@ public class TeleopShootCommand extends Command {
   private Swerve swerve;
 
   // Feedback controllers
-  private PIDController turnPID = new PIDController(7, 0, 0);
+  LoggedTunableNumber p = new LoggedTunableNumber("TeleopShootCommand/p", 7);
+  LoggedTunableNumber d = new LoggedTunableNumber("TeleopShootCommand/d", 0.2);
+  private PIDController turnPID = new PIDController(p.get(), 0, d.get());
 
   public TeleopShootCommand(Swerve swerve) {
     this.swerve = swerve;
@@ -32,6 +35,14 @@ public class TeleopShootCommand extends Command {
 
   @Override
   public void execute() {
+    // Set p and d of the controller
+    if (p.hasChanged(0)) {
+      turnPID.setP(p.get());
+    }
+
+    if (d.hasChanged(0)) {
+      turnPID.setD(d.get());
+    }
     // Swerve turn PID calcs
     double setpoint = RobotContainer.visionSupplier.robotToSpeakerAngle().getRadians();
     double measurement = swerve.getPose().getRotation().getRadians();
@@ -59,10 +70,17 @@ public class TeleopShootCommand extends Command {
     // RobotContainer.superstructure.requestFender(
     //     true, RobotContainer.swerve.atAngularSetpoint(setpoint));
     // RobotContainer.shooter.requestFender();
-    RobotContainer.superstructure.requestVisionSpeaker(
-        true,
-        RobotContainer.swerve.atAngularSetpoint(setpoint),
-        RobotContainer.operator.getYButton());
+    if (dx < 0.01 && dy < 0.01) {
+      RobotContainer.superstructure.requestVisionSpeaker(
+          true,
+          RobotContainer.swerve.atAngularSetpoint(setpoint) && RobotContainer.swerve.notRotating(),
+          RobotContainer.operator.getYButton());
+    } else {
+      RobotContainer.superstructure.requestVisionSpeaker(
+          true,
+          RobotContainer.swerve.atAngularSetpoint(setpoint),
+          RobotContainer.operator.getYButton());
+    }
     RobotContainer.shooter.requestVisionSpeaker(false);
 
     // Logs

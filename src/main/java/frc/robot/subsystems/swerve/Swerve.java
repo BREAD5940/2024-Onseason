@@ -67,6 +67,7 @@ public class Swerve extends SubsystemBase {
     Logger.recordOutput("Odometry/PoseEstimatorEstimateAuto", autoPose);
     Logger.recordOutput("Swerve/Targets", targets);
     Logger.recordOutput("Swerve/Achieved", states);
+    Logger.recordOutput("Swerve/OmegaRadsPerSec", getRobotRelativeSpeeds().omegaRadiansPerSecond);
     drivetrain.logCurrents();
   }
 
@@ -212,6 +213,11 @@ public class Swerve extends SubsystemBase {
   public boolean atAngularSetpoint(double setpointRad) {
     return Math.abs(this.getPose().getRotation().getRadians() - setpointRad)
         < SWERVE_ANGULAR_ERROR_TOLERANCE_RAD;
+  }
+
+  public boolean notRotating() {
+    return Math.abs(this.getRobotRelativeSpeeds().omegaRadiansPerSecond)
+        < SWERVE_ANGULAR_ERROR_TOLERANCE_RAD_P_S;
   }
 
   /* Swerve State */
