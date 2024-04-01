@@ -110,7 +110,6 @@ public class PhotonAprilTagVision extends SubsystemBase {
 
   @Override
   public void periodic() {
-
     Pose2d currentPose = poseSupplier.get();
     visionUpdates = new ArrayList<>();
     visionUpdatesAuto = new ArrayList<>();
@@ -122,153 +121,161 @@ public class PhotonAprilTagVision extends SubsystemBase {
       Pose3d cameraPose;
       Pose2d robotPose;
       List<Pose3d> tagPose3ds = new ArrayList<>();
-      PhotonPipelineResult latestCameraResult = cameras[instanceIndex].getLatestResult();
+      // PhotonPipelineResult latestCameraResult = cameras[instanceIndex].getLatestResult();
+      List<PhotonPipelineResult> unprocessedResults =
+          cameras[instanceIndex].getUnprocessedResults();
 
-      Logger.recordOutput(
-          "Photon/Camera " + instanceIndex + " Has Targets", latestCameraResult.hasTargets());
+      for (PhotonPipelineResult unprocessedResult : unprocessedResults) {
+        Logger.recordOutput(
+            "Photon/Camera " + instanceIndex + " Has Targets", unprocessedResult.hasTargets());
+        Logger.recordOutput(
+            "Photon/Camera " + instanceIndex + "LatencyMS", unprocessedResult.getLatencyMillis());
 
-      Logger.recordOutput(
-          "Photon/Raw Camera Data " + instanceIndex,
-          SmartDashboard.getRaw(
-              "photonvision/" + cameras[instanceIndex].getName() + "/rawBytes", new byte[] {}));
+        Logger.recordOutput(
+            "Photon/Raw Camera Data " + instanceIndex,
+            SmartDashboard.getRaw(
+                "photonvision/" + cameras[instanceIndex].getName() + "/rawBytes", new byte[] {}));
 
-      // Continue if the camera doesn't have any targets
-      if (!latestCameraResult.hasTargets()) {
-        continue;
-      }
-
-      double timestamp = latestCameraResult.getTimestampSeconds();
-      Logger.recordOutput("Photon/Camera " + instanceIndex + " Timestamp", timestamp);
-
-      boolean shouldUseMultiTag = latestCameraResult.getMultiTagResult().estimatedPose.isPresent;
-
-      if (shouldUseMultiTag) {
-        // If multitag, use directly
-        cameraPose =
-            GeomUtil.transform3dToPose3d(latestCameraResult.getMultiTagResult().estimatedPose.best);
-
-        robotPose =
-            cameraPose
-                .transformBy(GeomUtil.pose3dToTransform3d(cameraPoses[instanceIndex]).inverse())
-                .toPose2d();
-
-        // Populate array of tag poses with tags used
-        for (int id : latestCameraResult.getMultiTagResult().fiducialIDsUsed) {
-          tagPose3ds.add(aprilTags.getTagPose(id).get());
+        // Continue if the camera doesn't have any targets
+        if (!unprocessedResult.hasTargets()) {
+          continue;
         }
 
-        Logger.recordOutput("Photon/Camera Pose (Multi tag) " + instanceIndex, cameraPose);
-      } else {
-        // If not using multitag, disambiugate and then use
-        PhotonTrackedTarget target = latestCameraResult.targets.get(0);
+        double timestamp = unprocessedResult.getTimestampSeconds();
+        Logger.recordOutput("Photon/Camera " + instanceIndex + " Timestamp", timestamp);
 
-        // if (!(target.getFiducialId() == 3
-        //     || target.getFiducialId() == 4
-        //     || target.getFiducialId() == 7
-        //     || target.getFiducialId() == 8)) {
-        //   continue;
-        // }
+        boolean shouldUseMultiTag = unprocessedResult.getMultiTagResult().estimatedPose.isPresent;
 
-        Pose3d tagPos = aprilTags.getTagPose(target.getFiducialId()).get();
+        if (shouldUseMultiTag) {
+          // If multitag, use directly
+          cameraPose =
+              GeomUtil.transform3dToPose3d(
+                  unprocessedResult.getMultiTagResult().estimatedPose.best);
 
-        Pose3d cameraPose0 = tagPos.transformBy(target.getBestCameraToTarget().inverse());
-        Pose3d cameraPose1 = tagPos.transformBy(target.getAlternateCameraToTarget().inverse());
-        Pose2d robotPose0 =
-            cameraPose0
-                .transformBy(GeomUtil.pose3dToTransform3d(cameraPoses[instanceIndex]).inverse())
-                .toPose2d();
-        Pose2d robotPose1 =
-            cameraPose1
-                .transformBy(GeomUtil.pose3dToTransform3d(cameraPoses[instanceIndex]).inverse())
-                .toPose2d();
+          robotPose =
+              cameraPose
+                  .transformBy(GeomUtil.pose3dToTransform3d(cameraPoses[instanceIndex]).inverse())
+                  .toPose2d();
 
-        double projectionError = target.getPoseAmbiguity();
+          // Populate array of tag poses with tags used
+          for (int id : unprocessedResult.getMultiTagResult().fiducialIDsUsed) {
+            tagPose3ds.add(aprilTags.getTagPose(id).get());
+          }
 
-        // Select a pose using projection error and current rotation
-        if (projectionError < 0.15) {
-          cameraPose = cameraPose0;
-          robotPose = robotPose0;
-        } else if (Math.abs(robotPose0.getRotation().minus(currentPose.getRotation()).getRadians())
-            < Math.abs(robotPose1.getRotation().minus(currentPose.getRotation()).getRadians())) {
-          cameraPose = cameraPose0;
-          robotPose = robotPose0;
+          Logger.recordOutput("Photon/Camera Pose (Multi tag) " + instanceIndex, cameraPose);
         } else {
-          cameraPose = cameraPose1;
-          robotPose = robotPose1;
+          // If not using multitag, disambiugate and then use
+          PhotonTrackedTarget target = unprocessedResult.targets.get(0);
+
+          // if (!(target.getFiducialId() == 3
+          //     || target.getFiducialId() == 4
+          //     || target.getFiducialId() == 7
+          //     || target.getFiducialId() == 8)) {
+          //   continue;
+          // }
+
+          Pose3d tagPos = aprilTags.getTagPose(target.getFiducialId()).get();
+
+          Pose3d cameraPose0 = tagPos.transformBy(target.getBestCameraToTarget().inverse());
+          Pose3d cameraPose1 = tagPos.transformBy(target.getAlternateCameraToTarget().inverse());
+          Pose2d robotPose0 =
+              cameraPose0
+                  .transformBy(GeomUtil.pose3dToTransform3d(cameraPoses[instanceIndex]).inverse())
+                  .toPose2d();
+          Pose2d robotPose1 =
+              cameraPose1
+                  .transformBy(GeomUtil.pose3dToTransform3d(cameraPoses[instanceIndex]).inverse())
+                  .toPose2d();
+
+          double projectionError = target.getPoseAmbiguity();
+
+          // Select a pose using projection error and current rotation
+          if (projectionError < 0.15) {
+            cameraPose = cameraPose0;
+            robotPose = robotPose0;
+          } else if (Math.abs(
+                  robotPose0.getRotation().minus(currentPose.getRotation()).getRadians())
+              < Math.abs(robotPose1.getRotation().minus(currentPose.getRotation()).getRadians())) {
+            cameraPose = cameraPose0;
+            robotPose = robotPose0;
+          } else {
+            cameraPose = cameraPose1;
+            robotPose = robotPose1;
+          }
+
+          tagPose3ds.add(tagPos);
+          Logger.recordOutput("Photon/Camera Pose (Single Tag) " + instanceIndex, cameraPose);
         }
 
-        tagPose3ds.add(tagPos);
-        Logger.recordOutput("Photon/Camera Pose (Single Tag) " + instanceIndex, cameraPose);
-      }
+        // TODO not sure if we need this but I'll just leave it here
+        if (cameraPose == null || robotPose == null) {
+          continue;
+        }
 
-      // TODO not sure if we need this but I'll just leave it here
-      if (cameraPose == null || robotPose == null) {
-        continue;
-      }
+        // Move on to next camera if robot pose is off the field
+        if (robotPose.getX() < -fieldBorderMargin
+            || robotPose.getX() > FieldConstants.fieldLength + fieldBorderMargin
+            || robotPose.getY() < -fieldBorderMargin
+            || robotPose.getY() > FieldConstants.fieldWidth + fieldBorderMargin) {
+          continue;
+        }
 
-      // Move on to next camera if robot pose is off the field
-      if (robotPose.getX() < -fieldBorderMargin
-          || robotPose.getX() > FieldConstants.fieldLength + fieldBorderMargin
-          || robotPose.getY() < -fieldBorderMargin
-          || robotPose.getY() > FieldConstants.fieldWidth + fieldBorderMargin) {
-        continue;
-      }
+        // Calculate average distance to tag
+        double totalDistance = 0.0;
+        for (Pose3d tagPose : tagPose3ds) {
+          totalDistance += tagPose.getTranslation().getDistance(cameraPose.getTranslation());
+        }
+        double avgDistance = totalDistance / tagPose3ds.size();
+        double xyStdDev = 0.0;
+        double thetaStdDev = 0.0;
 
-      // Calculate average distance to tag
-      double totalDistance = 0.0;
-      for (Pose3d tagPose : tagPose3ds) {
-        totalDistance += tagPose.getTranslation().getDistance(cameraPose.getTranslation());
-      }
-      double avgDistance = totalDistance / tagPose3ds.size();
-      double xyStdDev = 0.0;
-      double thetaStdDev = 0.0;
+        if (shouldUseMultiTag) {
+          xyStdDev = Math.pow(avgDistance, 2.0) / tagPose3ds.size();
+          thetaStdDev = Math.pow(avgDistance, 2.0) / tagPose3ds.size();
+        } else {
+          xyStdDev = xyStdDevModel.predict(avgDistance);
+          thetaStdDev = thetaStdDevModel.predict(avgDistance);
+        }
 
-      if (shouldUseMultiTag) {
-        xyStdDev = Math.pow(avgDistance, 2.0) / tagPose3ds.size();
-        thetaStdDev = Math.pow(avgDistance, 2.0) / tagPose3ds.size();
-      } else {
-        xyStdDev = xyStdDevModel.predict(avgDistance);
-        thetaStdDev = thetaStdDevModel.predict(avgDistance);
-      }
+        if (shouldUseMultiTag) {
+          visionUpdates.add(
+              new TimestampedVisionUpdate(
+                  robotPose,
+                  timestamp,
+                  VecBuilder.fill(
+                      stdDevScalarShooting * thetaStdDevCoefficientShooting * xyStdDev,
+                      stdDevScalarShooting * thetaStdDevCoefficientShooting * xyStdDev,
+                      stdDevScalarShooting * thetaStdDevCoefficientShooting * thetaStdDev)));
+          visionUpdatesAuto.add(
+              new TimestampedVisionUpdate(
+                  robotPose,
+                  timestamp,
+                  VecBuilder.fill(
+                      stdDevScalarAuto * thetaStdDevCoefficientAuto * xyStdDev,
+                      stdDevScalarAuto * thetaStdDevCoefficientAuto * xyStdDev,
+                      stdDevScalarAuto * thetaStdDevCoefficientAuto * thetaStdDev)));
+        } else {
+          visionUpdates.add(
+              new TimestampedVisionUpdate(
+                  robotPose,
+                  timestamp,
+                  VecBuilder.fill(
+                      xyStdDev * stdDevScalarShooting,
+                      xyStdDev * stdDevScalarShooting,
+                      thetaStdDev * stdDevScalarShooting)));
+          visionUpdatesAuto.add(
+              new TimestampedVisionUpdate(
+                  robotPose,
+                  timestamp,
+                  VecBuilder.fill(
+                      xyStdDev * stdDevScalarAuto,
+                      xyStdDev * stdDevScalarAuto,
+                      thetaStdDev * stdDevScalarAuto)));
+        }
 
-      if (shouldUseMultiTag) {
-        visionUpdates.add(
-            new TimestampedVisionUpdate(
-                robotPose,
-                timestamp,
-                VecBuilder.fill(
-                    stdDevScalarShooting * thetaStdDevCoefficientShooting * xyStdDev,
-                    stdDevScalarShooting * thetaStdDevCoefficientShooting * xyStdDev,
-                    stdDevScalarShooting * thetaStdDevCoefficientShooting * thetaStdDev)));
-        visionUpdatesAuto.add(
-            new TimestampedVisionUpdate(
-                robotPose,
-                timestamp,
-                VecBuilder.fill(
-                    stdDevScalarAuto * thetaStdDevCoefficientAuto * xyStdDev,
-                    stdDevScalarAuto * thetaStdDevCoefficientAuto * xyStdDev,
-                    stdDevScalarAuto * thetaStdDevCoefficientAuto * thetaStdDev)));
-      } else {
-        visionUpdates.add(
-            new TimestampedVisionUpdate(
-                robotPose,
-                timestamp,
-                VecBuilder.fill(
-                    xyStdDev * stdDevScalarShooting,
-                    xyStdDev * stdDevScalarShooting,
-                    thetaStdDev * stdDevScalarShooting)));
-        visionUpdatesAuto.add(
-            new TimestampedVisionUpdate(
-                robotPose,
-                timestamp,
-                VecBuilder.fill(
-                    xyStdDev * stdDevScalarAuto,
-                    xyStdDev * stdDevScalarAuto,
-                    thetaStdDev * stdDevScalarAuto)));
+        Logger.recordOutput("VisionData/" + instanceIndex, robotPose);
+        Logger.recordOutput("Photon/Tags Used " + instanceIndex, tagPose3ds.size());
       }
-
-      Logger.recordOutput("VisionData/" + instanceIndex, robotPose);
-      Logger.recordOutput("Photon/Tags Used " + instanceIndex, tagPose3ds.size());
     }
 
     // Apply all vision updates to pose estimator

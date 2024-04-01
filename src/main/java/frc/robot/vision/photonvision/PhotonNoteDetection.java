@@ -123,7 +123,8 @@ public class PhotonNoteDetection extends SubsystemBase {
         Translation2d translationBottom =
             getCameraToTarget(pitchYawBottomLeft[0], pitchYawBottomLeft[1], instanceIndex, 0.0);
 
-        // Estimate the field poses of the two verticies based on the robot's position and the translations 
+        // Estimate the field poses of the two verticies based on the robot's position and the
+        // translations
         // above
         Pose2d topVertexPose =
             robotPose
@@ -137,8 +138,7 @@ public class PhotonNoteDetection extends SubsystemBase {
 
         // Average the two vertex poses to get the point in between them
         Translation2d averageVertexPose =
-            averageTranslations(
-                topVertexPose.getTranslation(), bottomVertexPose.getTranslation());
+            averageTranslations(topVertexPose.getTranslation(), bottomVertexPose.getTranslation());
 
         Translation2d topToBottom =
             topVertexPose.getTranslation().minus(bottomVertexPose.getTranslation());
@@ -150,8 +150,9 @@ public class PhotonNoteDetection extends SubsystemBase {
               new Rotation2d(topToBottom.getX(), topToBottom.getY())
                   .rotateBy(Rotation2d.fromDegrees(90.0));
         } else {
-          angleOffset = new Rotation2d(topToBottom.getX(), topToBottom.getY())
-              .rotateBy(Rotation2d.fromDegrees(-90.0));
+          angleOffset =
+              new Rotation2d(topToBottom.getX(), topToBottom.getY())
+                  .rotateBy(Rotation2d.fromDegrees(-90.0));
         }
 
         // Cook

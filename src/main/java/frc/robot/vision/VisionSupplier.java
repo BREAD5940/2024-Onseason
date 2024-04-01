@@ -126,6 +126,7 @@ public class VisionSupplier extends SubsystemBase {
 
     /* Note follower calculations */
     // notePose = RobotContainer.noteDetection.getNotePose();
+    notePose = new Translation2d();
 
     Translation2d robotToNote = notePose.minus(robotPose.getTranslation());
     robotToNoteAngle =
