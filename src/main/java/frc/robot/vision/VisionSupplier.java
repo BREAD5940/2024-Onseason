@@ -125,7 +125,7 @@ public class VisionSupplier extends SubsystemBase {
     distance = robotToRadialVirtualTarget.getNorm();
 
     /* Note follower calculations */
-    notePose = RobotContainer.noteDetection.getNotePose();
+    // notePose = RobotContainer.noteDetection.getNotePose();
 
     Translation2d robotToNote = notePose.minus(robotPose.getTranslation());
     robotToNoteAngle =
