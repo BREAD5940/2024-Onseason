@@ -93,7 +93,7 @@ public class ElevatorPivot {
         nextSystemState = ElevatorPivotState.HOMING;
       }
     } else if (systemState == ElevatorPivotState.HOMING) {
-      elevatorIO.setVoltage(-2.0);
+      elevatorIO.setVoltage(-3.0);
       pivotIO.setAngle(PIVOT_NEUTRAL_ANGLE, elevatorInputs.acceleration);
 
       if (BreadUtil.getFPGATimeSeconds() - mStateStartTime > ELEVATOR_HOMING_TRESHOLD_SEC

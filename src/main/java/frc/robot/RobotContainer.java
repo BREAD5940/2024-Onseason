@@ -14,7 +14,6 @@ import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.commons.BreadUtil;
 import frc.robot.constants.GammaTunerConstants;
 import frc.robot.subsystems.Superstructure;
-import frc.robot.subsystems.commands.AimAtTrapCommand;
 import frc.robot.subsystems.commands.AmpCommand;
 import frc.robot.subsystems.commands.FenderShotCommand;
 import frc.robot.subsystems.commands.ManualAmpCommand;
@@ -68,12 +67,13 @@ public class RobotContainer {
   public static final PhotonCamera backRightCamera = new PhotonCamera("back-right");
 
   // Note detection cameras
-  // public static final PhotonCamera leftObjCamera = new PhotonCamera("left-obj-camera");
-  // public static final PhotonCamera rightObjCamera = new PhotonCamera("right-obj-camera");
+  public static final PhotonCamera leftObjCamera = new PhotonCamera("left-obj");
+  public static final PhotonCamera rightObjCamera = new PhotonCamera("right-obj");
 
   public static final PhotonAprilTagVision aprilTagVision =
       new PhotonAprilTagVision(frontLeftCamera, frontRightCamera, backLeftCamera, backRightCamera);
-  public static final PhotonNoteDetection noteDetection = new PhotonNoteDetection();
+  public static final PhotonNoteDetection noteDetection =
+      new PhotonNoteDetection(leftObjCamera, rightObjCamera);
   public static final VisionSupplier visionSupplier = new VisionSupplier();
   public static AutonomousSelector autonomousSelector;
 
@@ -122,8 +122,8 @@ public class RobotContainer {
 
     new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new AmpCommand(swerve));
 
-    new JoystickButton(driver, XboxController.Button.kY.value)
-        .whileTrue(new AimAtTrapCommand(swerve));
+    // new JoystickButton(driver, XboxController.Button.kY.value)
+    //     .whileTrue(new AimAtTrapCommand(swerve));
 
     new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
         .whileTrue(new FenderShotCommand(swerve, superstructure, shooter));

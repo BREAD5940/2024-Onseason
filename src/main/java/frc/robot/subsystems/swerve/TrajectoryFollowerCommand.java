@@ -16,6 +16,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class TrajectoryFollowerCommand extends Command {
 
+  private Supplier<PathPlannerPath> pathSupplier;
   private PathPlannerPath path;
   private PathPlannerTrajectory trajectory;
   private final boolean isInitialPoint;
@@ -23,30 +24,57 @@ public class TrajectoryFollowerCommand extends Command {
   private final Timer timer = new Timer();
   private boolean flippedForRed = false;
   private Supplier<Boolean> aimAtSpeaker = () -> false;
+  private boolean firstTime = false;
+  private ChassisSpeeds startingSpeeds;
 
   public final BreadHolonomicDriveController autonomusController =
       new BreadHolonomicDriveController(
           new PIDController(8.0, 0, 0.0),
           new PIDController(8.0, 0, 0.0),
-          new PIDController(5.0, 0, 0.0));
+          new PIDController(7.0, 0, 0.2));
 
   public TrajectoryFollowerCommand(
-      PathPlannerPath path, Swerve swerve, boolean isInitialPoint, Supplier<Boolean> aimAtSpeaker) {
-    this.path = path;
+      Supplier<PathPlannerPath> path,
+      Swerve swerve,
+      boolean isInitialPoint,
+      Supplier<Boolean> aimAtSpeaker,
+      ChassisSpeeds startingSpeeds) {
+    this.pathSupplier = path;
     this.swerve = swerve;
     this.isInitialPoint = isInitialPoint;
     this.aimAtSpeaker = aimAtSpeaker;
+    this.startingSpeeds = startingSpeeds;
     addRequirements(swerve);
   }
 
   public TrajectoryFollowerCommand(
-      PathPlannerPath path, Swerve swerve, Supplier<Boolean> aimAtSpeaker) {
-    this(path, swerve, false, aimAtSpeaker);
+      Supplier<PathPlannerPath> path,
+      Swerve swerve,
+      Supplier<Boolean> aimAtSpeaker,
+      ChassisSpeeds startingSpeeds) {
+    this(path, swerve, false, aimAtSpeaker, startingSpeeds);
+  }
+
+  public TrajectoryFollowerCommand(
+      Supplier<PathPlannerPath> path,
+      Swerve swerve,
+      boolean isInitialPoint,
+      Supplier<Boolean> aimAtSpeaker) {
+    this(path, swerve, isInitialPoint, aimAtSpeaker, new ChassisSpeeds());
+  }
+
+  public TrajectoryFollowerCommand(
+      Supplier<PathPlannerPath> path, Swerve swerve, Supplier<Boolean> aimAtSpeaker) {
+    this(path, swerve, false, aimAtSpeaker, new ChassisSpeeds());
   }
 
   @Override
   public void initialize() {
     Logger.recordOutput("TrajectoryFollowerCommandAlliance", Robot.alliance);
+    if (!firstTime) {
+      path = pathSupplier.get();
+      firstTime = true;
+    }
     if (Robot.alliance == Alliance.Red && !flippedForRed) {
       path = path.flipPath();
       flippedForRed = true;
@@ -66,8 +94,7 @@ public class TrajectoryFollowerCommand extends Command {
       swerve.resetPose(path.getPreviewStartingHolonomicPose());
     } else {
       trajectory =
-          path.getTrajectory(
-              new ChassisSpeeds(), RobotContainer.swerve.getAutoPose().getRotation());
+          path.getTrajectory(startingSpeeds, RobotContainer.swerve.getAutoPose().getRotation());
     }
     timer.reset();
     timer.start();

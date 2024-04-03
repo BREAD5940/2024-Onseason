@@ -32,9 +32,9 @@ public class PhotonAprilTagVision extends SubsystemBase {
   private Supplier<Pose2d> poseSupplier = () -> new Pose2d();
 
   /* For shooting vs. path following in auto */
-  private double stdDevScalarAuto = 2.0;
-  private double xyStdDevCoefficientAuto = 0.6;
-  private double thetaStdDevCoefficientAuto = 0.2;
+  private double stdDevScalarAuto = 1.0;
+  private double xyStdDevCoefficientAuto = 0.1;
+  private double thetaStdDevCoefficientAuto = 0.1;
 
   private double stdDevScalarShooting = 0.1;
   private double xyStdDevCoefficientShooting = 0.0006;

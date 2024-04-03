@@ -45,21 +45,6 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath sixNoteAmpSideE;
   public static PathPlannerPath sixNoteAmpSideF;
 
-  public static PathPlannerPath fiveNoteMidlineAmpSideA;
-  public static PathPlannerPath fiveNoteMidlineAmpSideB;
-  public static PathPlannerPath fiveNoteMidlineAmpSideC;
-  public static PathPlannerPath fiveNoteMidlineAmpSideD;
-  public static PathPlannerPath fiveNoteMidlineAmpSideE;
-  public static PathPlannerPath fiveNoteMidlineAmpSideF;
-
-  public static PathPlannerPath reverseSixNoteARed;
-  public static PathPlannerPath reverseSixNoteBRed;
-  public static PathPlannerPath reverseSixNoteCRed;
-
-  public static PathPlannerPath reverseSixNoteABlue;
-  public static PathPlannerPath reverseSixNoteBBlue;
-  public static PathPlannerPath reverseSixNoteCBlue;
-
   public static PathPlannerPath bombA;
   public static PathPlannerPath bombB;
   public static PathPlannerPath bombC;
@@ -68,7 +53,26 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath fiveNoteAmpSideB;
   public static PathPlannerPath fiveNoteAmpSideC;
   public static PathPlannerPath fiveNoteAmpSideD;
-  public static PathPlannerPath fiveNoteAmpSideAlternate;
+  public static PathPlannerPath fiveNoteAmpSideEA;
+  public static PathPlannerPath fiveNoteAmpSideEB;
+
+  public static PathPlannerPath OPAutoA;
+  public static PathPlannerPath OPAutoBA;
+  public static PathPlannerPath OPAutoBB;
+  public static PathPlannerPath OPAutoC;
+  public static PathPlannerPath OPAutoCA;
+  public static PathPlannerPath OPAutoCB;
+  public static PathPlannerPath OPAutoD;
+  public static PathPlannerPath OPAutoDA;
+  public static PathPlannerPath OPAutoDB;
+
+  public static PathPlannerPath reverseFiveNoteA;
+  public static PathPlannerPath reverseFiveNoteB;
+  public static PathPlannerPath reverseFiveNoteCA;
+  public static PathPlannerPath reverseFiveNoteCB;
+  public static PathPlannerPath reverseFiveNoteD;
+  public static PathPlannerPath reverseFiveNoteEA;
+  public static PathPlannerPath reverseFiveNoteEB;
 
   private boolean requestedHome = false;
 
@@ -122,19 +126,6 @@ public class Robot extends LoggedRobot {
     sixNoteAmpSideE = PathPlannerPath.fromPathFile("Six Note E");
     sixNoteAmpSideF = PathPlannerPath.fromPathFile("Six Note F");
 
-    fiveNoteMidlineAmpSideA = PathPlannerPath.fromPathFile("Five Note Midline A");
-    fiveNoteMidlineAmpSideB = PathPlannerPath.fromPathFile("Five Note Midline B");
-    fiveNoteMidlineAmpSideC = PathPlannerPath.fromPathFile("Five Note Midline C");
-    fiveNoteMidlineAmpSideD = PathPlannerPath.fromPathFile("Five Note Midline D");
-    fiveNoteMidlineAmpSideE = PathPlannerPath.fromPathFile("Five Note Midline E");
-    fiveNoteMidlineAmpSideF = PathPlannerPath.fromPathFile("Five Note Midline F");
-
-    reverseSixNoteARed = PathPlannerPath.fromPathFile("Reverse Six Note A Red");
-    reverseSixNoteBRed = PathPlannerPath.fromPathFile("Reverse Six Note B Red");
-
-    reverseSixNoteABlue = PathPlannerPath.fromPathFile("Reverse Six Note A Blue");
-    reverseSixNoteBBlue = PathPlannerPath.fromPathFile("Reverse Six Note B Blue");
-
     bombA = PathPlannerPath.fromPathFile("Bomb A");
     bombB = PathPlannerPath.fromPathFile("Bomb B");
     bombC = PathPlannerPath.fromPathFile("Bomb C");
@@ -143,11 +134,32 @@ public class Robot extends LoggedRobot {
     fiveNoteAmpSideB = PathPlannerPath.fromPathFile("Five Note Amp Side B");
     fiveNoteAmpSideC = PathPlannerPath.fromPathFile("Five Note Amp Side C");
     fiveNoteAmpSideD = PathPlannerPath.fromPathFile("Five Note Amp Side D");
-    fiveNoteAmpSideAlternate = PathPlannerPath.fromPathFile("Five Note Amp Side Alternate");
+    fiveNoteAmpSideEA = PathPlannerPath.fromPathFile("Five Note Amp Side EA");
+    fiveNoteAmpSideEB = PathPlannerPath.fromPathFile("Five Note Amp Side EB");
 
     fourNoteSourceSideA = PathPlannerPath.fromPathFile("Four Note Source Side A");
     fourNoteSourceSideB = PathPlannerPath.fromPathFile("Four Note Source Side B");
     fourNoteSourceSideC = PathPlannerPath.fromPathFile("Four Note Source Side C");
+
+    OPAutoA = PathPlannerPath.fromPathFile("OP Auto A");
+    OPAutoBA = PathPlannerPath.fromPathFile("OP Auto BA");
+    OPAutoBB = PathPlannerPath.fromPathFile("OP Auto BB");
+
+    OPAutoC = PathPlannerPath.fromPathFile("OP Auto C");
+    OPAutoCA = PathPlannerPath.fromPathFile("OP Auto CA");
+    OPAutoCB = PathPlannerPath.fromPathFile("OP Auto CB");
+
+    OPAutoD = PathPlannerPath.fromPathFile("OP Auto D");
+    OPAutoDA = PathPlannerPath.fromPathFile("OP Auto DA");
+    OPAutoDB = PathPlannerPath.fromPathFile("OP Auto DB");
+
+    reverseFiveNoteA = PathPlannerPath.fromPathFile("Reverse Five A");
+    reverseFiveNoteB = PathPlannerPath.fromPathFile("Reverse Five B");
+    reverseFiveNoteCA = PathPlannerPath.fromPathFile("Reverse Five CA");
+    reverseFiveNoteCB = PathPlannerPath.fromPathFile("Reverse Five CB");
+    reverseFiveNoteD = PathPlannerPath.fromPathFile("Reverse Five D");
+    reverseFiveNoteEA = PathPlannerPath.fromPathFile("Reverse Five EA");
+    reverseFiveNoteEB = PathPlannerPath.fromPathFile("Reverse Five EB");
 
     m_robotContainer.configureAutonomousSelector();
   }

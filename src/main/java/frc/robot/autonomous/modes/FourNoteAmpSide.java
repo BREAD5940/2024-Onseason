@@ -34,7 +34,7 @@ public class FourNoteAmpSide extends SequentialCommandGroup {
               swerve.resetPose(path.getPreviewStartingHolonomicPose());
             }),
         new FenderShotCommand(swerve, superstructure, shooter).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.fiveNoteAmpSideA, swerve, () -> false)
+        new TrajectoryFollowerCommand(() -> Robot.fiveNoteAmpSideA, swerve, () -> false)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
@@ -43,7 +43,7 @@ public class FourNoteAmpSide extends SequentialCommandGroup {
                 }),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.fiveNoteAmpSideB, swerve, () -> false)
+        new TrajectoryFollowerCommand(() -> Robot.fiveNoteAmpSideB, swerve, () -> false)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
@@ -52,7 +52,7 @@ public class FourNoteAmpSide extends SequentialCommandGroup {
                 }),
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
-        new TrajectoryFollowerCommand(Robot.fiveNoteAmpSideC, swerve, () -> false)
+        new TrajectoryFollowerCommand(() -> Robot.fiveNoteAmpSideC, swerve, () -> false)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();

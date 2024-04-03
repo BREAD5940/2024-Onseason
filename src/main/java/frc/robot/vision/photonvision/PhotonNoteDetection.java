@@ -1,5 +1,7 @@
 package frc.robot.vision.photonvision;
 
+import static frc.robot.constants.FieldConstants.notePositions;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -10,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.commons.GeomUtil;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.PhotonCamera;
@@ -31,8 +32,8 @@ public class PhotonNoteDetection extends SubsystemBase {
             Units.inchesToMeters(22.74),
             new Rotation3d(
                 Units.degreesToRadians(0.0),
-                Units.degreesToRadians(25.0),
-                Units.degreesToRadians(-15))),
+                Units.degreesToRadians(12.1),
+                Units.degreesToRadians(0.0))),
 
         // Object detection right
         new Pose3d(
@@ -41,13 +42,13 @@ public class PhotonNoteDetection extends SubsystemBase {
             Units.inchesToMeters(22.74),
             new Rotation3d(
                 Units.degreesToRadians(0.0),
-                Units.degreesToRadians(25.0),
-                Units.degreesToRadians(15)))
+                Units.degreesToRadians(12.1),
+                Units.degreesToRadians(0.0)))
       };
 
   // IF THE STREAM RESOLUTION IS CHANGED, CHANGE THESE AS WELL
-  private final double cameraResolutionX = 800.0;
-  private final double cameraResolutionY = 600.0;
+  private final double cameraResolutionX = 1280.0;
+  private final double cameraResolutionY = 720.0;
 
   // IF THE LENSES ARE CHANGED, CHECK THESE
   private final double[] horizontalFOV =
@@ -58,8 +59,8 @@ public class PhotonNoteDetection extends SubsystemBase {
   private final double noteThickness = Units.inchesToMeters(2.0);
   private final double noteWidth = Units.inchesToMeters(14.0);
 
-  private Translation2d notePose = new Translation2d();
   private Translation2d[] notePoses = new Translation2d[5];
+  List<Translation2d> allNotePoses = new ArrayList<>();
 
   public PhotonNoteDetection(PhotonCamera... cameras) {
     this.cameras = cameras;
@@ -68,12 +69,15 @@ public class PhotonNoteDetection extends SubsystemBase {
   @Override
   public void periodic() {
     List<Translation2d> allNotePoses = new ArrayList<>();
-    Arrays.fill(notePoses, null);
+    allNotePoses.clear();
+    for (int i = 0; i < notePoses.length; i++) {
+      notePoses[i] = null;
+    }
 
     // Loop through all the cameras
     for (int instanceIndex = 0; instanceIndex < cameras.length; instanceIndex++) {
       Pose3d cameraPose = cameraPoses[instanceIndex];
-      Pose2d robotPose = RobotContainer.swerve.getPose();
+      Pose2d robotPose = RobotContainer.swerve.getAutoPose();
 
       // Track the best note in the FOV
       PhotonPipelineResult latestCameraResult = cameras[instanceIndex].getLatestResult();
@@ -83,88 +87,39 @@ public class PhotonNoteDetection extends SubsystemBase {
       }
 
       for (PhotonTrackedTarget target : latestCameraResult.getTargets()) {
-        // Calculate the center pixel coordinate of the note by averaging the corners
-        List<TargetCorner> corners = target.getMinAreaRectCorners();
-        TargetCorner center = averageCorners(corners);
 
-        // If the note is justified towards the right side of the frame us the left verticies and
-        // vice versa
-        boolean useRightVerticies = false;
-        if (center.x < cameraResolutionX / 2.0) {
-          useRightVerticies = true;
-        }
+        double targetPitch = target.getPitch();
+        double targetYaw = -target.getYaw();
 
-        // Extract the right or left verticies from the target box
-        List<TargetCorner> verticies;
-        if (useRightVerticies) {
-          verticies = getRightVerticies(corners);
-        } else {
-          verticies = getLeftVerticies(corners);
-        }
+        Translation2d cameraToNote = getCameraToTarget(targetYaw, targetPitch, instanceIndex, 0.0);
 
-        // Figure out which verticies are the top and bottom
-        TargetCorner top;
-        TargetCorner bottom;
-        if (verticies.get(0).y < verticies.get(1).y) {
-          top = verticies.get(0);
-          bottom = verticies.get(1);
-        } else {
-          top = verticies.get(1);
-          bottom = verticies.get(0);
-        }
-
-        // Get the pitch and yaw for the top and bottom verticies
-        double[] pitchYawTopLeft = getPitchYawFromTargetCorner(top, instanceIndex);
-        double[] pitchYawBottomLeft = getPitchYawFromTargetCorner(bottom, instanceIndex);
-
-        // Figure out the translation from the robot to the top and bottom verticies
-        Translation2d translationTop =
-            getCameraToTarget(pitchYawTopLeft[0], pitchYawTopLeft[1], instanceIndex, noteThickness);
-        Translation2d translationBottom =
-            getCameraToTarget(pitchYawBottomLeft[0], pitchYawBottomLeft[1], instanceIndex, 0.0);
-
-        // Estimate the field poses of the two verticies based on the robot's position and the
-        // translations
-        // above
-        Pose2d topVertexPose =
+        Translation2d notePose =
             robotPose
                 .plus(GeomUtil.poseToTransform(cameraPose.toPose2d()))
-                .plus(GeomUtil.translationToTransform(translationTop));
+                .plus(GeomUtil.translationToTransform(cameraToNote))
+                .getTranslation();
 
-        Pose2d bottomVertexPose =
-            robotPose
-                .plus(GeomUtil.poseToTransform(cameraPose.toPose2d()))
-                .plus(GeomUtil.translationToTransform(translationBottom));
-
-        // Average the two vertex poses to get the point in between them
-        Translation2d averageVertexPose =
-            averageTranslations(topVertexPose.getTranslation(), bottomVertexPose.getTranslation());
-
-        Translation2d topToBottom =
-            topVertexPose.getTranslation().minus(bottomVertexPose.getTranslation());
-
-        // Get the angular offset to apply based on whether we are using the left or right verticies
-        Rotation2d angleOffset;
-        if (useRightVerticies) {
-          angleOffset =
-              new Rotation2d(topToBottom.getX(), topToBottom.getY())
-                  .rotateBy(Rotation2d.fromDegrees(90.0));
-        } else {
-          angleOffset =
-              new Rotation2d(topToBottom.getX(), topToBottom.getY())
-                  .rotateBy(Rotation2d.fromDegrees(-90.0));
-        }
-
-        // Cook
-        Translation2d estimatedNotePose =
-            averageVertexPose.plus(new Translation2d(noteWidth / 2.0, angleOffset));
-
-        allNotePoses.add(estimatedNotePose);
+        allNotePoses.add(notePose);
       }
     }
-    for (int i = 0; i < allNotePoses.size(); i++) {
-      Logger.recordOutput("PhotonNoteDetection/All Detections/" + i, allNotePoses.get(i));
+
+    for (Translation2d note : allNotePoses) {
+      for (int i = 0; i < notePoses.length; i++) {
+        if (notePoses[i] == null
+            && note.getDistance(notePositions.get(i)) < Units.inchesToMeters(24.0)) {
+          notePoses[i] = note;
+        }
+      }
     }
+
+    for (int i = 0; i < notePoses.length; i++) {
+      Logger.recordOutput("Note Detections/" + i, notePoses[i]);
+      Logger.recordOutput("Note Vision/Not Null Pose/" + i, notePoses[i] != null);
+    }
+    for (int i = 0; i < allNotePoses.size(); i++) {
+      Logger.recordOutput("All Detections/" + i, new Pose2d(allNotePoses.get(i), new Rotation2d()));
+    }
+    Logger.recordOutput("All Notes Length", allNotePoses.size());
   }
 
   // Average target corners
@@ -187,7 +142,6 @@ public class PhotonNoteDetection extends SubsystemBase {
 
   // Converts target corner to yaw/pitch for the given camera
   private double[] getPitchYawFromTargetCorner(TargetCorner corner, int instanceIndex) {
-    System.out.println(corner.x + " " + corner.y);
     // Normalize the pixel coordinates
     double nx = (1 / (cameraResolutionX / 2.0)) * (corner.x - (cameraResolutionX / 2 - 0.5));
     double ny = (1 / (cameraResolutionY / 2.0)) * ((cameraResolutionY / 2 - 0.5) - corner.y);
@@ -210,6 +164,7 @@ public class PhotonNoteDetection extends SubsystemBase {
   // Private method that returns the distance to the target
   public Translation2d getCameraToTarget(
       double yaw, double pitch, int instanceIndex, double noteHeightMeters) {
+
     // Define the vector
     double x = 1.0 * Math.tan(Units.degreesToRadians(yaw));
     double y = 1.0 * Math.tan(Units.degreesToRadians(pitch));
@@ -274,5 +229,9 @@ public class PhotonNoteDetection extends SubsystemBase {
     }
 
     return rightVerticies;
+  }
+
+  public Translation2d[] getNotePoses() {
+    return notePoses;
   }
 }

@@ -3,32 +3,38 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.9,
-        "y": 7.42
+        "x": 5.28,
+        "y": 6.52
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.430007968016515,
-        "y": 6.91310849603036
+        "x": 6.79469113574461,
+        "y": 6.440960100179829
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.933001100521877,
-        "y": 6.341088938615956
+        "x": 7.234227545378168,
+        "y": 4.93347140540435
       },
       "prevControl": {
-        "x": 6.307585216949948,
-        "y": 6.812905245095791
+        "x": 6.6658719337410135,
+        "y": 4.918551349228233
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.6,
+      "rotationDegrees": 180.0,
+      "rotateFast": true
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -38,12 +44,15 @@
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": 0,
+    "velocity": 2.0,
+    "rotation": -179.54532861661636,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "ReverseFiveNoteMidlineAmpSide",
-  "previewStartingState": null,
+  "folder": "OPAuto",
+  "previewStartingState": {
+    "rotation": 179.57324872821178,
+    "velocity": 0
+  },
   "useDefaultConstraints": false
 }

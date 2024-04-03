@@ -31,7 +31,7 @@ public class CheekyThreePiece extends SequentialCommandGroup {
               swerve.resetPose(path.getPreviewStartingHolonomicPose());
             }),
         new FenderShotCommand(swerve, superstructure, shooter).withTimeout(3),
-        new TrajectoryFollowerCommand(Robot.cheekyThreePieceA, swerve, () -> false)
+        new TrajectoryFollowerCommand(() -> Robot.cheekyThreePieceA, swerve, () -> false)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
@@ -39,7 +39,7 @@ public class CheekyThreePiece extends SequentialCommandGroup {
                   superstructure.requestVisionSpeaker(false, false, false);
                 }),
         new StationaryShootCommand(swerve, superstructure, shooter),
-        new TrajectoryFollowerCommand(Robot.cheekyThreePieceB, swerve, () -> false)
+        new TrajectoryFollowerCommand(() -> Robot.cheekyThreePieceB, swerve, () -> false)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();

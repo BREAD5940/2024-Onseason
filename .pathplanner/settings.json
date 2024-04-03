@@ -6,11 +6,10 @@
     "Bomb",
     "CheekyThreePiece",
     "FiveNoteAmpSide",
-    "FiveNoteMidlineAmpSide",
     "FourNoteCenter",
     "FourNoteSourceSide",
-    "ReverseFiveNoteMidlineAmpSide",
-    "ReverseSixNote",
+    "OPAuto",
+    "ReverseFive",
     "SixNoteAmpSide"
   ],
   "autoFolders": [],

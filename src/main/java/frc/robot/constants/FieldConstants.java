@@ -26,6 +26,16 @@ public class FieldConstants {
 
   public static final Translation2d passingTarget = new Translation2d(0.53, 6.58);
 
+  public static final double noteSpacing = Units.inchesToMeters(64);
+
+  public static final List<Translation2d> notePositions =
+      List.of(
+          new Translation2d(fieldLength / 2, Units.inchesToMeters(32)),
+          new Translation2d(fieldLength / 2, Units.inchesToMeters(32) + noteSpacing),
+          new Translation2d(fieldLength / 2, Units.inchesToMeters(32) + noteSpacing * 2),
+          new Translation2d(fieldLength / 2, Units.inchesToMeters(32) + noteSpacing * 3),
+          new Translation2d(fieldLength / 2, Units.inchesToMeters(32) + noteSpacing * 4));
+
   public static final AprilTagFieldLayout aprilTags =
       new AprilTagFieldLayout(
           List.of(

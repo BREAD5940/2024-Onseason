@@ -3,41 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.52,
-        "y": 6.757152686917502
+        "x": 6.782980299198829,
+        "y": 6.5463576290918635
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.7498736338414176,
-        "y": 6.897682725465309
+        "x": 7.040618703206023,
+        "y": 6.698598504187022
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.1928595783011815,
-        "y": 7.33
+        "x": 7.95406395377698,
+        "y": 7.22558614874719
       },
       "prevControl": {
-        "x": 5.178595692426762,
-        "y": 6.990385740172336
+        "x": 7.473919655399938,
+        "y": 6.885971888919526
       },
       "nextControl": {
-        "x": 8.806255591602927,
-        "y": 7.602026072010179
+        "x": 8.434208252154022,
+        "y": 7.565200408574855
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.265150441855804,
-        "y": 6.335562571267796
+        "x": 4.8155597595075355,
+        "y": 6.534646792546081
       },
       "prevControl": {
-        "x": 8.715268329252778,
-        "y": 7.6003329182121995
+        "x": 6.624884005830779,
+        "y": 7.049923600560468
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,18 +46,13 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.65,
-      "rotationDegrees": 178.63607246839717,
-      "rotateFast": false
+      "waypointRelativePos": 0.0,
+      "rotationDegrees": -140.0,
+      "rotateFast": true
     },
     {
-      "waypointRelativePos": 0.75,
-      "rotationDegrees": 180.0,
-      "rotateFast": false
-    },
-    {
-      "waypointRelativePos": 1.2,
-      "rotationDegrees": 180.0,
+      "waypointRelativePos": 1.15,
+      "rotationDegrees": -140.0,
       "rotateFast": false
     }
   ],
@@ -71,14 +66,14 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -171.384351815836,
+    "rotation": -168.1579238846723,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "FiveNoteAmpSide",
   "previewStartingState": {
-    "rotation": -145.15198318390364,
-    "velocity": 0
+    "rotation": 180.0,
+    "velocity": 2.0
   },
   "useDefaultConstraints": false
 }

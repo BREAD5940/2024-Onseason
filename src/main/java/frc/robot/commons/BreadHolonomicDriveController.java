@@ -5,7 +5,6 @@
 package frc.robot.commons;
 
 import com.pathplanner.lib.path.PathPlannerTrajectory;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -94,16 +93,8 @@ public class BreadHolonomicDriveController {
     // Calculate feedforward velocities (field-relative).
     double xFF = linearVelocityRefMeters * poseRef.getRotation().getCos();
     double yFF = linearVelocityRefMeters * poseRef.getRotation().getSin();
-    double clampAdd =
-        1
-            + Math.abs(angleRef.getRadians() - currentPose.getRotation().getRadians())
-                * (2 / Math.PI);
     double thetaFF =
-        MathUtil.clamp(
-            m_thetaController.calculate(
-                currentPose.getRotation().getRadians(), angleRef.getRadians()),
-            -clampAdd,
-            clampAdd);
+        m_thetaController.calculate(currentPose.getRotation().getRadians(), angleRef.getRadians());
 
     Logger.recordOutput("Trajectory Theta Feedback", thetaFF);
 

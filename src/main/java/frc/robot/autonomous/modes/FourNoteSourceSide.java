@@ -32,7 +32,7 @@ public class FourNoteSourceSide extends SequentialCommandGroup {
             }),
         new FenderShotCommand(swerve, superstructure, shooter).withTimeout(3),
         new TrajectoryFollowerCommand(
-                Robot.fourNoteSourceSideA, swerve, () -> superstructure.hasPiece())
+                () -> Robot.fourNoteSourceSideA, swerve, () -> superstructure.hasPiece())
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
@@ -41,7 +41,7 @@ public class FourNoteSourceSide extends SequentialCommandGroup {
                 }),
         new StationaryShootCommand(swerve, superstructure, shooter),
         new TrajectoryFollowerCommand(
-                Robot.fourNoteSourceSideB, swerve, () -> superstructure.hasPiece())
+                () -> Robot.fourNoteSourceSideB, swerve, () -> superstructure.hasPiece())
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
@@ -50,7 +50,7 @@ public class FourNoteSourceSide extends SequentialCommandGroup {
                 }),
         new StationaryShootCommand(swerve, superstructure, shooter),
         new TrajectoryFollowerCommand(
-                Robot.fourNoteSourceSideC, swerve, () -> superstructure.hasPiece())
+                () -> Robot.fourNoteSourceSideC, swerve, () -> superstructure.hasPiece())
             .beforeStarting(
                 () -> {
                   intake.requestIntake();

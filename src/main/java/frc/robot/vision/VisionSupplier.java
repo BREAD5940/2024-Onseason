@@ -35,9 +35,20 @@ public class VisionSupplier extends SubsystemBase {
   private double distance;
   private Rotation2d robotToPassingAngle;
   private ShotParameter robotToPassingShot;
+  private Translation2d[] notePoses;
 
   private Rotation2d robotToNoteAngle;
   private Translation2d notePose;
+
+  public int getTargetNote(int firstChoice, int secondChoice) {
+    if (notePoses[firstChoice] != null) {
+      return firstChoice;
+    } else if (notePoses[secondChoice] != null) {
+      return secondChoice;
+    } else {
+      return firstChoice;
+    }
+  }
 
   public Rotation2d robotToPassingAngle() {
     return robotToPassingAngle;
@@ -140,6 +151,9 @@ public class VisionSupplier extends SubsystemBase {
     double robotToPassingDistance = robotToPassingPose.getNorm();
     robotToPassingShot = InterpolatingTablePassing.get(robotToPassingDistance);
 
+    /* Note Poses */
+    notePoses = RobotContainer.noteDetection.getNotePoses();
+
     // Logs
     Logger.recordOutput("Robot To Passing Distance", robotToPassingDistance);
     Logger.recordOutput("Vision/DistanceToTarget", robotToRadialVirtualTarget.getNorm());
@@ -149,5 +163,6 @@ public class VisionSupplier extends SubsystemBase {
     Logger.recordOutput(
         "Vision/TangentialVirtualTarget", new Pose2d(tangentialVirtualTarget, new Rotation2d()));
     Logger.recordOutput("Vision/Target", targetPose);
+    Logger.recordOutput("Note Selection", getTargetNote(4, 3));
   }
 }

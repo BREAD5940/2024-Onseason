@@ -7,13 +7,12 @@ import frc.robot.autonomous.modes.Bomb;
 import frc.robot.autonomous.modes.CheekyThreePiece;
 import frc.robot.autonomous.modes.DriveBackTwo;
 import frc.robot.autonomous.modes.FiveNoteAmpSide;
-import frc.robot.autonomous.modes.FiveNoteAmpSideAlternate;
-import frc.robot.autonomous.modes.FiveNoteMidlineAmpSide;
 import frc.robot.autonomous.modes.FourNoteAmpSide;
 import frc.robot.autonomous.modes.FourNoteCenter;
 import frc.robot.autonomous.modes.FourNoteSourceSide;
+import frc.robot.autonomous.modes.OPAuto;
 import frc.robot.autonomous.modes.Preload;
-import frc.robot.autonomous.modes.ReverseSixNoteAmpSide;
+import frc.robot.autonomous.modes.ReverseFiveNoteAmpSide;
 import frc.robot.autonomous.modes.SixNoteAmpSide;
 import frc.robot.autonomous.modes.ThreeNoteCenter;
 import frc.robot.subsystems.Superstructure;
@@ -34,9 +33,6 @@ public class AutonomousSelector {
     autonomousSelector.addOption(
         "CHEEKY_THREE_PIECE", new CheekyThreePiece(superstructure, swerve, shooter, intake));
     autonomousSelector.addOption(
-        "FIVE_NOTE_MIDLINE_AMP_SIDE",
-        new FiveNoteMidlineAmpSide(superstructure, swerve, shooter, intake));
-    autonomousSelector.addOption(
         "SIX_NOTE_AMP_SIDE", new SixNoteAmpSide(superstructure, swerve, shooter, intake));
     autonomousSelector.addOption(
         "FOUR_NOTE_CENTER", new FourNoteCenter(superstructure, swerve, shooter, intake));
@@ -49,12 +45,10 @@ public class AutonomousSelector {
     autonomousSelector.addOption(
         "DRIVE_BACK_TWO", new DriveBackTwo(superstructure, swerve, shooter, intake));
     autonomousSelector.addOption(
-        "FIVE_NOTE_AMP_SIDE_ALTERNATE",
-        new FiveNoteAmpSideAlternate(superstructure, swerve, shooter, intake));
-    autonomousSelector.addOption(
         "FOUR_NOTE_SOURCE_SIDE", new FourNoteSourceSide(superstructure, swerve, shooter, intake));
     autonomousSelector.addOption(
-        "REVERSE_SIX_NOTE", new ReverseSixNoteAmpSide(superstructure, swerve, shooter, intake));
+        "REVERSE_FIVE_NOTE", new ReverseFiveNoteAmpSide(superstructure, swerve, shooter, intake));
+    autonomousSelector.addOption("OP_AUTO", new OPAuto(superstructure, swerve, shooter, intake));
 
     SmartDashboard.putData("Autonomus Selector", autonomousSelector);
   }
