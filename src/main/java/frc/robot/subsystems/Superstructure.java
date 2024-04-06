@@ -25,10 +25,10 @@ import org.littletonrobotics.junction.Logger;
 public class Superstructure extends SubsystemBase {
   // For on-the-fly adjustments
   static LoggedTunableNumber angleAdditionBlue =
-      new LoggedTunableNumber("On-the-fly/angleAdditionBlue", 1.0); // degrees
+      new LoggedTunableNumber("On-the-fly/angleAdditionBlue", -1.1); // degrees
 
   static LoggedTunableNumber angleAdditionRed =
-      new LoggedTunableNumber("On-the-fly/angleAdditionRed", 1.0); // degrees
+      new LoggedTunableNumber("On-the-fly/angleAdditionRed", -1.1); // degrees
 
   static LoggedTunableNumber angleMultiplication =
       new LoggedTunableNumber("On-the-fly/distanceScaledAddition", 0.0);
@@ -76,6 +76,7 @@ public class Superstructure extends SubsystemBase {
     VISION_SPEAKER,
     AMP,
     PRE_CLIMB,
+    HALF_CLIMB,
     CLIMB,
     TRAP,
     TRAP_SCORED,
@@ -285,10 +286,21 @@ public class Superstructure extends SubsystemBase {
       elevatorPivot.requestPursueSetpoint(PIVOT_PRE_CLIMB_ANGLE, ELEVATOR_PRE_CLIMB_HEIGHT);
 
       if (requestNextClimbState) {
-        nextSystemState = SuperstructureState.CLIMB;
+        nextSystemState = SuperstructureState.HALF_CLIMB;
         requestNextClimbState = false;
       } else if (requestPrevClimbState) {
         nextSystemState = SuperstructureState.IDLE;
+        requestPrevClimbState = false;
+      }
+    } else if (systemState == SuperstructureState.HALF_CLIMB) {
+      feeder.requestIdle();
+      elevatorPivot.requestPursueSetpoint(PIVOT_HALF_CLIMB_ANGLE, ELEVATOR_HALF_CLIMB_HEIGHT);
+
+      if (requestNextClimbState) {
+        nextSystemState = SuperstructureState.CLIMB;
+        requestNextClimbState = false;
+      } else if (requestPrevClimbState) {
+        nextSystemState = SuperstructureState.PRE_CLIMB;
         requestPrevClimbState = false;
       }
     } else if (systemState == SuperstructureState.CLIMB) {
@@ -325,6 +337,7 @@ public class Superstructure extends SubsystemBase {
       if (requestNextClimbState && elevatorPivot.atSetpoint()) {
         nextSystemState = SuperstructureState.POST_TRAP;
         requestNextClimbState = false;
+        elevatorPivot.setPivotCurrentLimit(20.0);
       } else if (requestPrevClimbState) {
         nextSystemState = SuperstructureState.TRAP;
         requestPrevClimbState = false;
@@ -336,11 +349,14 @@ public class Superstructure extends SubsystemBase {
       feeder.requestIdle();
 
       if (requestPrevClimbState) {
+        elevatorPivot.setPivotCurrentLimit(80.0);
         nextSystemState = SuperstructureState.TRAP;
         requestPrevClimbState = false;
       }
     } else if (systemState == SuperstructureState.PASS) {
-      elevatorPivot.requestPursueSetpoint(PIVOT_PASS_ANGLE, ELEVATOR_PASS_HEIGHT);
+      ShotParameter passingShot = RobotContainer.visionSupplier.robotToPassingShot();
+      elevatorPivot.requestPursueSetpoint(
+          Rotation2d.fromDegrees(passingShot.pivotAngleDeg), passingShot.elevatorHeight);
       if (shouldShoot) {
         feeder.requestShoot();
       } else {

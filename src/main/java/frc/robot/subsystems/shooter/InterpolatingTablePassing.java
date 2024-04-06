@@ -14,8 +14,8 @@ public class InterpolatingTablePassing {
   public static TreeMap<Double, ShotParameter> table =
       new TreeMap<>(
           Map.ofEntries(
-              entry(Units.inchesToMeters(225.0), new ShotParameter(-54.0, 1500, 1000, 0.33)),
-              entry(Units.inchesToMeters(411.0), new ShotParameter(-54.0, 2500, 1300, 0.33))));
+              entry(Units.inchesToMeters(225.0), new ShotParameter(-54.0, 1500, 1300, 0.225)),
+              entry(Units.inchesToMeters(411.0), new ShotParameter(-54.0, 2500, 1300, 0.225))));
 
   public static ShotParameter get(double distanceToTarget) {
     Entry<Double, ShotParameter> ceil = table.ceilingEntry(distanceToTarget);

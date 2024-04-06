@@ -3,50 +3,56 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.31,
-        "y": 4.61
+        "x": 2.6,
+        "y": 4.29
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.450530038549379,
-        "y": 4.481180797996404
+        "x": 1.8692964403332504,
+        "y": 4.844864656861982
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.60221165235483,
-        "y": 4.286166175756032
+        "x": 2.6,
+        "y": 5.550936522700434
       },
       "prevControl": {
-        "x": 2.5507366123434076,
-        "y": 4.360886534240971
+        "x": 1.651422239791698,
+        "y": 5.429776468682752
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.25,
+      "rotationDegrees": 180.0,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 1.75,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -41.96101386218577,
+    "rotation": -177.96427187478793,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "SixNoteAmpSide",
   "previewStartingState": {
-    "rotation": -41.7809644873007,
-    "velocity": 0
+    "rotation": 140.27715064070802,
+    "velocity": 0.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

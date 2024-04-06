@@ -1,7 +1,6 @@
 package frc.robot.autonomous.modes;
 
 import com.pathplanner.lib.path.PathPlannerPath;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -34,7 +33,7 @@ public class FiveNoteAmpSide extends SequentialCommandGroup {
               }
               swerve.resetPose(path.getPreviewStartingHolonomicPose());
             }),
-        new FenderShotCommand(swerve, superstructure, shooter).withTimeout(2),
+        new FenderShotCommand(swerve, superstructure, shooter).withTimeout(3),
         new TrajectoryFollowerCommand(() -> Robot.fiveNoteAmpSideA, swerve, () -> true)
             .beforeStarting(
                 () -> {
@@ -63,14 +62,6 @@ public class FiveNoteAmpSide extends SequentialCommandGroup {
         new WaitUntilCommand(() -> superstructure.hasPiece()).withTimeout(2),
         new StationaryShootCommand(swerve, superstructure, shooter).withTimeout(2),
         new TrajectoryFollowerCommand(() -> Robot.fiveNoteAmpSideD, swerve, () -> false)
-            .beforeStarting(
-                () -> {
-                  intake.requestIntake();
-                  superstructure.requestIntake(true);
-                  superstructure.requestVisionSpeaker(false, false, false);
-                }),
-        new TrajectoryFollowerCommand(
-                () -> selectPath(), swerve, () -> false, new ChassisSpeeds(-2, 0, 0))
             .beforeStarting(
                 () -> {
                   intake.requestIntake();

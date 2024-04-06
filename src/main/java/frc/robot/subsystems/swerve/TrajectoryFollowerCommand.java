@@ -98,6 +98,7 @@ public class TrajectoryFollowerCommand extends Command {
     }
     timer.reset();
     timer.start();
+    System.out.println("\n\n\n\nTrajectory time seconds:" + trajectory.getTotalTimeSeconds());
   }
 
   @Override
@@ -105,7 +106,7 @@ public class TrajectoryFollowerCommand extends Command {
     PathPlannerTrajectory.State goal = trajectory.sample(timer.get());
     goal.targetHolonomicRotation =
         aimAtSpeaker.get()
-            ? RobotContainer.visionSupplier.robotToSpeakerAngle()
+            ? RobotContainer.visionSupplier.robotToSpeakerAngleAuto()
             : goal.targetHolonomicRotation;
     ChassisSpeeds adjustedSpeeds =
         autonomusController.calculate(RobotContainer.swerve.getAutoPose(), goal);

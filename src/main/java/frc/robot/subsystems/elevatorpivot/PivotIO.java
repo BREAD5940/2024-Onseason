@@ -13,6 +13,7 @@ public interface PivotIO {
     public double currentAmps = 0.0;
     public double appliedVoltage = 0.0;
     public double tempCelcius = 0.0;
+    public double shaftVelocityRPM = 0.0;
     public double motionMagicPositionTargetDeg = 0.0;
     public double motionMagicVelocityTargetDeg = 0.0;
     public double setpointDeg = 0.0;

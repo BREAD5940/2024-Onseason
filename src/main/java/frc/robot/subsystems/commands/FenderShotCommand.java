@@ -37,5 +37,6 @@ public class FenderShotCommand extends Command {
   @Override
   public void end(boolean interrupted) {
     superstructure.requestFender(false, false);
+    shooter.requestIdle();
   }
 }

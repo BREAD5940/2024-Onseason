@@ -169,10 +169,14 @@ public class ElevatorPivot {
 
   /* Returns whether or not the pivot is at its setpoint */
   public boolean atPivotSetpoint(Rotation2d setpoint) {
-    if ((RobotContainer.visionSupplier.getDistance() > 4.0
-            && RobotContainer.superstructure.getSystemState() == SuperstructureState.VISION_SPEAKER)
-        || (RobotContainer.superstructure.getSystemState() == SuperstructureState.VISION_SPEAKER
-            && RobotContainer.superstructure.wantsShootOverDefense())) {
+    if (RobotContainer.superstructure.getSystemState() == SuperstructureState.VISION_SPEAKER
+        && RobotContainer.superstructure.wantsShootOverDefense()) {
+      Logger.recordOutput("Allowing Jiggle", false);
+      return BreadUtil.atReference(
+              pivotInputs.angleRads, setpoint.getRadians(), PIVOT_SETPOINT_TOLERANCE_RADS, true)
+          && Math.abs(pivotInputs.deltaError) < PIVOT_DELTA_ERROR_TOLERANCE_SOD;
+    } else if ((RobotContainer.visionSupplier.getDistance() > 4.0
+        && RobotContainer.superstructure.getSystemState() == SuperstructureState.VISION_SPEAKER)) {
       Logger.recordOutput("Allowing Jiggle", false);
       return BreadUtil.atReference(
               pivotInputs.angleRads, setpoint.getRadians(), PIVOT_SETPOINT_TOLERANCE_RADS, true)
@@ -212,6 +216,11 @@ public class ElevatorPivot {
     requestHome = true;
     requestIdle = false;
     requestPursueSetpoint = false;
+  }
+
+  /* Sets the pivot current limit */
+  public void setPivotCurrentLimit(double limit) {
+    pivotIO.setCurrentLimit(limit, 1.5, 1.5);
   }
 
   /** Helper methods for collision avoidance */

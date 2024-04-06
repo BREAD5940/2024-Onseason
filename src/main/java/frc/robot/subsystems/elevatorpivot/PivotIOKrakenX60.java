@@ -53,16 +53,17 @@ public class PivotIOKrakenX60 implements PivotIO {
   private final StatusSignal<Double> motionMagicVelocityTarget;
 
   /* Gains */
-  LoggedTunableNumber kS = new LoggedTunableNumber("Pivot/kS", 0.3);
+  LoggedTunableNumber kS = new LoggedTunableNumber("Pivot/kS", 0.2); // 0.3
   LoggedTunableNumber kG = new LoggedTunableNumber("Pivot/kG", 0.0);
-  LoggedTunableNumber kV = new LoggedTunableNumber("Pivot/kV", 12.0);
-  LoggedTunableNumber kP = new LoggedTunableNumber("Pivot/kP", 200.000000);
+  LoggedTunableNumber kV = new LoggedTunableNumber("Pivot/kV", 10); // 12
+  LoggedTunableNumber kP = new LoggedTunableNumber("Pivot/kP", 150); // 200
   LoggedTunableNumber kI = new LoggedTunableNumber("Pivot/kI", 0.0);
-  LoggedTunableNumber kD = new LoggedTunableNumber("Pivot/kD", 9.000000);
+  LoggedTunableNumber kD = new LoggedTunableNumber("Pivot/kD", 4); // 9
 
-  LoggedTunableNumber motionAcceleration = new LoggedTunableNumber("Pivot/MotionAcceleration", 5.0);
+  LoggedTunableNumber motionAcceleration =
+      new LoggedTunableNumber("Pivot/MotionAcceleration", 3); // 5
   LoggedTunableNumber motionCruiseVelocity =
-      new LoggedTunableNumber("Pivot/MotionCruiseVelocity", 5.0);
+      new LoggedTunableNumber("Pivot/MotionCruiseVelocity", 5); // 5
 
   LoggedTunableNumber kE = new LoggedTunableNumber("Pivot/kE", 0.0);
 
@@ -81,8 +82,8 @@ public class PivotIOKrakenX60 implements PivotIO {
     /* Configure pivot hardware */
     currentLimitConfigs = new CurrentLimitsConfigs();
     currentLimitConfigs.StatorCurrentLimitEnable = true;
-    currentLimitConfigs.StatorCurrentLimit = 20.0;
-    currentLimitConfigs.SupplyCurrentLimit = 20.0;
+    currentLimitConfigs.StatorCurrentLimit = 100.0;
+    currentLimitConfigs.SupplyCurrentLimit = 80.0;
     currentLimitConfigs.SupplyTimeThreshold = 1.5;
 
     motorOutputConfigs = new MotorOutputConfigs();
@@ -165,13 +166,13 @@ public class PivotIOKrakenX60 implements PivotIO {
     inputs.angleDegrees = Units.rotationsToDegrees(position.getValue());
     inputs.angleRads = Units.rotationsToRadians(position.getValue());
     inputs.velDegreesPerSecond = Units.rotationsToDegrees(velocity.getValue());
-    inputs.currentAmps = supplyCurrent.getValue();
+    inputs.currentAmps = pivot.getStatorCurrent().getValue();
     inputs.appliedVoltage = appliedVoltage.getValue();
     inputs.tempCelcius = pivot.getDeviceTemp().getValue();
     inputs.motionMagicPositionTargetDeg =
-        Units.rotationsToDegrees(pivot.getClosedLoopReference().getValue());
+        Units.rotationsToDegrees(motionMagicPositionTarget.getValue());
     inputs.motionMagicVelocityTargetDeg =
-        Units.rotationsToDegrees(pivot.getClosedLoopReferenceSlope().getValue());
+        Units.rotationsToDegrees(motionMagicVelocityTarget.getValue());
     inputs.setpointDeg = setpointDeg;
     inputs.shaftPosition = Units.rotationsToDegrees(pivot.getPosition().getValue());
 

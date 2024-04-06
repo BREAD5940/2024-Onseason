@@ -42,8 +42,6 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath sixNoteAmpSideB;
   public static PathPlannerPath sixNoteAmpSideC;
   public static PathPlannerPath sixNoteAmpSideD;
-  public static PathPlannerPath sixNoteAmpSideE;
-  public static PathPlannerPath sixNoteAmpSideF;
 
   public static PathPlannerPath bombA;
   public static PathPlannerPath bombB;
@@ -123,8 +121,6 @@ public class Robot extends LoggedRobot {
     sixNoteAmpSideB = PathPlannerPath.fromPathFile("Six Note B");
     sixNoteAmpSideC = PathPlannerPath.fromPathFile("Six Note C");
     sixNoteAmpSideD = PathPlannerPath.fromPathFile("Six Note D");
-    sixNoteAmpSideE = PathPlannerPath.fromPathFile("Six Note E");
-    sixNoteAmpSideF = PathPlannerPath.fromPathFile("Six Note F");
 
     bombA = PathPlannerPath.fromPathFile("Bomb A");
     bombB = PathPlannerPath.fromPathFile("Bomb B");

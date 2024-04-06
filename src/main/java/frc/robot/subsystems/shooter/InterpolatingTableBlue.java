@@ -9,47 +9,36 @@ import java.util.TreeMap;
 
 public class InterpolatingTableBlue {
 
-  // 10 and 1/8 inches is the distance
-  // 83 inches and 1/2 to
-
   private InterpolatingTableBlue() {}
 
   public static TreeMap<Double, ShotParameter> table =
       new TreeMap<>(
           Map.ofEntries(
-
-              // SFR BLUE
               entry(
-                  Units.inchesToMeters(54.4),
-                  new ShotParameter(-54.0, 1700, 1200, 0.33)), // (first) 3 feet
+                  Units.inchesToMeters(54.0), new ShotParameter(-50, 2800, 2000, 0.175)), // 3 feet
               entry(
-                  Units.inchesToMeters(76.6),
-                  new ShotParameter(-44.5, 1850.000000, 1350.000000, 0.3)), // 5 feet
+                  Units.inchesToMeters(76.75), new ShotParameter(-42, 2800, 2000, 0.125)), // 5 feet
               entry(
-                  Units.inchesToMeters(100.8),
-                  new ShotParameter(-39.0, 2000.000000, 1400.000000, 0.23)), // 7 feet
+                  Units.inchesToMeters(101.0),
+                  new ShotParameter(-34.75, 2800, 2000, 0.05)), // 7 feet
               entry(
-                  Units.inchesToMeters(124.4),
-                  new ShotParameter(-33.500000, 2250.000000, 1450.000000, 0.2)), // 9 feet
+                  Units.inchesToMeters(123.25), new ShotParameter(-30, 2800, 2000, 0.05)), // 9 feet
               entry(
-                  Units.inchesToMeters(147.6),
-                  new ShotParameter(-30.000000, 2650.000000, 1800.000000, 0.175)), // 11 feet
+                  Units.inchesToMeters(149.2), new ShotParameter(-28, 2800, 2000, 0.0)), // 11 feet
               entry(
-                  Units.inchesToMeters(173.3),
-                  new ShotParameter(-28.000000, 2650.000000, 1800.000000, 0.15)), // 13 feet
+                  Units.inchesToMeters(174.2),
+                  new ShotParameter(-24.75, 2800, 2000, 0.0)), // 13 feet
               entry(
-                  Units.inchesToMeters(198),
-                  new ShotParameter(-26.700000, 2650.000000, 1800.000000, 0.125)), // 15 feet
+                  Units.inchesToMeters(198.75),
+                  new ShotParameter(-23.75, 2800, 2000, 0.0)), // 15 feet
               entry(
-                  Units.inchesToMeters(223.5),
-                  new ShotParameter(-23.000000, 2650.000000, 1800.000000, 0.125)), // 17 feet
+                  Units.inchesToMeters(220.0),
+                  new ShotParameter(-21.9, 2800, 2000, 0.0)), // 17 feet
               entry(
-                  Units.inchesToMeters(247.0),
-                  new ShotParameter(-22.300000, 2700.000000, 1850.000000, 0.125)), // 19 feet
+                  Units.inchesToMeters(242.0), new ShotParameter(-21, 3200, 2100, 0.0)), // 19 feet
               entry(
-                  Units.inchesToMeters(270.0),
-                  new ShotParameter(-21.400000, 2750.000000, 1900.000000, 0.125)) // 21 feet
-              ));
+                  Units.inchesToMeters(265.0), new ShotParameter(-20, 3200, 2100, 0.0) // 21 feet
+                  )));
 
   public static ShotParameter get(double distanceToTarget) {
     Entry<Double, ShotParameter> ceil = table.ceilingEntry(distanceToTarget);

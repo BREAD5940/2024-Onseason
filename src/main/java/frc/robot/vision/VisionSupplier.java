@@ -36,6 +36,8 @@ public class VisionSupplier extends SubsystemBase {
   private Rotation2d robotToPassingAngle;
   private ShotParameter robotToPassingShot;
   private Translation2d[] notePoses;
+  private double swerveAngleTolerance;
+  private Rotation2d robotToSpeakerAngleAuto;
 
   private Rotation2d robotToNoteAngle;
   private Translation2d notePose;
@@ -48,6 +50,10 @@ public class VisionSupplier extends SubsystemBase {
     } else {
       return firstChoice;
     }
+  }
+
+  public Rotation2d robotToSpeakerAngleAuto() {
+    return robotToSpeakerAngleAuto;
   }
 
   public Rotation2d robotToPassingAngle() {
@@ -86,6 +92,10 @@ public class VisionSupplier extends SubsystemBase {
     return distance;
   }
 
+  public double getSwerveAngleTolerance() {
+    return swerveAngleTolerance;
+  }
+
   @Override
   public void periodic() {
 
@@ -119,9 +129,16 @@ public class VisionSupplier extends SubsystemBase {
     Translation2d robotToRadialVirtualTarget =
         radialVirtualTarget.minus(robotPose.getTranslation());
 
+    Translation2d robotToTangentialVirtualTargetAuto =
+        tangentialVirtualTarget.minus(RobotContainer.swerve.getAutoPose().getTranslation());
+
     yaw =
         new Rotation2d(
             robotToTangentialVirtualTarget.getX(), robotToTangentialVirtualTarget.getY());
+
+    robotToSpeakerAngleAuto =
+        new Rotation2d(
+            robotToTangentialVirtualTargetAuto.getX(), robotToTangentialVirtualTargetAuto.getY());
 
     if (Robot.alliance == Alliance.Blue) {
       shot = InterpolatingTableBlue.get(robotToRadialVirtualTarget.getNorm());
@@ -154,6 +171,21 @@ public class VisionSupplier extends SubsystemBase {
     /* Note Poses */
     notePoses = RobotContainer.noteDetection.getNotePoses();
 
+    /* Swerve Tolerance Calculations */
+    Pose2d targetPoseA =
+        new Pose2d(
+            targetPose.getX(), targetPose.getY() + targetWidth / 2, targetPose.getRotation());
+    Pose2d targetPoseB =
+        new Pose2d(
+            targetPose.getX(), targetPose.getY() - targetWidth / 2, targetPose.getRotation());
+
+    double a = targetPoseA.getTranslation().getDistance(robotPose.getTranslation());
+    double b = targetPoseB.getTranslation().getDistance(robotPose.getTranslation());
+    double c = targetWidth;
+
+    double angleToleranceRad = Math.acos((a * a + b * b - c * c) / (2 * a * b));
+    swerveAngleTolerance = angleToleranceRad / 2;
+
     // Logs
     Logger.recordOutput("Robot To Passing Distance", robotToPassingDistance);
     Logger.recordOutput("Vision/DistanceToTarget", robotToRadialVirtualTarget.getNorm());
@@ -164,5 +196,7 @@ public class VisionSupplier extends SubsystemBase {
         "Vision/TangentialVirtualTarget", new Pose2d(tangentialVirtualTarget, new Rotation2d()));
     Logger.recordOutput("Vision/Target", targetPose);
     Logger.recordOutput("Note Selection", getTargetNote(4, 3));
+    Logger.recordOutput("Vision/AngleToleranceToTarget", angleToleranceRad);
+    Logger.recordOutput("Vision/SwerveAngleTolerance", swerveAngleTolerance);
   }
 }

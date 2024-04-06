@@ -106,7 +106,7 @@ public class PhotonNoteDetection extends SubsystemBase {
     for (Translation2d note : allNotePoses) {
       for (int i = 0; i < notePoses.length; i++) {
         if (notePoses[i] == null
-            && note.getDistance(notePositions.get(i)) < Units.inchesToMeters(24.0)) {
+            && note.getDistance(notePositions.get(i)) < Units.inchesToMeters(36.0)) {
           notePoses[i] = note;
         }
       }

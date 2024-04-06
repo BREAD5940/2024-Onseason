@@ -33,6 +33,7 @@ import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOKrakenX60;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.vision.VisionSupplier;
+import frc.robot.vision.photonvision.BreadPhotonCamera;
 import frc.robot.vision.photonvision.PhotonAprilTagVision;
 import frc.robot.vision.photonvision.PhotonNoteDetection;
 import org.photonvision.PhotonCamera;
@@ -61,10 +62,10 @@ public class RobotContainer {
           GammaTunerConstants.BackRight);
 
   // April tag cameras
-  public static final PhotonCamera frontLeftCamera = new PhotonCamera("front-left");
-  public static final PhotonCamera frontRightCamera = new PhotonCamera("front-right");
-  public static final PhotonCamera backLeftCamera = new PhotonCamera("back-left");
-  public static final PhotonCamera backRightCamera = new PhotonCamera("back-right");
+  public static final BreadPhotonCamera frontLeftCamera = new BreadPhotonCamera("front-left");
+  public static final BreadPhotonCamera frontRightCamera = new BreadPhotonCamera("front-right");
+  public static final BreadPhotonCamera backLeftCamera = new BreadPhotonCamera("back-left");
+  public static final BreadPhotonCamera backRightCamera = new BreadPhotonCamera("back-right");
 
   // Note detection cameras
   public static final PhotonCamera leftObjCamera = new PhotonCamera("left-obj");
@@ -74,6 +75,7 @@ public class RobotContainer {
       new PhotonAprilTagVision(frontLeftCamera, frontRightCamera, backLeftCamera, backRightCamera);
   public static final PhotonNoteDetection noteDetection =
       new PhotonNoteDetection(leftObjCamera, rightObjCamera);
+  // public static final PhotonNoteDetection noteDetection = new PhotonNoteDetection();
   public static final VisionSupplier visionSupplier = new VisionSupplier();
   public static AutonomousSelector autonomousSelector;
 

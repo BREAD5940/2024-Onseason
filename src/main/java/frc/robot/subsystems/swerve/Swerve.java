@@ -210,9 +210,12 @@ public class Swerve extends SubsystemBase {
     return fieldRelativeSpeeds2d;
   }
 
+  public boolean atAngularSetpoint(double setpointRad, double tolerance) {
+    return Math.abs(this.getPose().getRotation().getRadians() - setpointRad) < tolerance;
+  }
+
   public boolean atAngularSetpoint(double setpointRad) {
-    return Math.abs(this.getPose().getRotation().getRadians() - setpointRad)
-        < SWERVE_ANGULAR_ERROR_TOLERANCE_RAD;
+    return atAngularSetpoint(setpointRad, SWERVE_ANGULAR_ERROR_TOLERANCE_RAD);
   }
 
   public boolean notRotating() {

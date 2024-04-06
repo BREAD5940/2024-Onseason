@@ -104,6 +104,7 @@ public class ReverseFiveNoteAmpSide extends SequentialCommandGroup {
 
   public PathPlannerPath selectFirstPath() {
     int target = RobotContainer.visionSupplier.getTargetNote(4, 3);
+    System.out.println("\n\n\n\n\nSelecting target with obj det: " + target);
     if (target == 4) {
       return Robot.reverseFiveNoteCB;
     } else {
@@ -113,7 +114,8 @@ public class ReverseFiveNoteAmpSide extends SequentialCommandGroup {
 
   public PathPlannerPath selectSecondPath() {
     int target = RobotContainer.visionSupplier.getTargetNote(3, 2);
-    if (target == 4) {
+    System.out.println("\n\n\n\n\nSelecting target with obj det 2: " + target);
+    if (target == 3) {
       return Robot.reverseFiveNoteEB;
     } else {
       return Robot.reverseFiveNoteEA;

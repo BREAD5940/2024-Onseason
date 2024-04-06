@@ -70,15 +70,19 @@ public class TeleopShootCommand extends Command {
     // RobotContainer.superstructure.requestFender(
     //     true, RobotContainer.swerve.atAngularSetpoint(setpoint));
     // RobotContainer.shooter.requestFender();
-    if (dx < 0.01 && dy < 0.01) {
+
+    double tolerance = RobotContainer.visionSupplier.getSwerveAngleTolerance();
+
+    if (Math.abs(dx) < 0.01 && Math.abs(dy) < 0.01) {
       RobotContainer.superstructure.requestVisionSpeaker(
           true,
-          RobotContainer.swerve.atAngularSetpoint(setpoint) && RobotContainer.swerve.notRotating(),
+          RobotContainer.swerve.atAngularSetpoint(setpoint, tolerance)
+              && RobotContainer.swerve.notRotating(),
           RobotContainer.operator.getYButton());
     } else {
       RobotContainer.superstructure.requestVisionSpeaker(
           true,
-          RobotContainer.swerve.atAngularSetpoint(setpoint),
+          RobotContainer.swerve.atAngularSetpoint(setpoint, tolerance),
           RobotContainer.operator.getYButton());
     }
     RobotContainer.shooter.requestVisionSpeaker(false);
@@ -88,7 +92,9 @@ public class TeleopShootCommand extends Command {
         "TeleopShootCommand/MeasurementDegrees", Units.radiansToDegrees(measurement));
     Logger.recordOutput("TeleopShootCommand/SetpointDegrees", Units.radiansToDegrees(setpoint));
     Logger.recordOutput(
-        "TeleopShootCommand/atTurnSetpoint", RobotContainer.swerve.atAngularSetpoint(setpoint));
+        "TeleopShootCommand/atTurnSetpoint",
+        RobotContainer.swerve.atAngularSetpoint(setpoint, tolerance));
+    Logger.recordOutput("TeleopShootCommand/Tolerance", tolerance);
   }
 
   @Override

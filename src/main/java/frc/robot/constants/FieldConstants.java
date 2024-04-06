@@ -24,7 +24,7 @@ public class FieldConstants {
   public static final Translation2d ampCenter =
       new Translation2d(Units.inchesToMeters(72.455), fieldWidth);
 
-  public static final Translation2d passingTarget = new Translation2d(0.53, 6.58);
+  public static final Translation2d passingTarget = new Translation2d(0.53, 6.6);
 
   public static final double noteSpacing = Units.inchesToMeters(64);
 
@@ -206,4 +206,6 @@ public class FieldConstants {
   };
 
   public static final Pose2d targetPoseBlue = tagSevenPose.toPose2d();
+
+  public static final double targetWidth = Units.inchesToMeters(42);
 }

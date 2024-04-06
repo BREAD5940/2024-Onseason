@@ -55,14 +55,14 @@ public class ShooterIOKrakenX60 implements ShooterIO {
    */
   LoggedTunableNumber rightShooterKs = new LoggedTunableNumber("RightShooter/kS", 0.0);
   LoggedTunableNumber rightShooterKa = new LoggedTunableNumber("RightShooter/kA", 0.0);
-  LoggedTunableNumber rightShooterKv = new LoggedTunableNumber("RightShooter/kV", 0.131);
+  LoggedTunableNumber rightShooterKv = new LoggedTunableNumber("RightShooter/kV", 0.132);
   LoggedTunableNumber rightShooterKp = new LoggedTunableNumber("RightShooter/kP", 0.4);
   LoggedTunableNumber rightShooterKi = new LoggedTunableNumber("RightShooter/kI", 0.0);
   LoggedTunableNumber rightShooterKd = new LoggedTunableNumber("RightShooter/kD", 0.0);
 
   LoggedTunableNumber leftShooterKs = new LoggedTunableNumber("LeftShooter/kS", 0.0);
   LoggedTunableNumber leftShooterKa = new LoggedTunableNumber("LeftShooter/kA", 0.0);
-  LoggedTunableNumber leftShooterKv = new LoggedTunableNumber("LeftShooter/kV", 0.137);
+  LoggedTunableNumber leftShooterKv = new LoggedTunableNumber("LeftShooter/kV", 0.133);
   LoggedTunableNumber leftShooterKp = new LoggedTunableNumber("LeftShooter/kP", 0.4);
   LoggedTunableNumber leftShooterKi = new LoggedTunableNumber("LeftShooter/kI", 0.0);
   LoggedTunableNumber leftShooterKd = new LoggedTunableNumber("LeftShooter/kD", 0.0);
@@ -200,13 +200,13 @@ public class ShooterIOKrakenX60 implements ShooterIO {
     desiredRight = velocityRight;
 
     if (velocityLeft > 0.0) {
-      left.setControl(new VelocityVoltage(velocityLeft / 60.0).withSlot(0));
+      left.setControl(new VelocityVoltage(velocityLeft / 60.0).withSlot(0).withEnableFOC(true));
     } else {
       left.setControl(new DutyCycleOut(0.0));
     }
 
     if (velocityRight > 0.0) {
-      right.setControl(new VelocityVoltage(velocityRight / 60.0).withSlot(0));
+      right.setControl(new VelocityVoltage(velocityRight / 60.0).withSlot(0).withEnableFOC(true));
     } else {
       right.setControl(new DutyCycleOut(0.0));
     }
