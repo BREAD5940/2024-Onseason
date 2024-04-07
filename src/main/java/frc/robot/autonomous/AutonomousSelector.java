@@ -14,6 +14,7 @@ import frc.robot.autonomous.modes.OPAuto;
 import frc.robot.autonomous.modes.Preload;
 import frc.robot.autonomous.modes.ReverseFiveNoteAmpSide;
 import frc.robot.autonomous.modes.SixNoteAmpSide;
+import frc.robot.autonomous.modes.SixNoteAmpSideAlternate;
 import frc.robot.autonomous.modes.ThreeNoteCenter;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.intake.Intake;
@@ -34,6 +35,9 @@ public class AutonomousSelector {
         "CHEEKY_THREE_PIECE", new CheekyThreePiece(superstructure, swerve, shooter, intake));
     autonomousSelector.addOption(
         "SIX_NOTE_AMP_SIDE", new SixNoteAmpSide(superstructure, swerve, shooter, intake));
+    autonomousSelector.addOption(
+        "SIX_NOTE_AMP_SIDE_ALTERNATE",
+        new SixNoteAmpSideAlternate(superstructure, swerve, shooter, intake));
     autonomousSelector.addOption(
         "FOUR_NOTE_CENTER", new FourNoteCenter(superstructure, swerve, shooter, intake));
     autonomousSelector.addOption("BOMB", new Bomb(superstructure, swerve, shooter, intake));

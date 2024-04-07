@@ -2,7 +2,9 @@ package frc.robot.subsystems.shooter;
 
 import static frc.robot.constants.Constants.Shooter.*;
 
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.commons.BreadUtil;
 import frc.robot.commons.LoggedTunableNumber;
@@ -182,8 +184,13 @@ public class Shooter extends SubsystemBase {
 
   public void requestPass() {
     ShotParameter shot = RobotContainer.visionSupplier.robotToPassingShot();
-    desiredLeftRPM = shot.leftRPM;
-    desiredRightRPM = shot.rightRPM;
+    if (Robot.alliance == Alliance.Red) {
+      desiredLeftRPM = shot.rightRPM;
+      desiredRightRPM = shot.leftRPM;
+    } else {
+      desiredLeftRPM = shot.leftRPM;
+      desiredRightRPM = shot.rightRPM;
+    }
     unsetAllRequests();
     requestPass = true;
   }

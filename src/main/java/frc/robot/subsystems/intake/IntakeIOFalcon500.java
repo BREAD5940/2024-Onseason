@@ -14,7 +14,7 @@ import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.AnalogInput;
 import frc.robot.commons.LoggedTunableNumber;
 
 public class IntakeIOFalcon500 implements IntakeIO {
@@ -22,8 +22,8 @@ public class IntakeIOFalcon500 implements IntakeIO {
   /* Hardware */
   private final TalonFX intake = new TalonFX(INTAKE_ID, "dabus");
   private final TalonFX vector = new TalonFX(VECTOR_ID, "dabus");
-  // private final AnalogInput beamBreak = new AnalogInput(0);
-  private final DigitalInput beamBreak = new DigitalInput(3);
+  private final AnalogInput beamBreak = new AnalogInput(0);
+  // private final DigitalInput beamBreak = new DigitalInput(3);
 
   /* Configurator */
   private final TalonFXConfigurator intakeConfigurator;
@@ -147,8 +147,9 @@ public class IntakeIOFalcon500 implements IntakeIO {
     inputs.vectorVelocitySetpoint = vectorVelocitySetpoint;
     inputs.vectorSupplyCurrent = supplyVector.getValueAsDouble();
 
-    // inputs.beamBreakTriggered = beamBreak.getVoltage() > 0.8;
-    inputs.beamBreakTriggered = !beamBreak.get();
+    inputs.beamBreakTriggered = beamBreak.getVoltage() > 0.8;
+    inputs.beamBreakRawVoltage = beamBreak.getVoltage();
+    // inputs.beamBreakTriggered = !beamBreak.get();
   }
 
   @Override

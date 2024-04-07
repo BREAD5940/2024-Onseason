@@ -18,6 +18,7 @@ public interface IntakeIO {
     public double vectorSupplyCurrent = 0.0;
 
     public boolean beamBreakTriggered = false;
+    public double beamBreakRawVoltage = 0.0;
   }
 
   /** Updates the set of loggable inputs. */
