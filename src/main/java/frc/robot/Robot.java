@@ -74,6 +74,20 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath reverseFiveNoteEA;
   public static PathPlannerPath reverseFiveNoteEB;
 
+  public static PathPlannerPath ssrRushA;
+  public static PathPlannerPath ssrRushB;
+  public static PathPlannerPath ssrSkipPivotC;
+  public static PathPlannerPath ssrPivotA;
+  public static PathPlannerPath ssrPivotB;
+  public static PathPlannerPath ssrPivotC;
+  public static PathPlannerPath ssrReturnA;
+  public static PathPlannerPath ssrReturnB;
+  public static PathPlannerPath ssrReturnC;
+  public static PathPlannerPath ssrFromShootPoseA;
+  public static PathPlannerPath ssrFromShootPoseB;
+  public static PathPlannerPath ssrFromShootPoseC;
+  public static PathPlannerPath ssrPreloadShoot;
+
   private boolean requestedHome = false;
 
   private CANdle leds = new CANdle(31, "dabus");
@@ -161,6 +175,20 @@ public class Robot extends LoggedRobot {
     reverseFiveNoteEA = PathPlannerPath.fromPathFile("Reverse Five EA");
     reverseFiveNoteEB = PathPlannerPath.fromPathFile("Reverse Five EB");
 
+    ssrRushA = PathPlannerPath.fromPathFile("SSR Rush A");
+    ssrRushB = PathPlannerPath.fromPathFile("SSR Rush B");
+    ssrSkipPivotC = PathPlannerPath.fromPathFile("SSR Skip Pivot C");
+    ssrPivotA = PathPlannerPath.fromPathFile("SSR Pivot A");
+    ssrPivotB = PathPlannerPath.fromPathFile("SSR Pivot B");
+    ssrPivotC = PathPlannerPath.fromPathFile("SSR Pivot C");
+    ssrReturnA = PathPlannerPath.fromPathFile("SSR Return A");
+    ssrReturnB = PathPlannerPath.fromPathFile("SSR Return B");
+    ssrReturnC = PathPlannerPath.fromPathFile("SSR Return C");
+    ssrFromShootPoseA = PathPlannerPath.fromPathFile("SSR From Shoot Pose A");
+    ssrFromShootPoseB = PathPlannerPath.fromPathFile("SSR From Shoot Pose B");
+    ssrFromShootPoseC = PathPlannerPath.fromPathFile("SSR From Shoot Pose C");
+    ssrPreloadShoot = PathPlannerPath.fromPathFile("SSR Preload Shoot");
+
     m_robotContainer.configureAutonomousSelector();
   }
 
@@ -208,8 +236,8 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void autonomousInit() {
-    RobotContainer.superstructure.registerAutoPreload();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    RobotContainer.superstructure.registerAutoPreload();
 
     if (!requestedHome) {
       RobotContainer.superstructure.requestHome();

@@ -150,4 +150,12 @@ public class Feeder {
   public void registerAutoPreload() {
     hasPiece = true;
   }
+
+  public void unregisterAutoPreload() {
+    hasPiece = false;
+  }
+
+  public boolean getRawBeamBreakTriggered() {
+    return inputs.rawBeamBreakTriggered;
+  }
 }

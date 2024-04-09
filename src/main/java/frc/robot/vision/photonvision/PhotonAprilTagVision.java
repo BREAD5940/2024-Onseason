@@ -31,6 +31,8 @@ public class PhotonAprilTagVision extends SubsystemBase {
   private Supplier<Pose2d> poseSupplier = () -> new Pose2d();
 
   /* For shooting vs. path following in auto */
+  private double singleTagStdDevScalar = 100.0;
+
   private double stdDevScalarAuto = 1.0;
   private double xyStdDevCoefficientAuto = 0.1;
   private double thetaStdDevCoefficientAuto = 0.1;
@@ -272,9 +274,9 @@ public class PhotonAprilTagVision extends SubsystemBase {
                 robotPose,
                 timestamp,
                 VecBuilder.fill(
-                    xyStdDev * stdDevScalarAuto,
-                    xyStdDev * stdDevScalarAuto,
-                    thetaStdDev * stdDevScalarAuto)));
+                    singleTagStdDevScalar * xyStdDev * stdDevScalarAuto,
+                    singleTagStdDevScalar * xyStdDev * stdDevScalarAuto,
+                    singleTagStdDevScalar * thetaStdDev * stdDevScalarAuto)));
 
         Logger.recordOutput("VisionData/" + instanceIndex, robotPose);
         Logger.recordOutput("Photon/Tags Used " + instanceIndex, tagPose3ds.size());

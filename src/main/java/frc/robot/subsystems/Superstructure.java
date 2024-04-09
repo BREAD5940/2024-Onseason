@@ -17,6 +17,7 @@ import frc.robot.subsystems.elevatorpivot.ElevatorPivot;
 import frc.robot.subsystems.elevatorpivot.ElevatorPivot.ElevatorPivotState;
 import frc.robot.subsystems.elevatorpivot.PivotIO;
 import frc.robot.subsystems.feeder.Feeder;
+import frc.robot.subsystems.feeder.Feeder.FeederState;
 import frc.robot.subsystems.feeder.FeederIO;
 import frc.robot.subsystems.shooter.ShotParameter;
 import org.littletonrobotics.junction.Logger;
@@ -25,10 +26,10 @@ import org.littletonrobotics.junction.Logger;
 public class Superstructure extends SubsystemBase {
   // For on-the-fly adjustments
   static LoggedTunableNumber angleAdditionBlue =
-      new LoggedTunableNumber("On-the-fly/angleAdditionBlue", -1.1); // degrees
+      new LoggedTunableNumber("On-the-fly/angleAdditionBlue", 0.0); // degrees
 
   static LoggedTunableNumber angleAdditionRed =
-      new LoggedTunableNumber("On-the-fly/angleAdditionRed", -1.1); // degrees
+      new LoggedTunableNumber("On-the-fly/angleAdditionRed", 0.0); // degrees
 
   static LoggedTunableNumber angleMultiplication =
       new LoggedTunableNumber("On-the-fly/distanceScaledAddition", 0.0);
@@ -507,5 +508,17 @@ public class Superstructure extends SubsystemBase {
 
   public void registerAutoPreload() {
     feeder.registerAutoPreload();
+  }
+
+  public void unregisterAutoPreload() {
+    feeder.unregisterAutoPreload();
+  }
+
+  public FeederState getFeederState() {
+    return feeder.getSystemState();
+  }
+
+  public boolean getFeederBreamBreakTriggered() {
+    return feeder.getRawBeamBreakTriggered();
   }
 }
