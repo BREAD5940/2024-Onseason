@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.86,
-        "y": 4.53
+        "x": 8.4,
+        "y": 7.46
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.209149308455535,
-        "y": 3.876286896653679
+        "x": 7.4414333444051515,
+        "y": 7.2818037943768195
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.853245318473517,
-        "y": 3.396142598276637
+        "x": 8.4,
+        "y": 5.811629315566324
       },
       "prevControl": {
-        "x": 6.088296853428993,
-        "y": 3.410415180316807
+        "x": 7.747308571540221,
+        "y": 6.354311170160802
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,28 +30,28 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.0,
-      "rotationDegrees": 180.0,
+      "waypointRelativePos": 0.35,
+      "rotationDegrees": 130.0,
       "rotateFast": false
     }
   ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 4.0,
+    "maxAcceleration": 4.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 2.0,
-    "rotation": 180.0,
+    "velocity": 0,
+    "rotation": 130.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "OPAuto",
+  "folder": "AmpSideRush",
   "previewStartingState": {
-    "rotation": 157.45734329260122,
+    "rotation": -179.92869665343684,
     "velocity": 0
   },
   "useDefaultConstraints": false

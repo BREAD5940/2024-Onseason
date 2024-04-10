@@ -27,6 +27,11 @@ public class VisionSupplier extends SubsystemBase {
   private static LoggedTunableNumber RADIAL_NOTE_FLIGHT_TIME =
       new LoggedTunableNumber("SOTM/RadialNoteFlightTime", 0.3);
 
+  private static LoggedTunableNumber PASSING_TANGENTIAL_NOTE_FLIGHT_TIME =
+      new LoggedTunableNumber("SOTM/PassingTangentialNoteFlightTime", 0.5);
+  private static LoggedTunableNumber PASSING_RADIAL_NOTE_FLIGHT_TIME =
+      new LoggedTunableNumber("SOTM/PassingRadialNoteFlightTime", 0.5);
+
   /* Speaker Results */
   private Rotation2d yaw;
   private ShotParameter shot;
@@ -163,9 +168,33 @@ public class VisionSupplier extends SubsystemBase {
 
     /* Passing target calculation */
     Translation2d flippedPassingTarget = AllianceFlipUtil.apply(passingTarget);
-    Translation2d robotToPassingPose = flippedPassingTarget.minus(robotPose.getTranslation());
-    robotToPassingAngle = new Rotation2d(robotToPassingPose.getX(), robotToPassingPose.getY());
-    double robotToPassingDistance = robotToPassingPose.getNorm();
+
+    Translation2d passingTangentialVirtualTarget =
+        targetPose
+            .getTranslation()
+            .plus(
+                fieldRelativeRobotVelocity
+                    .times(PASSING_TANGENTIAL_NOTE_FLIGHT_TIME.get())
+                    .rotateBy(Rotation2d.fromDegrees(180.0)));
+
+    Translation2d passingRadialVirtualTarget =
+        targetPose
+            .getTranslation()
+            .plus(
+                fieldRelativeRobotVelocity
+                    .times(PASSING_RADIAL_NOTE_FLIGHT_TIME.get())
+                    .rotateBy(Rotation2d.fromDegrees(180.0)));
+
+    Translation2d robotToPassingTangentialVirtualTarget =
+        passingTangentialVirtualTarget.minus(robotPose.getTranslation());
+    Translation2d robotToPassingRadialVirtualTarget =
+        passingTangentialVirtualTarget.minus(robotPose.getTranslation());
+
+    robotToPassingAngle =
+        new Rotation2d(
+            robotToPassingTangentialVirtualTarget.getX(),
+            robotToPassingTangentialVirtualTarget.getY());
+    double robotToPassingDistance = robotToPassingRadialVirtualTarget.getNorm();
     robotToPassingShot = InterpolatingTablePassing.get(robotToPassingDistance);
 
     /* Note Poses */

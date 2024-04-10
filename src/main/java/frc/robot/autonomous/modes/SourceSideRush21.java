@@ -19,6 +19,7 @@ public class SourceSideRush21 extends SequentialCommandGroup {
 
   public SourceSideRush21(
       Superstructure superstructure, Swerve swerve, Shooter shooter, Intake intake) {
+    setName("SOURCE_SIDE_RUSH_21");
     addRequirements(superstructure, swerve, shooter, intake);
     addCommands(
         new InstantCommand(
@@ -61,7 +62,13 @@ public class SourceSideRush21 extends SequentialCommandGroup {
                                     })),
                         new StationaryShootCommand(swerve, superstructure, shooter),
                         new TrajectoryFollowerCommand(
-                            () -> Robot.ssrPreloadShoot, swerve, () -> false),
+                                () -> Robot.ssrPreloadShoot, swerve, () -> false)
+                            .deadlineWith(
+                                new RunCommand(
+                                    () -> {
+                                      shooter.requestVisionSpeaker(false);
+                                      superstructure.requestVisionSpeaker(true, false, false);
+                                    })),
                         new StationaryShootCommand(swerve, superstructure, shooter)),
                     new SequentialCommandGroup(
                         new TrajectoryFollowerCommand(
@@ -76,7 +83,13 @@ public class SourceSideRush21 extends SequentialCommandGroup {
                                     })),
                         new StationaryShootCommand(swerve, superstructure, shooter),
                         new TrajectoryFollowerCommand(
-                            () -> Robot.ssrPreloadShoot, swerve, false, () -> false),
+                                () -> Robot.ssrPreloadShoot, swerve, false, () -> false)
+                            .deadlineWith(
+                                new RunCommand(
+                                    () -> {
+                                      shooter.requestVisionSpeaker(false);
+                                      superstructure.requestVisionSpeaker(true, false, false);
+                                    })),
                         new StationaryShootCommand(swerve, superstructure, shooter)),
                     superstructure::hasPiece)),
             new SequentialCommandGroup(
@@ -105,7 +118,13 @@ public class SourceSideRush21 extends SequentialCommandGroup {
                                     })),
                         new StationaryShootCommand(swerve, superstructure, shooter),
                         new TrajectoryFollowerCommand(
-                            () -> Robot.ssrPreloadShoot, swerve, () -> false),
+                                () -> Robot.ssrPreloadShoot, swerve, () -> false)
+                            .deadlineWith(
+                                new RunCommand(
+                                    () -> {
+                                      shooter.requestVisionSpeaker(false);
+                                      superstructure.requestVisionSpeaker(true, false, false);
+                                    })),
                         new StationaryShootCommand(swerve, superstructure, shooter)),
                     new SequentialCommandGroup(
                         new TrajectoryFollowerCommand(

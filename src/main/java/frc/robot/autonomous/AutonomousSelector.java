@@ -3,16 +3,14 @@ package frc.robot.autonomous;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.autonomous.modes.Bomb;
+import frc.robot.autonomous.modes.AmpSideRush;
 import frc.robot.autonomous.modes.CheekyThreePiece;
 import frc.robot.autonomous.modes.DriveBackTwo;
 import frc.robot.autonomous.modes.FiveNoteAmpSide;
 import frc.robot.autonomous.modes.FourNoteAmpSide;
 import frc.robot.autonomous.modes.FourNoteCenter;
 import frc.robot.autonomous.modes.FourNoteSourceSide;
-import frc.robot.autonomous.modes.OPAuto;
 import frc.robot.autonomous.modes.Preload;
-import frc.robot.autonomous.modes.ReverseFiveNoteAmpSide;
 import frc.robot.autonomous.modes.SixNoteAmpSide;
 import frc.robot.autonomous.modes.SixNoteAmpSideAlternate;
 import frc.robot.autonomous.modes.SourceSideRush12;
@@ -42,7 +40,6 @@ public class AutonomousSelector {
         new SixNoteAmpSideAlternate(superstructure, swerve, shooter, intake));
     autonomousSelector.addOption(
         "FOUR_NOTE_CENTER", new FourNoteCenter(superstructure, swerve, shooter, intake));
-    autonomousSelector.addOption("BOMB", new Bomb(superstructure, swerve, shooter, intake));
     autonomousSelector.addOption(
         "FOUR_NOTE_AMP_SIDE", new FourNoteAmpSide(superstructure, swerve, shooter, intake));
     autonomousSelector.addOption(
@@ -53,12 +50,11 @@ public class AutonomousSelector {
     autonomousSelector.addOption(
         "FOUR_NOTE_SOURCE_SIDE", new FourNoteSourceSide(superstructure, swerve, shooter, intake));
     autonomousSelector.addOption(
-        "REVERSE_FIVE_NOTE", new ReverseFiveNoteAmpSide(superstructure, swerve, shooter, intake));
-    autonomousSelector.addOption("OP_AUTO", new OPAuto(superstructure, swerve, shooter, intake));
-    autonomousSelector.addOption(
         "SOURCE_SIDE_RUSH_12", new SourceSideRush12(superstructure, swerve, shooter, intake));
     autonomousSelector.addOption(
         "SOURCE_SIDE_RUSH_21", new SourceSideRush21(superstructure, swerve, shooter, intake));
+    autonomousSelector.addOption(
+        "AMP_SIDE_RUSH", new AmpSideRush(superstructure, swerve, shooter, intake));
 
     SmartDashboard.putData("Autonomus Selector", autonomousSelector);
   }

@@ -15,6 +15,7 @@ import frc.robot.subsystems.swerve.Swerve;
 public class Preload extends SequentialCommandGroup {
 
   public Preload(Superstructure superstructure, Swerve swerve, Shooter shooter, Intake intake) {
+    setName("PRELOAD");
     addRequirements(superstructure, swerve, shooter, intake);
     addCommands(
         // Fire preload

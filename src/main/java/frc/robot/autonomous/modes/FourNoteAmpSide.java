@@ -20,6 +20,7 @@ public class FourNoteAmpSide extends SequentialCommandGroup {
 
   public FourNoteAmpSide(
       Superstructure superstructure, Swerve swerve, Shooter shooter, Intake intake) {
+    setName("FOUR_NOTE_AMP_SIDE");
     addRequirements(superstructure, swerve, shooter, intake);
     addCommands(
         new InstantCommand(() -> superstructure.requestIntake(true)),

@@ -13,6 +13,7 @@ import frc.robot.commons.GeomUtil;
 import frc.robot.commons.PolynomialRegression;
 import frc.robot.commons.TimestampedVisionUpdate;
 import frc.robot.constants.FieldConstants;
+import frc.robot.constants.SingleTagAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -124,6 +125,8 @@ public class PhotonAprilTagVision extends SubsystemBase {
       List<Pose3d> tagPose3ds = new ArrayList<>();
       PhotonPipelineResult unprocessedResult = cameras[instanceIndex].getLatestResult();
 
+      double singleTagAdjustment = 1.0;
+
       // if (unprocessedResults.size() > 2) {
       //   unprocessedResults =
       //       unprocessedResults.subList(unprocessedResults.size() - 2, unprocessedResults.size());
@@ -210,6 +213,7 @@ public class PhotonAprilTagVision extends SubsystemBase {
         }
 
         tagPose3ds.add(tagPos);
+        singleTagAdjustment = SingleTagAdjusters.getAdjustmentForTag(target.getFiducialId());
         Logger.recordOutput("Photon/Camera Pose (Single Tag) " + instanceIndex, cameraPose);
       }
 
@@ -266,17 +270,17 @@ public class PhotonAprilTagVision extends SubsystemBase {
                 robotPose,
                 timestamp,
                 VecBuilder.fill(
-                    xyStdDev * stdDevScalarShooting,
-                    xyStdDev * stdDevScalarShooting,
-                    thetaStdDev * stdDevScalarShooting)));
+                    singleTagAdjustment * xyStdDev * stdDevScalarShooting,
+                    singleTagAdjustment * xyStdDev * stdDevScalarShooting,
+                    singleTagAdjustment * thetaStdDev * stdDevScalarShooting)));
         visionUpdatesAuto.add(
             new TimestampedVisionUpdate(
                 robotPose,
                 timestamp,
                 VecBuilder.fill(
-                    singleTagStdDevScalar * xyStdDev * stdDevScalarAuto,
-                    singleTagStdDevScalar * xyStdDev * stdDevScalarAuto,
-                    singleTagStdDevScalar * thetaStdDev * stdDevScalarAuto)));
+                    singleTagAdjustment * singleTagStdDevScalar * xyStdDev * stdDevScalarAuto,
+                    singleTagAdjustment * singleTagStdDevScalar * xyStdDev * stdDevScalarAuto,
+                    singleTagAdjustment * singleTagStdDevScalar * thetaStdDev * stdDevScalarAuto)));
 
         Logger.recordOutput("VisionData/" + instanceIndex, robotPose);
         Logger.recordOutput("Photon/Tags Used " + instanceIndex, tagPose3ds.size());

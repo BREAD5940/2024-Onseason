@@ -16,6 +16,7 @@ public class DriveBackTwo extends SequentialCommandGroup {
 
   public DriveBackTwo(
       Superstructure superstructure, Swerve swerve, Shooter shooter, Intake intake) {
+    setName("DRIVE_BACK_TWO");
     addRequirements(superstructure, swerve, shooter, intake);
     addCommands(
         // Fire preload

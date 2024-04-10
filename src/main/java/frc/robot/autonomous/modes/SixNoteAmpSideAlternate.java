@@ -20,6 +20,7 @@ public class SixNoteAmpSideAlternate extends SequentialCommandGroup {
 
   public SixNoteAmpSideAlternate(
       Superstructure superstructure, Swerve swerve, Shooter shooter, Intake intake) {
+    setName("SIX_NOTE_AMP_SIDE_ALTERNATE");
     addRequirements(superstructure, swerve, shooter, intake);
     addCommands(
         new InstantCommand(

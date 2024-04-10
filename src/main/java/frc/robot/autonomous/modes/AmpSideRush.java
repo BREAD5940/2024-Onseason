@@ -9,38 +9,41 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Robot;
 import frc.robot.subsystems.Superstructure;
+import frc.robot.subsystems.commands.FenderShotCommand;
 import frc.robot.subsystems.commands.StationaryShootCommand;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.subsystems.swerve.TrajectoryFollowerCommand;
 
-public class SourceSideRush12 extends SequentialCommandGroup {
+public class AmpSideRush extends SequentialCommandGroup {
 
-  public SourceSideRush12(
-      Superstructure superstructure, Swerve swerve, Shooter shooter, Intake intake) {
-    setName("SOURCE_SIDE_RUSH_12");
+  public AmpSideRush(Superstructure superstructure, Swerve swerve, Shooter shooter, Intake intake) {
+    setName("AMP_SIDE_RUSH");
     addRequirements(superstructure, swerve, shooter, intake);
     addCommands(
         new InstantCommand(
             () -> {
-              PathPlannerPath path = Robot.ssrRushA;
+              superstructure.requestFender(true, true);
+              shooter.requestFender();
+
+              PathPlannerPath path = Robot.asrRushA;
               if (Robot.alliance == Alliance.Red) {
                 path = path.flipPath();
               }
               swerve.resetPose(path.getPreviewStartingHolonomicPose());
-              superstructure.unregisterAutoPreload();
             }),
-        new TrajectoryFollowerCommand(() -> Robot.ssrRushA, swerve, false, () -> false)
+        new FenderShotCommand(swerve, superstructure, shooter),
+        new TrajectoryFollowerCommand(() -> Robot.asrRushA, swerve, false, () -> false)
             .beforeStarting(
                 () -> {
                   intake.requestIntake();
                   superstructure.requestIntake(true);
                 }),
-        new WaitUntilCommand(superstructure::hasPiece).withTimeout(0.75),
+        new WaitUntilCommand(superstructure::hasPiece).withTimeout(0.5),
         new ConditionalCommand(
             new SequentialCommandGroup(
-                new TrajectoryFollowerCommand(() -> Robot.ssrReturnA, swerve, false, () -> true)
+                new TrajectoryFollowerCommand(() -> Robot.asrReturnA, swerve, false, () -> true)
                     .deadlineWith(
                         new RunCommand(
                             () -> {
@@ -48,12 +51,12 @@ public class SourceSideRush12 extends SequentialCommandGroup {
                               superstructure.requestVisionSpeaker(true, false, false);
                             })),
                 new StationaryShootCommand(swerve, superstructure, shooter),
-                new TrajectoryFollowerCommand(() -> Robot.ssrFromShootPoseB, swerve, () -> false),
-                new WaitUntilCommand(superstructure::hasPiece).withTimeout(0.75),
+                new TrajectoryFollowerCommand(() -> Robot.asrFromShootPoseB, swerve, () -> false),
+                new WaitUntilCommand(superstructure::hasPiece).withTimeout(0.5),
                 new ConditionalCommand(
                     new SequentialCommandGroup(
                         new TrajectoryFollowerCommand(
-                                () -> Robot.ssrReturnB, swerve, false, () -> true)
+                                () -> Robot.asrReturnB, swerve, false, () -> true)
                             .deadlineWith(
                                 new RunCommand(
                                     () -> {
@@ -62,7 +65,8 @@ public class SourceSideRush12 extends SequentialCommandGroup {
                                     })),
                         new StationaryShootCommand(swerve, superstructure, shooter),
                         new TrajectoryFollowerCommand(
-                                () -> Robot.ssrPreloadShoot, swerve, () -> false)
+                            () -> Robot.asrFromShootPoseC, swerve, () -> false),
+                        new TrajectoryFollowerCommand(() -> Robot.asrReturnC, swerve, () -> false)
                             .deadlineWith(
                                 new RunCommand(
                                     () -> {
@@ -72,18 +76,9 @@ public class SourceSideRush12 extends SequentialCommandGroup {
                         new StationaryShootCommand(swerve, superstructure, shooter)),
                     new SequentialCommandGroup(
                         new TrajectoryFollowerCommand(
-                            () -> Robot.ssrPivotC, swerve, false, () -> false),
+                            () -> Robot.asrPivotC, swerve, false, () -> false),
                         new TrajectoryFollowerCommand(
-                                () -> Robot.ssrReturnC, swerve, false, () -> false)
-                            .deadlineWith(
-                                new RunCommand(
-                                    () -> {
-                                      shooter.requestVisionSpeaker(false);
-                                      superstructure.requestVisionSpeaker(true, false, false);
-                                    })),
-                        new StationaryShootCommand(swerve, superstructure, shooter),
-                        new TrajectoryFollowerCommand(
-                                () -> Robot.ssrPreloadShoot, swerve, false, () -> false)
+                                () -> Robot.asrReturnC, swerve, false, () -> false)
                             .deadlineWith(
                                 new RunCommand(
                                     () -> {
@@ -93,12 +88,12 @@ public class SourceSideRush12 extends SequentialCommandGroup {
                         new StationaryShootCommand(swerve, superstructure, shooter)),
                     superstructure::hasPiece)),
             new SequentialCommandGroup(
-                new TrajectoryFollowerCommand(() -> Robot.ssrPivotB, swerve, false, () -> false),
-                new WaitUntilCommand(superstructure::hasPiece).withTimeout(0.75),
+                new TrajectoryFollowerCommand(() -> Robot.asrPivotB, swerve, false, () -> false),
+                new WaitUntilCommand(superstructure::hasPiece).withTimeout(0.5),
                 new ConditionalCommand(
                     new SequentialCommandGroup(
                         new TrajectoryFollowerCommand(
-                                () -> Robot.ssrReturnB, swerve, false, () -> true)
+                                () -> Robot.asrReturnB, swerve, false, () -> true)
                             .deadlineWith(
                                 new RunCommand(
                                     () -> {
@@ -107,18 +102,9 @@ public class SourceSideRush12 extends SequentialCommandGroup {
                                     })),
                         new StationaryShootCommand(swerve, superstructure, shooter),
                         new TrajectoryFollowerCommand(
-                            () -> Robot.ssrFromShootPoseC, swerve, false, () -> false),
+                            () -> Robot.asrFromShootPoseC, swerve, false, () -> false),
                         new TrajectoryFollowerCommand(
-                                () -> Robot.ssrReturnC, swerve, false, () -> false)
-                            .deadlineWith(
-                                new RunCommand(
-                                    () -> {
-                                      shooter.requestVisionSpeaker(false);
-                                      superstructure.requestVisionSpeaker(true, false, false);
-                                    })),
-                        new StationaryShootCommand(swerve, superstructure, shooter),
-                        new TrajectoryFollowerCommand(
-                                () -> Robot.ssrPreloadShoot, swerve, () -> false)
+                                () -> Robot.asrReturnC, swerve, false, () -> false)
                             .deadlineWith(
                                 new RunCommand(
                                     () -> {
@@ -128,18 +114,9 @@ public class SourceSideRush12 extends SequentialCommandGroup {
                         new StationaryShootCommand(swerve, superstructure, shooter)),
                     new SequentialCommandGroup(
                         new TrajectoryFollowerCommand(
-                            () -> Robot.ssrPivotC, swerve, false, () -> false),
+                            () -> Robot.asrPivotC, swerve, false, () -> false),
                         new TrajectoryFollowerCommand(
-                                () -> Robot.ssrReturnC, swerve, false, () -> false)
-                            .deadlineWith(
-                                new RunCommand(
-                                    () -> {
-                                      shooter.requestVisionSpeaker(false);
-                                      superstructure.requestVisionSpeaker(true, false, false);
-                                    })),
-                        new StationaryShootCommand(swerve, superstructure, shooter),
-                        new TrajectoryFollowerCommand(
-                                () -> Robot.ssrPreloadShoot, swerve, false, () -> false)
+                                () -> Robot.asrReturnC, swerve, false, () -> false)
                             .deadlineWith(
                                 new RunCommand(
                                     () -> {

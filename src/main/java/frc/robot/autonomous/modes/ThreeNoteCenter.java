@@ -17,6 +17,7 @@ public class ThreeNoteCenter extends SequentialCommandGroup {
 
   public ThreeNoteCenter(
       Superstructure superstructure, Swerve swerve, Shooter shooter, Intake intake) {
+    setName("THREE_NOTE_CENTER");
     addRequirements(superstructure, swerve, shooter, intake);
     addCommands(
         new InstantCommand(() -> superstructure.requestIntake(true)),

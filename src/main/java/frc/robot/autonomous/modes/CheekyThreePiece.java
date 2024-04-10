@@ -17,6 +17,7 @@ import frc.robot.subsystems.swerve.TrajectoryFollowerCommand;
 public class CheekyThreePiece extends SequentialCommandGroup {
   public CheekyThreePiece(
       Superstructure superstructure, Swerve swerve, Shooter shooter, Intake intake) {
+    setName("CHEEKY_THREE_PIECE");
     addRequirements(superstructure, swerve, shooter, intake);
     addCommands(
         new InstantCommand(() -> superstructure.requestIntake(true)),

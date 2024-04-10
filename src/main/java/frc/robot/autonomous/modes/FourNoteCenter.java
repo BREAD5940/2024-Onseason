@@ -17,6 +17,7 @@ import frc.robot.subsystems.swerve.TrajectoryFollowerCommand;
 public class FourNoteCenter extends SequentialCommandGroup {
   public FourNoteCenter(
       Superstructure superstructure, Swerve swerve, Shooter shooter, Intake intake) {
+    setName("FOUR_NOTE_CENTER");
     addRequirements(superstructure, swerve, shooter, intake);
     addCommands(
         new InstantCommand(() -> superstructure.requestIntake(true)),

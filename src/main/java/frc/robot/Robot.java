@@ -45,34 +45,12 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath sixNoteAmpSideCAlternate;
   public static PathPlannerPath sixNoteAmpSideDAlternate;
 
-  public static PathPlannerPath bombA;
-  public static PathPlannerPath bombB;
-  public static PathPlannerPath bombC;
-
   public static PathPlannerPath fiveNoteAmpSideA;
   public static PathPlannerPath fiveNoteAmpSideB;
   public static PathPlannerPath fiveNoteAmpSideC;
   public static PathPlannerPath fiveNoteAmpSideD;
   public static PathPlannerPath fiveNoteAmpSideEA;
   public static PathPlannerPath fiveNoteAmpSideEB;
-
-  public static PathPlannerPath OPAutoA;
-  public static PathPlannerPath OPAutoBA;
-  public static PathPlannerPath OPAutoBB;
-  public static PathPlannerPath OPAutoC;
-  public static PathPlannerPath OPAutoCA;
-  public static PathPlannerPath OPAutoCB;
-  public static PathPlannerPath OPAutoD;
-  public static PathPlannerPath OPAutoDA;
-  public static PathPlannerPath OPAutoDB;
-
-  public static PathPlannerPath reverseFiveNoteA;
-  public static PathPlannerPath reverseFiveNoteB;
-  public static PathPlannerPath reverseFiveNoteCA;
-  public static PathPlannerPath reverseFiveNoteCB;
-  public static PathPlannerPath reverseFiveNoteD;
-  public static PathPlannerPath reverseFiveNoteEA;
-  public static PathPlannerPath reverseFiveNoteEB;
 
   public static PathPlannerPath ssrRushA;
   public static PathPlannerPath ssrRushB;
@@ -87,6 +65,15 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath ssrFromShootPoseB;
   public static PathPlannerPath ssrFromShootPoseC;
   public static PathPlannerPath ssrPreloadShoot;
+
+  public static PathPlannerPath asrRushA;
+  public static PathPlannerPath asrPivotB;
+  public static PathPlannerPath asrPivotC;
+  public static PathPlannerPath asrReturnA;
+  public static PathPlannerPath asrReturnB;
+  public static PathPlannerPath asrReturnC;
+  public static PathPlannerPath asrFromShootPoseB;
+  public static PathPlannerPath asrFromShootPoseC;
 
   private boolean requestedHome = false;
 
@@ -140,10 +127,6 @@ public class Robot extends LoggedRobot {
     sixNoteAmpSideCAlternate = PathPlannerPath.fromPathFile("Six Note C Alternate");
     sixNoteAmpSideDAlternate = PathPlannerPath.fromPathFile("Six Note D Alternate");
 
-    bombA = PathPlannerPath.fromPathFile("Bomb A");
-    bombB = PathPlannerPath.fromPathFile("Bomb B");
-    bombC = PathPlannerPath.fromPathFile("Bomb C");
-
     fiveNoteAmpSideA = PathPlannerPath.fromPathFile("Five Note Amp Side A");
     fiveNoteAmpSideB = PathPlannerPath.fromPathFile("Five Note Amp Side B");
     fiveNoteAmpSideC = PathPlannerPath.fromPathFile("Five Note Amp Side C");
@@ -154,26 +137,6 @@ public class Robot extends LoggedRobot {
     fourNoteSourceSideA = PathPlannerPath.fromPathFile("Four Note Source Side A");
     fourNoteSourceSideB = PathPlannerPath.fromPathFile("Four Note Source Side B");
     fourNoteSourceSideC = PathPlannerPath.fromPathFile("Four Note Source Side C");
-
-    OPAutoA = PathPlannerPath.fromPathFile("OP Auto A");
-    OPAutoBA = PathPlannerPath.fromPathFile("OP Auto BA");
-    OPAutoBB = PathPlannerPath.fromPathFile("OP Auto BB");
-
-    OPAutoC = PathPlannerPath.fromPathFile("OP Auto C");
-    OPAutoCA = PathPlannerPath.fromPathFile("OP Auto CA");
-    OPAutoCB = PathPlannerPath.fromPathFile("OP Auto CB");
-
-    OPAutoD = PathPlannerPath.fromPathFile("OP Auto D");
-    OPAutoDA = PathPlannerPath.fromPathFile("OP Auto DA");
-    OPAutoDB = PathPlannerPath.fromPathFile("OP Auto DB");
-
-    reverseFiveNoteA = PathPlannerPath.fromPathFile("Reverse Five A");
-    reverseFiveNoteB = PathPlannerPath.fromPathFile("Reverse Five B");
-    reverseFiveNoteCA = PathPlannerPath.fromPathFile("Reverse Five CA");
-    reverseFiveNoteCB = PathPlannerPath.fromPathFile("Reverse Five CB");
-    reverseFiveNoteD = PathPlannerPath.fromPathFile("Reverse Five D");
-    reverseFiveNoteEA = PathPlannerPath.fromPathFile("Reverse Five EA");
-    reverseFiveNoteEB = PathPlannerPath.fromPathFile("Reverse Five EB");
 
     ssrRushA = PathPlannerPath.fromPathFile("SSR Rush A");
     ssrRushB = PathPlannerPath.fromPathFile("SSR Rush B");
@@ -188,6 +151,15 @@ public class Robot extends LoggedRobot {
     ssrFromShootPoseB = PathPlannerPath.fromPathFile("SSR From Shoot Pose B");
     ssrFromShootPoseC = PathPlannerPath.fromPathFile("SSR From Shoot Pose C");
     ssrPreloadShoot = PathPlannerPath.fromPathFile("SSR Preload Shoot");
+
+    asrRushA = PathPlannerPath.fromPathFile("ASR Rush A");
+    asrPivotB = PathPlannerPath.fromPathFile("ASR Pivot B");
+    asrPivotC = PathPlannerPath.fromPathFile("ASR Pivot C");
+    asrReturnA = PathPlannerPath.fromPathFile("ASR Return A");
+    asrReturnB = PathPlannerPath.fromPathFile("ASR Return B");
+    asrReturnC = PathPlannerPath.fromPathFile("ASR Return C");
+    asrFromShootPoseB = PathPlannerPath.fromPathFile("ASR From Shoot Pose B");
+    asrFromShootPoseC = PathPlannerPath.fromPathFile("ASR From Shoot Pose C");
 
     m_robotContainer.configureAutonomousSelector();
   }
@@ -229,7 +201,16 @@ public class Robot extends LoggedRobot {
   public void disabledInit() {}
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    if (DriverStation.isAutonomous()
+        && m_robotContainer.getAutonomousCommand().getName() == "AMP_SIDE_RUSH") {
+      RobotContainer.superstructure.requestVisionSpeaker(true, false, false);
+      RobotContainer.shooter.requestVisionSpeaker(false);
+    } else {
+      RobotContainer.superstructure.requestFender(false, false);
+      RobotContainer.shooter.requestIdle();
+    }
+  }
 
   @Override
   public void disabledExit() {}
@@ -272,6 +253,7 @@ public class Robot extends LoggedRobot {
     RobotController.setBrownoutVoltage(5.75);
 
     RobotContainer.superstructure.requestVisionSpeaker(false, false, false);
+    RobotContainer.superstructure.requestFender(false, false);
   }
 
   @Override

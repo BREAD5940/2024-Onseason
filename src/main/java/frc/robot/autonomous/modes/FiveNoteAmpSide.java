@@ -19,6 +19,7 @@ public class FiveNoteAmpSide extends SequentialCommandGroup {
 
   public FiveNoteAmpSide(
       Superstructure superstructure, Swerve swerve, Shooter shooter, Intake intake) {
+    setName("FIVE_NOTE_AMP_SIDE");
     addRequirements(superstructure, swerve, shooter, intake);
     addCommands(
         // Fire preload

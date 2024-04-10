@@ -3,41 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.23,
-        "y": 4.93
+        "x": 0.7417791758660457,
+        "y": 6.551650026376976
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.64958220358666,
-        "y": 4.6960454548583845
+        "x": 1.2844610304553143,
+        "y": 7.449541822165302
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.151853226783379,
-        "y": 4.2921201227017844
+        "x": 3.5933256481897597,
+        "y": 7.73568316367402
       },
       "prevControl": {
-        "x": 7.895509771048071,
-        "y": 4.520382906671662
+        "x": 1.067388288617523,
+        "y": 7.735683163678754
       },
       "nextControl": {
-        "x": 8.844255865812869,
-        "y": 3.675565455606405
+        "x": 5.892344496707697,
+        "y": 7.735683163669711
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.86,
-        "y": 4.53
+        "x": 8.398526797053595,
+        "y": 7.459408764971376
       },
       "prevControl": {
-        "x": 6.448577792540201,
-        "y": 3.8393140032433912
+        "x": 8.11238545554014,
+        "y": 7.489009593403802
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,29 +46,29 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.0,
-      "rotationDegrees": 130.0,
+      "waypointRelativePos": 0.2,
+      "rotationDegrees": 180.0,
       "rotateFast": true
     }
   ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 4.0,
+    "maxAcceleration": 4.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": 153.60431753951363,
+    "rotation": -179.36340642403653,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "OPAuto",
+  "folder": "AmpSideRush",
   "previewStartingState": {
-    "rotation": 179.85653405181486,
-    "velocity": 2.0
+    "rotation": -119.5387822595581,
+    "velocity": 0
   },
   "useDefaultConstraints": false
 }
