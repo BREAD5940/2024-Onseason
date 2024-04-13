@@ -134,6 +134,7 @@ public class Constants {
     public static final double ELEVATOR_END_OF_DANGER_ZONE;
     public static final double ELEVATOR_MAX_HEIGHT;
     public static final double ELEVATOR_PASS_HEIGHT;
+    public static final double ELEVATOR_LOW_PASS_HEIGHT;
 
     static {
       if (robot == RobotType.BETA) {
@@ -166,6 +167,8 @@ public class Constants {
         ELEVATOR_FENDER_HEIGHT = 0.22; // 0.4
 
         ELEVATOR_PASS_HEIGHT = 0.4;
+
+        ELEVATOR_LOW_PASS_HEIGHT = 0.05;
 
         ELEVATOR_SPOOL_DIAMETER = Units.inchesToMeters(1.463);
         ELEVATOR_SETPOINT_TOLERANCE_METERS = 0.01;
@@ -210,6 +213,8 @@ public class Constants {
         ELEVATOR_FENDER_HEIGHT = 0.4;
 
         ELEVATOR_PASS_HEIGHT = 0.4;
+
+        ELEVATOR_LOW_PASS_HEIGHT = 0.05;
 
         ELEVATOR_SPOOL_DIAMETER = Units.inchesToMeters(1.463);
         ELEVATOR_SETPOINT_TOLERANCE_METERS = 0.01;
@@ -265,6 +270,8 @@ public class Constants {
 
     public static final Rotation2d PIVOT_PASS_ANGLE;
 
+    public static final Rotation2d PIVOT_LOW_PASS_ANGLE;
+
     /* Physical Measurements */
     public static final double PIVOT_SETPOINT_TOLERANCE_RADS;
     public static final double PIVOT_DELTA_ERROR_TOLERANCE;
@@ -311,6 +318,8 @@ public class Constants {
 
         PIVOT_PASS_ANGLE = Rotation2d.fromDegrees(-50.0);
 
+        PIVOT_LOW_PASS_ANGLE = Rotation2d.fromDegrees(0.0);
+
         PIVOT_SETPOINT_TOLERANCE_RADS = Units.degreesToRadians(1.5);
         PIVOT_DELTA_ERROR_TOLERANCE = 0.07;
         PIVOT_DELTA_ERROR_TOLERANCE_SOD = 0.01;
@@ -353,6 +362,8 @@ public class Constants {
         PIVOT_FENDER_ANGLE = Rotation2d.fromDegrees(-50.0);
 
         PIVOT_PASS_ANGLE = Rotation2d.fromDegrees(-50.0);
+
+        PIVOT_LOW_PASS_ANGLE = Rotation2d.fromDegrees(0.0);
 
         PIVOT_SETPOINT_TOLERANCE_RADS = Units.degreesToRadians(3.0);
         PIVOT_DELTA_ERROR_TOLERANCE = 0.002;
@@ -397,6 +408,9 @@ public class Constants {
     public static final double SHOOTER_LEFT_PASS_RPM;
     public static final double SHOOTER_RIGHT_PASS_RPM;
 
+    public static final double SHOOTER_LEFT_LOW_PASS_RPM;
+    public static final double SHOOTER_RIGHT_LOW_PASS_RPM;
+
     static {
       if (robot == RobotType.BETA) {
         SHOOTER_LEFT_ID = 13;
@@ -424,6 +438,9 @@ public class Constants {
         SHOOTER_MAX_VELOCITY = (6380.0 / 60.0);
         SHOOTER_RIGHT_INVERSION = InvertedValue.CounterClockwise_Positive;
         SHOOTER_LEFT_INVERSION = InvertedValue.Clockwise_Positive;
+
+        SHOOTER_LEFT_LOW_PASS_RPM = 2500;
+        SHOOTER_RIGHT_LOW_PASS_RPM = 1500;
       } else {
         SHOOTER_LEFT_ID = 13;
         SHOOTER_RIGHT_ID = 14;
@@ -450,6 +467,9 @@ public class Constants {
         SHOOTER_MAX_VELOCITY = (6380.0 / 60.0);
         SHOOTER_RIGHT_INVERSION = InvertedValue.CounterClockwise_Positive;
         SHOOTER_LEFT_INVERSION = InvertedValue.Clockwise_Positive;
+
+        SHOOTER_LEFT_LOW_PASS_RPM = 2500;
+        SHOOTER_RIGHT_LOW_PASS_RPM = 1500;
       }
     }
   }

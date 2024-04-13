@@ -37,7 +37,7 @@ public class SourceSideRush12 extends SequentialCommandGroup {
                   intake.requestIntake();
                   superstructure.requestIntake(true);
                 }),
-        new WaitUntilCommand(superstructure::hasPiece).withTimeout(0.75),
+        new WaitUntilCommand(superstructure::hasPiece).withTimeout(0.5),
         new ConditionalCommand(
             new SequentialCommandGroup(
                 new TrajectoryFollowerCommand(() -> Robot.ssrReturnA, swerve, false, () -> true)
@@ -49,7 +49,7 @@ public class SourceSideRush12 extends SequentialCommandGroup {
                             })),
                 new StationaryShootCommand(swerve, superstructure, shooter),
                 new TrajectoryFollowerCommand(() -> Robot.ssrFromShootPoseB, swerve, () -> false),
-                new WaitUntilCommand(superstructure::hasPiece).withTimeout(0.75),
+                new WaitUntilCommand(superstructure::hasPiece).withTimeout(0.3),
                 new ConditionalCommand(
                     new SequentialCommandGroup(
                         new TrajectoryFollowerCommand(
@@ -94,7 +94,7 @@ public class SourceSideRush12 extends SequentialCommandGroup {
                     superstructure::hasPiece)),
             new SequentialCommandGroup(
                 new TrajectoryFollowerCommand(() -> Robot.ssrPivotB, swerve, false, () -> false),
-                new WaitUntilCommand(superstructure::hasPiece).withTimeout(0.75),
+                new WaitUntilCommand(superstructure::hasPiece).withTimeout(0.3),
                 new ConditionalCommand(
                     new SequentialCommandGroup(
                         new TrajectoryFollowerCommand(

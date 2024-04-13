@@ -16,7 +16,7 @@ import frc.robot.constants.GammaTunerConstants;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.commands.AmpCommand;
 import frc.robot.subsystems.commands.FenderShotCommand;
-import frc.robot.subsystems.commands.ManualAmpCommand;
+import frc.robot.subsystems.commands.LowPassCommand;
 import frc.robot.subsystems.commands.PassCommand;
 import frc.robot.subsystems.commands.TeleopShootCommand;
 import frc.robot.subsystems.elevatorpivot.ElevatorIO;
@@ -128,10 +128,10 @@ public class RobotContainer {
     //     .whileTrue(new AimAtTrapCommand(swerve));
 
     new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
-        .whileTrue(new FenderShotCommand(swerve, superstructure, shooter));
+        .whileTrue(new LowPassCommand(swerve, superstructure, shooter));
 
     new JoystickButton(driver, XboxController.Button.kRightBumper.value)
-        .whileTrue(new ManualAmpCommand(swerve));
+        .whileTrue(new FenderShotCommand(swerve, superstructure, shooter));
   }
 
   private void configureAprilTagVision() {

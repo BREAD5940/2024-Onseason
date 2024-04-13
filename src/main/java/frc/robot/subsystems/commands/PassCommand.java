@@ -46,12 +46,12 @@ public class PassCommand extends Command {
     double dy;
 
     if (Robot.alliance == DriverStation.Alliance.Blue) {
-      dx = Math.pow(-x, 1) * 2.5;
-      dy = Math.pow(-y, 1) * 2.5;
+      dx = Math.pow(-x, 1) * 5;
+      dy = Math.pow(-y, 1) * 5;
 
     } else {
-      dx = Math.pow(-x, 1) * -1 * 2.5;
-      dy = Math.pow(-y, 1) * -1 * 2.5;
+      dx = Math.pow(-x, 1) * -1 * 5;
+      dy = Math.pow(-y, 1) * -1 * 5;
     }
 
     // Subsystem Requests

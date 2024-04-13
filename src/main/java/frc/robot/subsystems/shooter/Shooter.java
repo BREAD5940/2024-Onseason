@@ -24,6 +24,7 @@ public class Shooter extends SubsystemBase {
   private boolean requestAmp = false;
   private boolean requestPass = false;
   private boolean requestTrap = false;
+  private boolean requestLowPass = false;
 
   private boolean wantsShootOverDefense = false;
   private boolean override = false;
@@ -45,7 +46,8 @@ public class Shooter extends SubsystemBase {
     AMP,
     TUNING,
     PASS,
-    TRAP
+    TRAP,
+    LOW_PASS
   }
 
   public Shooter(ShooterIO io) {
@@ -83,6 +85,8 @@ public class Shooter extends SubsystemBase {
         nextSystemState = ShooterState.PASS;
       } else if (requestTrap) {
         nextSystemState = ShooterState.TRAP;
+      } else if (requestLowPass) {
+        nextSystemState = ShooterState.LOW_PASS;
       }
     } else if (systemState == ShooterState.FENDER) {
       // Outputs
@@ -118,12 +122,24 @@ public class Shooter extends SubsystemBase {
       if (!requestTrap) {
         nextSystemState = ShooterState.IDLE;
       }
+    } else if (systemState == ShooterState.LOW_PASS) {
+      io.setVelocity(desiredLeftRPM, desiredRightRPM);
+
+      if (!requestLowPass) {
+        nextSystemState = ShooterState.IDLE;
+      }
     }
 
     if (nextSystemState != systemState) {
       stateStartTime = BreadUtil.getFPGATimeSeconds();
       systemState = nextSystemState;
     }
+  }
+
+  /* Returns whether or not the shooter is spinning */
+  public boolean shooterNotSpinning() {
+    return Math.abs(inputs.shooterLeftVelocityRpm) < 10.0
+        && Math.abs(inputs.shooterRightVelocityRpm) < 10.0;
   }
 
   // Returns whether the shooter is at setpoint for the superstructure
@@ -202,11 +218,19 @@ public class Shooter extends SubsystemBase {
     requestTrap = true;
   }
 
+  public void requestLowPass() {
+    desiredLeftRPM = SHOOTER_LEFT_PASS_RPM;
+    desiredRightRPM = SHOOTER_RIGHT_PASS_RPM;
+    unsetAllRequests();
+    requestLowPass = true;
+  }
+
   private void unsetAllRequests() {
     requestFender = false;
     requestVisionSpeaker = false;
     requestAmp = false;
     requestPass = false;
     requestTrap = false;
+    requestLowPass = false;
   }
 }
