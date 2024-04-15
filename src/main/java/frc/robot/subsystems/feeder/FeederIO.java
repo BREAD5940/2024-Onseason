@@ -31,6 +31,9 @@ public interface FeederIO {
   /** Enables or disables brake mode for the motor. */
   public default void enableBrakeMode(boolean enable) {}
 
+  /** Enabled or disables the reverse limit for the motor */
+  public default void enableReverseLimit(boolean enable) {}
+
   /** Updates the tunable numbers */
   public default void updateTunableNumbers() {}
 }

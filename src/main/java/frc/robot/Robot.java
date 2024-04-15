@@ -1,7 +1,6 @@
 package frc.robot;
 
 import com.pathplanner.lib.path.PathPlannerPath;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -70,34 +69,34 @@ public class Robot extends LoggedRobot {
 
     Logger.start();
 
-    fourNoteCenterA = PathPlannerPath.fromPathFile("Four Note Center A");
-    fourNoteCenterB = PathPlannerPath.fromPathFile("Four Note Center B");
-    fourNoteCenterC = PathPlannerPath.fromPathFile("Four Note Center C");
-    fourNoteCenterD = PathPlannerPath.fromPathFile("Four Note Center D");
+    // fourNoteCenterA = PathPlannerPath.fromPathFile("Four Note Center A");
+    // fourNoteCenterB = PathPlannerPath.fromPathFile("Four Note Center B");
+    // fourNoteCenterC = PathPlannerPath.fromPathFile("Four Note Center C");
+    // fourNoteCenterD = PathPlannerPath.fromPathFile("Four Note Center D");
 
-    fourNoteSourceSideA = PathPlannerPath.fromPathFile("Four Note Source A");
-    fourNoteSourceSideB = PathPlannerPath.fromPathFile("Four Note Source B");
-    fourNoteSourceSideC = PathPlannerPath.fromPathFile("Four Note Source C");
-    fourNoteSourceSideD = PathPlannerPath.fromPathFile("Four Note Source D");
-    fourNoteSourceSideE = PathPlannerPath.fromPathFile("Four Note Source E");
-    fourNoteSourceSideF = PathPlannerPath.fromPathFile("Four Note Source F");
+    // fourNoteSourceSideA = PathPlannerPath.fromPathFile("Four Note Source A");
+    // fourNoteSourceSideB = PathPlannerPath.fromPathFile("Four Note Source B");
+    // fourNoteSourceSideC = PathPlannerPath.fromPathFile("Four Note Source C");
+    // fourNoteSourceSideD = PathPlannerPath.fromPathFile("Four Note Source D");
+    // fourNoteSourceSideE = PathPlannerPath.fromPathFile("Four Note Source E");
+    // fourNoteSourceSideF = PathPlannerPath.fromPathFile("Four Note Source F");
 
-    sixNoteAmpSideA = PathPlannerPath.fromPathFile("Six Note A");
-    sixNoteAmpSideB = PathPlannerPath.fromPathFile("Six Note B");
-    sixNoteAmpSideC = PathPlannerPath.fromPathFile("Six Note C");
-    sixNoteAmpSideD = PathPlannerPath.fromPathFile("Six Note D");
-    sixNoteAmpSideE = PathPlannerPath.fromPathFile("Six Note E");
-    sixNoteAmpSideF = PathPlannerPath.fromPathFile("Six Note F");
-    sixNoteAmpSideG = PathPlannerPath.fromPathFile("Six Note G");
+    // sixNoteAmpSideA = PathPlannerPath.fromPathFile("Six Note A");
+    // sixNoteAmpSideB = PathPlannerPath.fromPathFile("Six Note B");
+    // sixNoteAmpSideC = PathPlannerPath.fromPathFile("Six Note C");
+    // sixNoteAmpSideD = PathPlannerPath.fromPathFile("Six Note D");
+    // sixNoteAmpSideE = PathPlannerPath.fromPathFile("Six Note E");
+    // sixNoteAmpSideF = PathPlannerPath.fromPathFile("Six Note F");
+    // sixNoteAmpSideG = PathPlannerPath.fromPathFile("Six Note G");
 
-    fiveNoteMidlineAmpSideA = PathPlannerPath.fromPathFile("Five Note Midline A");
-    fiveNoteMidlineAmpSideB = PathPlannerPath.fromPathFile("Five Note Midline B");
-    fiveNoteMidlineAmpSideC = PathPlannerPath.fromPathFile("Five Note Midline C");
-    fiveNoteMidlineAmpSideD = PathPlannerPath.fromPathFile("Five Note Midline D");
-    fiveNoteMidlineAmpSideE = PathPlannerPath.fromPathFile("Five Note Midline E");
-    fiveNoteMidlineAmpSideF = PathPlannerPath.fromPathFile("Five Note Midline F");
+    // fiveNoteMidlineAmpSideA = PathPlannerPath.fromPathFile("Five Note Midline A");
+    // fiveNoteMidlineAmpSideB = PathPlannerPath.fromPathFile("Five Note Midline B");
+    // fiveNoteMidlineAmpSideC = PathPlannerPath.fromPathFile("Five Note Midline C");
+    // fiveNoteMidlineAmpSideD = PathPlannerPath.fromPathFile("Five Note Midline D");
+    // fiveNoteMidlineAmpSideE = PathPlannerPath.fromPathFile("Five Note Midline E");
+    // fiveNoteMidlineAmpSideF = PathPlannerPath.fromPathFile("Five Note Midline F");
 
-    m_robotContainer.configureAutonomousSelector();
+    // m_robotContainer.configureAutonomousSelector();
   }
 
   @Override
@@ -150,33 +149,13 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void teleopPeriodic() {
-    RobotContainer.aprilTagVision.setStdDevMode(StdDevMode.TELEOP);
-    /* Intake requests */
-    if (RobotContainer.driver.getRightTriggerAxis() > 0.1) {
-      RobotContainer.intake.requestIntake();
-      RobotContainer.superstructure.requestIntake(true);
-    } else if (RobotContainer.driver.getLeftTriggerAxis() > 0.1) {
-      RobotContainer.intake.requestSpit();
+    if (RobotContainer.driver.getRightTriggerAxis() > 0.05) {
+      RobotContainer.superstructure.feeder.requestIntake();
+    } else if (RobotContainer.driver.getLeftTriggerAxis() > 0.05) {
+      RobotContainer.superstructure.feeder.requestSpit();
     } else {
-      RobotContainer.superstructure.requestIntake(false);
-      RobotContainer.intake.requestIdle();
+      RobotContainer.superstructure.feeder.requestIdle();
     }
-
-    /* Superstructure spit requests */
-    // if (RobotContainer.operator.getBButton()) {
-    //   RobotContainer.superstructure.requestSpit(true);
-    // } else {
-    //   RobotContainer.superstructure.requestSpit(false);
-    // }
-
-    // Controller vibrations
-    if (RobotContainer.intake.hasPiece()) {
-      RobotContainer.driver.setRumble(RumbleType.kBothRumble, 1.0);
-    } else {
-      RobotContainer.driver.setRumble(RumbleType.kBothRumble, 0.0);
-    }
-
-    /* Climb requests */
   }
 
   @Override

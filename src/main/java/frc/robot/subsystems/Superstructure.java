@@ -21,7 +21,7 @@ public class Superstructure extends SubsystemBase {
 
   /* Subsystems */
   public final ElevatorPivot elevatorPivot;
-  private final Feeder feeder;
+  public final Feeder feeder;
 
   /* State variables */
   private SuperstructureState systemState = SuperstructureState.STARTING_CONFIG;

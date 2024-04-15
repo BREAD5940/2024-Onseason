@@ -18,6 +18,7 @@ public class Feeder {
   private boolean requestIntake = false;
   private boolean requestSpit = false;
   private boolean requestShoot = false;
+  private boolean reverseLimitEnabled = false;
 
   private boolean hasPiece = false;
 
@@ -46,11 +47,16 @@ public class Feeder {
     Logger.processInputs("Feeder", inputs);
 
     Logger.recordOutput("Feeder/SystemState", systemState.toString());
+    Logger.recordOutput("Feeder/ReverseLimitEnabled", reverseLimitEnabled);
 
     // Handle statemachine logic
     FeederState nextSystemState = systemState;
     if (systemState == FeederState.IDLE) {
       io.setPercent(0.0);
+      if (reverseLimitEnabled) {
+        io.enableReverseLimit(false);
+        reverseLimitEnabled = false;
+      }
 
       if (requestIntake && !hasPiece) {
         nextSystemState = FeederState.INTAKE;
@@ -62,15 +68,24 @@ public class Feeder {
       }
     } else if (systemState == FeederState.INTAKE) {
       io.setPercent(FEEDER_INTAKE_SPEED);
+      if (!reverseLimitEnabled) {
+        io.enableReverseLimit(true);
+        reverseLimitEnabled = true;
+      }
 
       if (!requestIntake) {
         nextSystemState = FeederState.IDLE;
-      } else if (inputs.beamBreakTriggered) {
-        hasPiece = true;
-        nextSystemState = FeederState.IDLE;
       }
+      // else if (inputs.beamBreakTriggered) {
+      //   hasPiece = true;
+      //   nextSystemState = FeederState.IDLE;
+      // }
     } else if (systemState == FeederState.SPIT) {
       io.setPercent(FEEDER_SPIT_SPEED);
+      if (reverseLimitEnabled) {
+        io.enableReverseLimit(false);
+        reverseLimitEnabled = false;
+      }
 
       if (!requestSpit) {
         hasPiece = false;
@@ -78,6 +93,10 @@ public class Feeder {
       }
     } else if (systemState == FeederState.SHOOT) {
       io.setPercent(FEEDER_SHOOT_SPEED);
+      if (reverseLimitEnabled) {
+        io.enableReverseLimit(false);
+        reverseLimitEnabled = false;
+      }
 
       if (!requestShoot) {
         nextSystemState = FeederState.IDLE;

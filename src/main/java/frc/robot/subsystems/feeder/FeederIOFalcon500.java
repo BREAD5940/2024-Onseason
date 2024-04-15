@@ -13,10 +13,12 @@ import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.ForwardLimitSourceValue;
+import com.ctre.phoenix6.signals.ForwardLimitTypeValue;
+import com.ctre.phoenix6.signals.ForwardLimitValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.ReverseLimitSourceValue;
-import com.ctre.phoenix6.signals.ReverseLimitValue;
+import com.ctre.phoenix6.signals.ReverseLimitTypeValue;
 import frc.robot.commons.LoggedTunableNumber;
 
 public class FeederIOFalcon500 implements FeederIO {
@@ -37,7 +39,7 @@ public class FeederIOFalcon500 implements FeederIO {
   private StatusSignal<Double> velocity;
   private StatusSignal<Double> current;
   private StatusSignal<Double> temperature;
-  private StatusSignal<ReverseLimitValue> beamBreak;
+  private StatusSignal<ForwardLimitValue> beamBreak;
 
   /* Gains */
   LoggedTunableNumber kS = new LoggedTunableNumber("Feeder/kS", 0.0);
@@ -75,13 +77,15 @@ public class FeederIOFalcon500 implements FeederIO {
     hardwareLimitSwitchConfigs.ForwardLimitEnable = false;
     hardwareLimitSwitchConfigs.ReverseLimitSource = ReverseLimitSourceValue.LimitSwitchPin;
     hardwareLimitSwitchConfigs.ForwardLimitSource = ForwardLimitSourceValue.LimitSwitchPin;
+    hardwareLimitSwitchConfigs.ReverseLimitType = ReverseLimitTypeValue.NormallyClosed;
+    hardwareLimitSwitchConfigs.ForwardLimitType = ForwardLimitTypeValue.NormallyClosed;
 
     /* Set status signals */
     position = motor.getPosition();
     velocity = motor.getVelocity();
     current = motor.getSupplyCurrent();
     temperature = motor.getDeviceTemp();
-    beamBreak = motor.getReverseLimit();
+    beamBreak = motor.getForwardLimit();
 
     /* Apply configs */
     configurator.apply(currentLimitConfigs);
@@ -104,7 +108,7 @@ public class FeederIOFalcon500 implements FeederIO {
     inputs.appliedVolts = motor.getMotorVoltage().getValue();
     inputs.tempCelcius = temperature.getValue();
     inputs.currentAmps = current.getValue();
-    inputs.beamBreakTriggered = beamBreak.getValue().value == 0;
+    inputs.beamBreakTriggered = beamBreak.getValue().value == 1;
   }
 
   @Override
@@ -157,5 +161,12 @@ public class FeederIOFalcon500 implements FeederIO {
 
       configurator.apply(slot0Configs);
     }
+  }
+
+  @Override
+  public void enableReverseLimit(boolean enable) {
+    hardwareLimitSwitchConfigs.ReverseLimitEnable = enable;
+    hardwareLimitSwitchConfigs.ForwardLimitEnable = enable;
+    configurator.apply(hardwareLimitSwitchConfigs);
   }
 }
