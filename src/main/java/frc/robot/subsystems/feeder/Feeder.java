@@ -80,6 +80,7 @@ public class Feeder {
       }
     } else if (systemState == FeederState.SPIT) {
       io.setPercent(isTrapping ? -0.45 : FEEDER_SPIT_SPEED);
+      io.enableBeamBreakLimit(false);
 
       if (!requestSpit) {
         hasPiece = false;
@@ -87,6 +88,7 @@ public class Feeder {
       }
     } else if (systemState == FeederState.SHOOT) {
       io.setPercent(FEEDER_SHOOT_SPEED);
+      io.enableBeamBreakLimit(false);
 
       if (!requestShoot) {
         nextSystemState = FeederState.IDLE;
@@ -97,6 +99,7 @@ public class Feeder {
       }
     } else if (systemState == FeederState.PRE_TRAP) {
       io.setPercent(0.1);
+      io.enableBeamBreakLimit(false);
 
       if (!requestPreTrap) {
         nextSystemState = FeederState.IDLE;
