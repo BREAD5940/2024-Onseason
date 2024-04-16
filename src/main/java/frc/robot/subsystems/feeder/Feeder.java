@@ -56,6 +56,7 @@ public class Feeder {
     FeederState nextSystemState = systemState;
     if (systemState == FeederState.IDLE) {
       io.setVelocity(0.0);
+      io.enableBeamBreakLimit(false);
 
       if (requestIntake && !hasPiece) {
         nextSystemState = FeederState.INTAKE;
@@ -69,6 +70,7 @@ public class Feeder {
       }
     } else if (systemState == FeederState.INTAKE) {
       io.setVelocity(FEEDER_INTAKE_SPEED);
+      io.enableBeamBreakLimit(true);
 
       if (!requestIntake) {
         nextSystemState = FeederState.IDLE;

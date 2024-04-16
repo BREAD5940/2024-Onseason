@@ -31,7 +31,11 @@ public interface FeederIO {
       double currentLimitThresholdTime) {}
 
   /** Enables or disables brake mode for the motor. */
-  public default void enableBrakeMode(boolean enable) {}
+  public default void enableBrakeMode(boolean enable) {
+  }
+  
+  /** Enables or disables the beam break as a limit switch */
+  public default void enableBeamBreakLimit(boolean enable) {}
 
   /** Updates the tunable numbers */
   public default void updateTunableNumbers() {}

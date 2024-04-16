@@ -3,6 +3,7 @@ package frc.robot.subsystems.feeder;
 import static frc.robot.constants.Constants.Feeder.*;
 
 import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.HardwareLimitSwitchConfigs;
@@ -13,9 +14,9 @@ import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.ForwardLimitSourceValue;
+import com.ctre.phoenix6.signals.ForwardLimitValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.ReverseLimitSourceValue;
-import com.ctre.phoenix6.signals.ReverseLimitValue;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import frc.robot.commons.LoggedTunableNumber;
@@ -38,7 +39,7 @@ public class FeederIOFalcon500 implements FeederIO {
   private StatusSignal<Double> velocity;
   private StatusSignal<Double> current;
   private StatusSignal<Double> temperature;
-  private StatusSignal<ReverseLimitValue> beamBreak;
+  private StatusSignal<ForwardLimitValue> beamBreak;
   private Debouncer beamBreakDebounce = new Debouncer(0.25, DebounceType.kFalling);
 
   /* Gains */
@@ -49,6 +50,7 @@ public class FeederIOFalcon500 implements FeederIO {
   LoggedTunableNumber kD = new LoggedTunableNumber("Feeder/kD", 0.0);
 
   private double setpoint;
+  private boolean beamBreakLimitEnabled = false;
 
   public FeederIOFalcon500() {
     /* Instantiate configurator */
@@ -85,7 +87,7 @@ public class FeederIOFalcon500 implements FeederIO {
     velocity = motor.getVelocity();
     current = motor.getSupplyCurrent();
     temperature = motor.getDeviceTemp();
-    beamBreak = motor.getReverseLimit();
+    beamBreak = motor.getForwardLimit();
 
     /* Apply configs */
     configurator.apply(currentLimitConfigs);
@@ -109,7 +111,7 @@ public class FeederIOFalcon500 implements FeederIO {
     inputs.tempCelcius = temperature.getValue();
     inputs.currentAmps = current.getValue();
     inputs.beamBreakTriggered = beamBreakDebounce.calculate(beamBreak.getValue().value == 0);
-    inputs.rawBeamBreakTriggered = beamBreak.getValue().value == 0;
+    inputs.rawBeamBreakTriggered = beamBreak.getValue().value == 1;
     inputs.setpoint = setpoint;
   }
 
@@ -163,6 +165,18 @@ public class FeederIOFalcon500 implements FeederIO {
       slot0Configs.kD = kD.get();
 
       configurator.apply(slot0Configs);
+    }
+  }
+
+  @Override
+  public void enableBeamBreakLimit(boolean enable) {
+    if (enable != beamBreakLimitEnabled) {
+      hardwareLimitSwitchConfigs.ReverseLimitEnable = enable;
+      hardwareLimitSwitchConfigs.ForwardLimitEnable = enable;
+      StatusCode limitApplyStatus = configurator.apply(hardwareLimitSwitchConfigs);
+      if (limitApplyStatus == StatusCode.OK) {
+        beamBreakLimitEnabled = enable;
+      }
     }
   }
 }
