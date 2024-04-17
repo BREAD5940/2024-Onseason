@@ -40,7 +40,7 @@ public class AmpSideRush extends SequentialCommandGroup {
                   intake.requestIntake();
                   superstructure.requestIntake(true);
                 }),
-        new WaitUntilCommand(superstructure::hasPiece).withTimeout(0.5),
+        new WaitUntilCommand(() -> superstructure.hasPiece() || intake.hasPiece()).withTimeout(0.5),
         new ConditionalCommand(
             new SequentialCommandGroup(
                 new TrajectoryFollowerCommand(() -> Robot.asrReturnA, swerve, false, () -> true)
@@ -52,7 +52,8 @@ public class AmpSideRush extends SequentialCommandGroup {
                             })),
                 new StationaryShootCommand(swerve, superstructure, shooter),
                 new TrajectoryFollowerCommand(() -> Robot.asrFromShootPoseB, swerve, () -> false),
-                new WaitUntilCommand(superstructure::hasPiece).withTimeout(0.5),
+                new WaitUntilCommand(() -> superstructure.hasPiece() || intake.hasPiece())
+                    .withTimeout(0.5),
                 new ConditionalCommand(
                     new SequentialCommandGroup(
                         new TrajectoryFollowerCommand(
@@ -86,10 +87,11 @@ public class AmpSideRush extends SequentialCommandGroup {
                                       superstructure.requestVisionSpeaker(true, false, false);
                                     })),
                         new StationaryShootCommand(swerve, superstructure, shooter)),
-                    superstructure::hasPiece)),
+                    () -> superstructure.hasPiece() || intake.hasPiece())),
             new SequentialCommandGroup(
                 new TrajectoryFollowerCommand(() -> Robot.asrPivotB, swerve, false, () -> false),
-                new WaitUntilCommand(superstructure::hasPiece).withTimeout(0.5),
+                new WaitUntilCommand(() -> superstructure.hasPiece() || intake.hasPiece())
+                    .withTimeout(0.5),
                 new ConditionalCommand(
                     new SequentialCommandGroup(
                         new TrajectoryFollowerCommand(
@@ -124,7 +126,7 @@ public class AmpSideRush extends SequentialCommandGroup {
                                       superstructure.requestVisionSpeaker(true, false, false);
                                     })),
                         new StationaryShootCommand(swerve, superstructure, shooter)),
-                    superstructure::hasPiece)),
-            superstructure::hasPiece));
+                    () -> superstructure.hasPiece() || intake.hasPiece())),
+            () -> superstructure.hasPiece() || intake.hasPiece()));
   }
 }

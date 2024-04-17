@@ -34,7 +34,8 @@ public class InterpolatingTableDtech {
                   new ShotParameter(-19.5, 2800, 2000, 0.015)), // 17 feet
               entry(
                   Units.inchesToMeters(243.5),
-                  new ShotParameter(-18.25, 3200, 2100, 0.015)))); // 19 feet
+                  new ShotParameter(-18.25, 3200, 2100, 0.015)) // 19 feet
+              ));
 
   public static ShotParameter get(double distanceToTarget) {
     Entry<Double, ShotParameter> ceil = table.ceilingEntry(distanceToTarget);

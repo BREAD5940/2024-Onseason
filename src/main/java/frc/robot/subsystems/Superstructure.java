@@ -26,10 +26,10 @@ import org.littletonrobotics.junction.Logger;
 public class Superstructure extends SubsystemBase {
   // For on-the-fly adjustments
   static LoggedTunableNumber angleAdditionBlue =
-      new LoggedTunableNumber("On-the-fly/angleAdditionBlue", 0.0); // degrees
+      new LoggedTunableNumber("On-the-fly/angleAdditionBlue", -0.25); // degrees
 
   static LoggedTunableNumber angleAdditionRed =
-      new LoggedTunableNumber("On-the-fly/angleAdditionRed", 0.0); // degrees
+      new LoggedTunableNumber("On-the-fly/angleAdditionRed", -0.25); // degrees
 
   static LoggedTunableNumber angleMultiplication =
       new LoggedTunableNumber("On-the-fly/distanceScaledAddition", 0.0);

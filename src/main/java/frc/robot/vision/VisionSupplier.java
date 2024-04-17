@@ -11,8 +11,9 @@ import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.commons.AllianceFlipUtil;
 import frc.robot.commons.LoggedTunableNumber;
-import frc.robot.subsystems.shooter.InterpolatingTableDtech;
+import frc.robot.subsystems.shooter.InterpolatingTableBlue;
 import frc.robot.subsystems.shooter.InterpolatingTablePassing;
+import frc.robot.subsystems.shooter.InterpolatingTableRed;
 import frc.robot.subsystems.shooter.SODInterpolatingTableBlue;
 import frc.robot.subsystems.shooter.SODInterpolatingTableRed;
 import frc.robot.subsystems.shooter.ShotParameter;
@@ -150,11 +151,11 @@ public class VisionSupplier extends SubsystemBase {
             robotToTangentialVirtualTargetAuto.getX(), robotToTangentialVirtualTargetAuto.getY());
 
     if (Robot.alliance == Alliance.Blue) {
-      shot = InterpolatingTableDtech.get(robotToRadialVirtualTarget.getNorm());
+      shot = InterpolatingTableBlue.get(robotToRadialVirtualTarget.getNorm());
       shotSOD = SODInterpolatingTableBlue.get(robotToRadialVirtualTarget.getNorm());
       Logger.recordOutput("Using Blue Table", true);
     } else {
-      shot = InterpolatingTableDtech.get(robotToRadialVirtualTarget.getNorm());
+      shot = InterpolatingTableRed.get(robotToRadialVirtualTarget.getNorm());
       shotSOD = SODInterpolatingTableRed.get(robotToRadialVirtualTarget.getNorm());
       Logger.recordOutput("Using Blue Table", false);
     }
