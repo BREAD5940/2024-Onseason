@@ -67,11 +67,13 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath ssrPreloadShoot;
 
   public static PathPlannerPath asrRushA;
+  public static PathPlannerPath asrRushB;
   public static PathPlannerPath asrPivotB;
   public static PathPlannerPath asrPivotC;
   public static PathPlannerPath asrReturnA;
   public static PathPlannerPath asrReturnB;
   public static PathPlannerPath asrReturnC;
+  public static PathPlannerPath asrFromShootPoseA;
   public static PathPlannerPath asrFromShootPoseB;
   public static PathPlannerPath asrFromShootPoseC;
 
@@ -153,11 +155,13 @@ public class Robot extends LoggedRobot {
     ssrPreloadShoot = PathPlannerPath.fromPathFile("SSR Preload Shoot");
 
     asrRushA = PathPlannerPath.fromPathFile("ASR Rush A");
+    asrRushB = PathPlannerPath.fromPathFile("ASR Rush B");
     asrPivotB = PathPlannerPath.fromPathFile("ASR Pivot B");
     asrPivotC = PathPlannerPath.fromPathFile("ASR Pivot C");
     asrReturnA = PathPlannerPath.fromPathFile("ASR Return A");
     asrReturnB = PathPlannerPath.fromPathFile("ASR Return B");
     asrReturnC = PathPlannerPath.fromPathFile("ASR Return C");
+    asrFromShootPoseA = PathPlannerPath.fromPathFile("ASR From Shoot Pose A");
     asrFromShootPoseB = PathPlannerPath.fromPathFile("ASR From Shoot Pose B");
     asrFromShootPoseC = PathPlannerPath.fromPathFile("ASR From Shoot Pose C");
 
@@ -206,7 +210,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void disabledPeriodic() {
     if (DriverStation.isAutonomous()
-        && m_robotContainer.getAutonomousCommand().getName() == "AMP_SIDE_RUSH") {
+        && m_robotContainer.getAutonomousCommand().getName() == "AMP_SIDE_RUSH" || m_robotContainer.getAutonomousCommand().getName() == "AMP_SIDE_RUSH_23") {
       RobotContainer.superstructure.requestVisionSpeaker(true, false, false);
       RobotContainer.shooter.requestVisionSpeaker(false);
     } else {
