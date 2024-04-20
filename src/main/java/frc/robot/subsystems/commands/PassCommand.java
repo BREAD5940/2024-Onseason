@@ -57,7 +57,8 @@ public class PassCommand extends Command {
     // Subsystem Requests
     swerve.requestVelocity(new ChassisSpeeds(dx, dy, output), true);
 
-    RobotContainer.superstructure.requestPass(true, RobotContainer.driver.getYButton());
+    RobotContainer.superstructure.requestPass(
+        true, RobotContainer.swerve.atAngularSetpoint(setpoint));
     RobotContainer.shooter.requestPass();
     // RobotContainer.shooter.requestFender();
     // RobotContainer.superstructure.requestFender(

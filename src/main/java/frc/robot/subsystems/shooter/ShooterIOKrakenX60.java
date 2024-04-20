@@ -15,7 +15,9 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.util.Units;
+import frc.robot.RobotContainer;
 import frc.robot.commons.LoggedTunableNumber;
+import frc.robot.subsystems.Superstructure.SuperstructureState;
 
 public class ShooterIOKrakenX60 implements ShooterIO {
 
@@ -199,16 +201,46 @@ public class ShooterIOKrakenX60 implements ShooterIO {
     desiredLeft = velocityLeft;
     desiredRight = velocityRight;
 
-    if (velocityLeft > 0.0) {
-      left.setControl(new VelocityVoltage(velocityLeft / 60.0).withSlot(0).withEnableFOC(true));
-    } else {
-      left.setControl(new DutyCycleOut(0.0));
-    }
+    if (RobotContainer.superstructure.getSystemState() == SuperstructureState.PRE_CLIMB) {
+      if (velocityLeft > 0.0) {
+        left.setControl(
+            new VelocityVoltage(velocityLeft / 60.0)
+                .withSlot(0)
+                .withEnableFOC(true)
+                .withOverrideBrakeDurNeutral(true));
+      } else {
+        left.setControl(new DutyCycleOut(0.0).withOverrideBrakeDurNeutral(true));
+      }
 
-    if (velocityRight > 0.0) {
-      right.setControl(new VelocityVoltage(velocityRight / 60.0).withSlot(0).withEnableFOC(true));
+      if (velocityRight > 0.0) {
+        right.setControl(
+            new VelocityVoltage(velocityRight / 60.0)
+                .withSlot(0)
+                .withEnableFOC(true)
+                .withOverrideBrakeDurNeutral(true));
+      } else {
+        right.setControl(new DutyCycleOut(0.0).withOverrideBrakeDurNeutral(true));
+      }
     } else {
-      right.setControl(new DutyCycleOut(0.0));
+      if (velocityLeft > 0.0) {
+        left.setControl(
+            new VelocityVoltage(velocityLeft / 60.0)
+                .withSlot(0)
+                .withEnableFOC(true)
+                .withOverrideBrakeDurNeutral(false));
+      } else {
+        left.setControl(new DutyCycleOut(0.0).withOverrideBrakeDurNeutral(false));
+      }
+
+      if (velocityRight > 0.0) {
+        right.setControl(
+            new VelocityVoltage(velocityRight / 60.0)
+                .withSlot(0)
+                .withEnableFOC(true)
+                .withOverrideBrakeDurNeutral(false));
+      } else {
+        right.setControl(new DutyCycleOut(0.0).withOverrideBrakeDurNeutral(false));
+      }
     }
   }
 
