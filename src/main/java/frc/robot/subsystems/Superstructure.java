@@ -566,4 +566,8 @@ public class Superstructure extends SubsystemBase {
   public boolean getFeederBreamBreakTriggered() {
     return feeder.getRawBeamBreakTriggered();
   }
+
+  public Rotation2d getPivotAngle() {
+    return elevatorPivot.getPivotAngle();
+  }
 }

@@ -5,6 +5,7 @@ import static frc.robot.constants.Constants.Intake.*;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.commons.BreadUtil;
+import frc.robot.subsystems.Superstructure.SuperstructureState;
 import org.littletonrobotics.junction.Logger;
 
 public class Intake extends SubsystemBase {
@@ -54,9 +55,14 @@ public class Intake extends SubsystemBase {
         nextSystemState = IntakeState.SPIT;
       }
     } else if (systemState == IntakeState.INTAKE) {
-      io.setIntakePercent(INTAKE_SPEED);
-      // io.setVectorVelocity(3000);
-      io.setVectorPercent(0.5);
+      if (RobotContainer.superstructure.getSystemState() == SuperstructureState.INTAKE
+          && RobotContainer.superstructure.getPivotAngle().getDegrees() < 0.0) {
+        io.setIntakePercent(INTAKE_SPEED);
+        io.setVectorPercent(0.5);
+      } else {
+        io.setIntakePercent(0.0);
+        io.setVectorPercent(0.0);
+      }
 
       if (!requestIntake || RobotContainer.superstructure.hasPiece()) {
         nextSystemState = IntakeState.IDLE;

@@ -293,4 +293,9 @@ public class ElevatorPivot {
   public double getHeight() {
     return elevatorInputs.posMeters;
   }
+
+  /* Returns the angle of the pivot */
+  public Rotation2d getPivotAngle() {
+    return new Rotation2d(pivotInputs.angleRads);
+  }
 }

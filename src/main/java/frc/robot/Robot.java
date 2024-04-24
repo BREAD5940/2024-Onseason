@@ -210,7 +210,8 @@ public class Robot extends LoggedRobot {
   @Override
   public void disabledPeriodic() {
     if (DriverStation.isAutonomous()
-        && m_robotContainer.getAutonomousCommand().getName() == "AMP_SIDE_RUSH" || m_robotContainer.getAutonomousCommand().getName() == "AMP_SIDE_RUSH_23") {
+            && m_robotContainer.getAutonomousCommand().getName() == "AMP_SIDE_RUSH"
+        || m_robotContainer.getAutonomousCommand().getName() == "AMP_SIDE_RUSH_23") {
       RobotContainer.superstructure.requestVisionSpeaker(true, false, false);
       RobotContainer.shooter.requestVisionSpeaker(false);
     } else {
