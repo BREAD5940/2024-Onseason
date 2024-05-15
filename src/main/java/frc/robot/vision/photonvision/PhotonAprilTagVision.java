@@ -6,6 +6,7 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -14,10 +15,14 @@ import frc.robot.commons.PolynomialRegression;
 import frc.robot.commons.TimestampedVisionUpdate;
 import frc.robot.constants.FieldConstants;
 import frc.robot.constants.SingleTagAdjusters;
+import frc.robot.vision.photonvision.gtsam.GtsamInterface;
+import frc.robot.vision.photonvision.gtsam.TagDetection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
@@ -41,6 +46,10 @@ public class PhotonAprilTagVision extends SubsystemBase {
   private double stdDevScalarShooting = 0.1;
   private double xyStdDevCoefficientShooting = 0.0006;
   private double thetaStdDevCoefficientShooting = 0.0002;
+
+  private final List<String> cameraNames = List.of("Camera1", "Camera2", "Camera3", "Camera4");
+
+  GtsamInterface gtsamMeme = new GtsamInterface(cameraNames);
 
   private PolynomialRegression xyStdDevModel =
       new PolynomialRegression(
@@ -99,6 +108,12 @@ public class PhotonAprilTagVision extends SubsystemBase {
                 Units.degreesToRadians(-165.0))),
       };
 
+  private final Transform3d[] cameraPosesT =
+      Arrays.stream(cameraPoses)
+          .map(it -> new Transform3d(it.getTranslation(), it.getRotation()))
+          .collect(Collectors.toList())
+          .toArray(new Transform3d[0]);
+
   public PhotonAprilTagVision(BreadPhotonCamera... cameras) {
     this.cameras = cameras;
   }
@@ -118,6 +133,9 @@ public class PhotonAprilTagVision extends SubsystemBase {
 
     // Loop through all the cameras
     for (int instanceIndex = 0; instanceIndex < cameras.length; instanceIndex++) {
+
+      // gtsam shit
+      gtsamMeme.setCamIntrinsics(cameraNames.get(i), cam.getCameraMatrix(), cam.getDistCoeffs());
 
       // Camera-specific variables
       Pose3d cameraPose;
@@ -221,6 +239,23 @@ public class PhotonAprilTagVision extends SubsystemBase {
       if (cameraPose == null || robotPose == null) {
         continue;
       }
+
+      // Do this before other crap happens
+      // (ntRecieveTimestampMicros - (publishTimestampMicros - captureTimestampMicros))
+      long timestampUs =
+          unprocessedResult.getNtRecieveTimestampMicros()
+              - (unprocessedResult.getPublishTimestampMicros()
+                  - unprocessedResult.getCaptureTimestampMicros());
+
+      List<TagDetection> tags = new ArrayList<>();
+      for (var result : unprocessedResult.getTargets()) {
+          tags.add(
+                  new TagDetection(result.getFiducialId(),
+                          result.getDetectedCorners()));
+      }
+
+      gtsamMeme.sendVisionUpdate(
+          cameraNames.get(instanceIndex), timestampUs, tags, cameraPosesT[instanceIndex]);
 
       // Move on to next camera if robot pose is off the field
       if (robotPose.getX() < -fieldBorderMargin

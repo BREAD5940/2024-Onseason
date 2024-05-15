@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commons.LoggedTunableNumber;
+import frc.robot.constants.FieldConstants;
 import frc.robot.subsystems.Superstructure.SuperstructureState;
 import java.util.Optional;
 import org.littletonrobotics.junction.LogFileUtil;
@@ -262,6 +263,9 @@ public class Robot extends LoggedRobot {
 
     RobotContainer.superstructure.requestVisionSpeaker(false, false, false);
     RobotContainer.superstructure.requestFender(false, false);
+
+    RobotContainer.swerve.setLayout(FieldConstants.aprilTags);
+    RobotContainer.swerve.sendInitialGuess();
   }
 
   @Override

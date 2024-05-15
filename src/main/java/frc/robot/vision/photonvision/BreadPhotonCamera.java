@@ -369,10 +369,10 @@ public class BreadPhotonCamera implements AutoCloseable {
     } else return Optional.empty();
   }
 
-  public Optional<Matrix<N5, N1>> getDistCoeffs() {
+  public Optional<Matrix<N8, N1>> getDistCoeffs() {
     var distCoeffs = cameraDistortionSubscriber.get();
-    if (distCoeffs != null && distCoeffs.length == 5) {
-      return Optional.of(MatBuilder.fill(Nat.N5(), Nat.N1(), distCoeffs));
+    if (distCoeffs != null && distCoeffs.length == 8) {
+      return Optional.of(MatBuilder.fill(Nat.N8(), Nat.N1(), distCoeffs));
     } else return Optional.empty();
   }
 

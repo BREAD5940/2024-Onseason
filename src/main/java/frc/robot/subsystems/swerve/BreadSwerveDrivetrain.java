@@ -25,15 +25,20 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Twist3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.subsystems.swerve.BreadSwerveRequest.SwerveControlRequestParameters;
+import frc.robot.vision.photonvision.gtsam.GtsamInterface;
+import java.util.List;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Consumer;
@@ -111,6 +116,8 @@ public class BreadSwerveDrivetrain {
   protected Consumer<SwerveDriveState> m_telemetryFunction = null;
   protected final SwerveDriveState m_cachedState = new SwerveDriveState();
 
+  public final GtsamInterface gtsamMeme = new GtsamInterface(List.of());
+
   /* Perform swerve module updates in a separate thread to minimize latency */
   public class OdometryThread {
     protected static final int START_THREAD_PRIORITY =
@@ -134,6 +141,8 @@ public class BreadSwerveDrivetrain {
 
     protected int lastThreadPriority = START_THREAD_PRIORITY;
     protected volatile int threadPriorityToSet = START_THREAD_PRIORITY;
+
+    private SwerveDriveWheelPositions lastPositions = null;
 
     public OdometryThread() {
       m_thread = new Thread(this::run);
@@ -202,6 +211,7 @@ public class BreadSwerveDrivetrain {
 
           lastTime = currentTime;
           currentTime = Utils.getCurrentTimeSeconds();
+          var wpiNow = WPIUtilJNI.now();
           /* We don't care about the peaks, as they correspond to GC events, and we want the period generally low passed */
           averageLoopTime = lowPass.calculate(peakRemover.calculate(currentTime - lastTime));
 
@@ -224,6 +234,22 @@ public class BreadSwerveDrivetrain {
           /* Keep track of previous and current pose to account for the carpet vector */
           m_ShotOdometry.update(Rotation2d.fromDegrees(yawDegrees), m_modulePositions);
           m_AutoOdometry.update(Rotation2d.fromDegrees(yawDegrees), m_modulePositions);
+
+          {
+            var currEncoderPos = new SwerveDriveWheelPositions(m_modulePositions);
+
+            // assume robot turns on not moving
+            if (lastPositions == null) {
+              lastPositions = currEncoderPos;
+            }
+
+            var twist = m_kinematics.toTwist2d(lastPositions, currEncoderPos);
+            lastPositions = currEncoderPos;
+
+            var twist3 = new Twist3d(twist.dx, twist.dy, 0, 0, 0, twist.dtheta);
+
+            gtsamMeme.sendOdomUpdate(wpiNow, twist3, null);
+          }
 
           ChassisSpeeds speeds = m_kinematics.toChassisSpeeds(m_moduleStates);
 

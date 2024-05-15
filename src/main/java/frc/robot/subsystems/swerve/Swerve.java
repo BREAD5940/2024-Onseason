@@ -5,11 +5,14 @@ import static frc.robot.constants.Constants.Swerve.*;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -227,5 +230,13 @@ public class Swerve extends SubsystemBase {
   public enum SwerveState {
     VELOCITY,
     PERCENT
+  }
+
+  public void sendInitialGuess() {
+    drivetrain.gtsamMeme.sendGuess(WPIUtilJNI.now(), new Pose3d(getAutoPose()));
+  }
+
+  public void setLayout(AprilTagFieldLayout layout) {
+    drivetrain.gtsamMeme.sendLayout(layout);
   }
 }
