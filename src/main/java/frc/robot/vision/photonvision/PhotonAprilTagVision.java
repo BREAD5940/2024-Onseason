@@ -134,9 +134,6 @@ public class PhotonAprilTagVision extends SubsystemBase {
     // Loop through all the cameras
     for (int instanceIndex = 0; instanceIndex < cameras.length; instanceIndex++) {
 
-      // gtsam shit
-      gtsamMeme.setCamIntrinsics(cameraNames.get(i), cam.getCameraMatrix(), cam.getDistCoeffs());
-
       // Camera-specific variables
       Pose3d cameraPose;
       Pose2d robotPose;
@@ -249,13 +246,17 @@ public class PhotonAprilTagVision extends SubsystemBase {
 
       List<TagDetection> tags = new ArrayList<>();
       for (var result : unprocessedResult.getTargets()) {
-          tags.add(
-                  new TagDetection(result.getFiducialId(),
-                          result.getDetectedCorners()));
+        tags.add(new TagDetection(result.getFiducialId(), result.getDetectedCorners()));
       }
 
       gtsamMeme.sendVisionUpdate(
           cameraNames.get(instanceIndex), timestampUs, tags, cameraPosesT[instanceIndex]);
+
+      // // gtsam shit
+      // gtsamMeme.setCamIntrinsics(
+      //     cameraNames.get(instanceIndex),
+      //     cameras[instanceIndex].getCameraMatrix(),
+      //     cameras[instanceIndex].getDistCoeffs());
 
       // Move on to next camera if robot pose is off the field
       if (robotPose.getX() < -fieldBorderMargin

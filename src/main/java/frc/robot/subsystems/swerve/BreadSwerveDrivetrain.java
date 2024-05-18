@@ -248,7 +248,7 @@ public class BreadSwerveDrivetrain {
 
             var twist3 = new Twist3d(twist.dx, twist.dy, 0, 0, 0, twist.dtheta);
 
-            gtsamMeme.sendOdomUpdate(wpiNow, twist3, null);
+            gtsamMeme.sendOdomUpdate(wpiNow, twist3);
           }
 
           ChassisSpeeds speeds = m_kinematics.toChassisSpeeds(m_moduleStates);

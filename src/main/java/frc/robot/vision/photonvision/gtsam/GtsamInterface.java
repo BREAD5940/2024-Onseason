@@ -18,6 +18,7 @@ import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.networktables.StructSubscriber;
+import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DriverStation;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +34,25 @@ import org.photonvision.estimation.OpenCVHelp;
 import org.photonvision.targeting.TargetCorner;
 
 public class GtsamInterface {
+
+  private static final DataLog logfile =
+      new DataLog("/U/logs_matt", "matt_" + System.currentTimeMillis() + ".wpilog");
+  private static int m_ntEntryLogger;
+
+  private static boolean setupDone = false;
+
+  static void setup() {
+
+    m_ntEntryLogger =
+        NetworkTableInstance.getDefault().startEntryDataLog(logfile, "/gtsam_meme", "/gtsam_meme");
+
+    logfile.addSchema(Twist3d.struct);
+    logfile.addSchema(Pose3d.struct);
+    logfile.addSchema(Transform3d.struct);
+    logfile.addSchema(TagDetection.struct);
+
+    setupDone = true;
+  }
 
   public static class CameraCalibration {
     Mat cameraMat;
@@ -61,7 +81,7 @@ public class GtsamInterface {
 
     public TagDetection undistort(TagDetection distorted) {
       if (this.cameraCal == null) {
-        System.err.println("Camera cal still null -- is your camera connected?");
+        // System.err.println("Camera cal still null -- is your camera connected?");
         return distorted;
       }
 
@@ -108,6 +128,10 @@ public class GtsamInterface {
   TimeInterpolatableBuffer<Pose3d> odometryBuffer = TimeInterpolatableBuffer.createBuffer(5);
 
   public GtsamInterface(List<String> cameraNames) {
+    if (!setupDone) {
+      setup();
+    }
+
     odomPub =
         NetworkTableInstance.getDefault()
             .getStructTopic("/gtsam_meme/input/odom_twist", Twist3d.struct)
@@ -118,7 +142,7 @@ public class GtsamInterface {
             .publish(PubSubOption.sendAll(true), PubSubOption.keepDuplicates(true));
     tagLayoutPub =
         NetworkTableInstance.getDefault()
-            .getStringTopic("/gtsam_meme/input/pose_initial_guess")
+            .getStringTopic("/gtsam_meme/input/tag_layout")
             .publish(PubSubOption.sendAll(true));
     optimizedPoseSub =
         NetworkTableInstance.getDefault()
@@ -140,6 +164,7 @@ public class GtsamInterface {
   public void setCamIntrinsics(
       String camName, Optional<Matrix<N3, N3>> intrinsics, Optional<Matrix<N8, N1>> distCoeffs) {
     if (intrinsics.isEmpty() || distCoeffs.isEmpty()) {
+      // System.out.println("No intrinsics?");
       return;
     }
 
@@ -212,12 +237,13 @@ public class GtsamInterface {
       throw new RuntimeException("Camera " + camName + " not in map!");
     }
 
-    cam.tagPub.set(
+    var tags =
         camDetectedTags.stream()
-            .map(it -> cam.undistort(it))
+            // .map(it -> cam.undistort(it))
             .collect(Collectors.toList())
-            .toArray(new TagDetection[0]),
-        tagDetTime);
+            .toArray(new TagDetection[0]);
+
+    cam.tagPub.set(tags, tagDetTime);
     cam.robotTcamPub.set(robotTcam, tagDetTime);
   }
 
