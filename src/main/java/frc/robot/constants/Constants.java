@@ -17,10 +17,6 @@ public class Constants {
   public static final double KRAKEN_FREE_SPEED = 6000.0;
   public static final double GOAL_INWARD_SHIFT = 0.0;
 
-  // FOR EPA:
-  // 12 in inward shift on the red side
-  // 0 in inward shift on the blue side
-
   public enum RobotType {
     BETA,
     GAMMA

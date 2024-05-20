@@ -2,6 +2,7 @@ package frc.robot;
 
 import com.ctre.phoenix.led.CANdle;
 import com.pathplanner.lib.path.PathPlannerPath;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
@@ -172,18 +173,6 @@ public class Robot extends LoggedRobot {
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
 
-    // LED colors
-
-    // g r b
-    // if (RobotContainer.intake.hasPiece() && RobotContainer.superstructure.hasPiece()) {
-    //   leds.setLEDs(255, 255, 0, 0, 0, 60);
-    // } else if (RobotContainer.intake.hasPiece()) {
-    //   leds.setLEDs(255, 0, 0, 0, 0, 60);
-    // } else if (RobotContainer.superstructure.hasPiece()) {
-    //   leds.setLEDs(0, 255, 0, 0, 0, 60);
-    // } else {
-    //   leds.setLEDs(0, 0, 0, 0, 0, 60);
-    // }
     if (RobotContainer.superstructure.getSystemState() == SuperstructureState.PRE_CLIMB) {
       leds.setLEDs(255, 0, 0, 0, 0, 60);
       RobotContainer.driver.setRumble(RumbleType.kBothRumble, 0);
@@ -301,12 +290,7 @@ public class Robot extends LoggedRobot {
   }
 
   @Override
-  public void testPeriodic() {
-    // double targetHeight = testHeight.get();
-    // Rotation2d targetAngle = Rotation2d.fromDegrees(testAngle.get());
-
-    // RobotContainer.superstructure.elevatorPivot.requestPursueSetpoint(targetAngle, targetHeight);
-  }
+  public void testPeriodic() {}
 
   @Override
   public void testExit() {}

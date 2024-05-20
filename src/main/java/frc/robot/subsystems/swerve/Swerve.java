@@ -22,7 +22,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class Swerve extends SubsystemBase {
 
-  /*IStores the swerve drivetrain object */
+  /* Stores the swerve drivetrain object */
   private final BreadSwerveDrivetrain drivetrain;
 
   /* Stores requests and parameters */

@@ -1,7 +1,5 @@
 package frc.robot.autonomous.modes;
 
-import static frc.robot.constants.Constants.AutoShots.*;
-
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -9,8 +7,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Robot;
 import frc.robot.subsystems.Superstructure;
-import frc.robot.subsystems.commands.FenderShotCommand;
-import frc.robot.subsystems.commands.StationaryShootCommand;
+import frc.robot.commands.FenderShotCommand;
+import frc.robot.commands.StationaryShootCommand;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.swerve.Swerve;

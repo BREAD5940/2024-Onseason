@@ -108,7 +108,6 @@ public class VisionSupplier extends SubsystemBase {
 
   @Override
   public void periodic() {
-
     /* Flip the target position if you're on the red alliance */
     Pose2d targetPose = AllianceFlipUtil.apply(targetPoseBlue);
 

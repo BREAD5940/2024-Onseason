@@ -35,11 +35,9 @@ public class PhotonAprilTagVision extends SubsystemBase {
   private double singleTagStdDevScalar = 100.0;
 
   private double stdDevScalarAuto = 1.0;
-  private double xyStdDevCoefficientAuto = 0.1;
   private double thetaStdDevCoefficientAuto = 0.1;
 
   private double stdDevScalarShooting = 0.1;
-  private double xyStdDevCoefficientShooting = 0.0006;
   private double thetaStdDevCoefficientShooting = 0.0002;
 
   private PolynomialRegression xyStdDevModel =
@@ -217,7 +215,6 @@ public class PhotonAprilTagVision extends SubsystemBase {
         Logger.recordOutput("Photon/Camera Pose (Single Tag) " + instanceIndex, cameraPose);
       }
 
-      // TODO not sure if we need this but I'll just leave it here
       if (cameraPose == null || robotPose == null) {
         continue;
       }

@@ -65,7 +65,6 @@ public class Superstructure extends SubsystemBase {
   private boolean overrideVision = false;
   private double overrideElevatorHeight = 0.0;
   private double overridePivotAngle = 0.0;
-  private Pose2d overrideRobotPose = null;
 
   /* System States */
   public enum SuperstructureState {

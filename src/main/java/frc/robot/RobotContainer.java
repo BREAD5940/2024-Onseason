@@ -14,11 +14,11 @@ import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.commons.BreadUtil;
 import frc.robot.constants.GammaTunerConstants;
 import frc.robot.subsystems.Superstructure;
-import frc.robot.subsystems.commands.AmpCommand;
-import frc.robot.subsystems.commands.FenderShotCommand;
-import frc.robot.subsystems.commands.LowPassCommand;
-import frc.robot.subsystems.commands.PassCommand;
-import frc.robot.subsystems.commands.TeleopShootCommand;
+import frc.robot.commands.AmpCommand;
+import frc.robot.commands.FenderShotCommand;
+import frc.robot.commands.LowPassCommand;
+import frc.robot.commands.PassCommand;
+import frc.robot.commands.TeleopShootCommand;
 import frc.robot.subsystems.elevatorpivot.ElevatorIO;
 import frc.robot.subsystems.elevatorpivot.ElevatorIOKrakenX60;
 import frc.robot.subsystems.elevatorpivot.PivotIO;
@@ -123,9 +123,6 @@ public class RobotContainer {
         .whileTrue(new PassCommand(swerve, superstructure, shooter));
 
     new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new AmpCommand(swerve));
-
-    // new JoystickButton(driver, XboxController.Button.kY.value)
-    //     .whileTrue(new AimAtTrapCommand(swerve));
 
     new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
         .whileTrue(new LowPassCommand(swerve, superstructure, shooter));
