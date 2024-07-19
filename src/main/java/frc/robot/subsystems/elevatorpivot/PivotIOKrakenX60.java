@@ -168,7 +168,8 @@ public class PivotIOKrakenX60 implements PivotIO {
     inputs.velDegreesPerSecond = Units.rotationsToDegrees(velocity.getValue());
     inputs.currentAmps = pivot.getStatorCurrent().getValue();
     inputs.appliedVoltage = appliedVoltage.getValue();
-    inputs.tempCelcius = pivot.getDeviceTemp().getValue();
+    // inputs.tempCelcius = pivot.getDeviceTemp().getValue();
+    inputs.tempCelcius = position.getValue();
     inputs.motionMagicPositionTargetDeg =
         Units.rotationsToDegrees(motionMagicPositionTarget.getValue());
     inputs.motionMagicVelocityTargetDeg =

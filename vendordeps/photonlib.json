@@ -1,19 +1,19 @@
 {
   "fileName": "photonlib.json",
   "name": "photonlib",
-  "version": "dev-v2024.3.1-52-g912c3b0d",
+  "version": "dev-v2024.3.1-59-g1800728e",
   "uuid": "515fe07e-bfc6-11fa-b3de-0242ac130004",
   "frcYear": "2024",
   "mavenUrls": [
     "https://maven.photonvision.org/repository/bleedingedge"
   ],
-  "jsonUrl": "https://maven.photonvision.org/repository/bleedingedge/org/photonvision/photonlib-json/1.0/photonlib-json-1.0.json",
+  "jsonUrl": "https://maven.photonvision.org/repository/internal/org/photonvision/photonlib-json/1.0/photonlib-json-1.0.json",
   "jniDependencies": [],
   "cppDependencies": [
     {
       "groupId": "org.photonvision",
       "artifactId": "photonlib-cpp",
-      "version": "dev-v2024.3.1-52-g912c3b0d",
+      "version": "dev-v2024.3.1-59-g1800728e",
       "libName": "photonlib",
       "headerClassifier": "headers",
       "sharedLibrary": true,
@@ -28,7 +28,7 @@
     {
       "groupId": "org.photonvision",
       "artifactId": "photontargeting-cpp",
-      "version": "dev-v2024.3.1-52-g912c3b0d",
+      "version": "dev-v2024.3.1-59-g1800728e",
       "libName": "photontargeting",
       "headerClassifier": "headers",
       "sharedLibrary": true,
@@ -45,12 +45,12 @@
     {
       "groupId": "org.photonvision",
       "artifactId": "photonlib-java",
-      "version": "dev-v2024.3.1-52-g912c3b0d"
+      "version": "dev-v2024.3.1-59-g1800728e"
     },
     {
       "groupId": "org.photonvision",
       "artifactId": "photontargeting-java",
-      "version": "dev-v2024.3.1-52-g912c3b0d"
+      "version": "dev-v2024.3.1-59-g1800728e"
     }
   ]
 }

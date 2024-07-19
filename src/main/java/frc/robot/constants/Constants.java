@@ -281,7 +281,8 @@ public class Constants {
       if (robot == RobotType.BETA) {
         PIVOT_ID = 18;
         PIVOT_AZIMUTH_ID = 19;
-        PIVOT_MAGNET_OFFSET = 0.153809;
+        PIVOT_MAGNET_OFFSET = -0.395263671875 + Units.degreesToRotations(-3.3);
+        // PIVOT_MAGNET_OFFSET = 0.153809;
 
         PIVOT_MAX_ANGLE = Rotation2d.fromDegrees(30.0);
         PIVOT_MIN_SAFE_ANGLE =
