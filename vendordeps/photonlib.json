@@ -5,7 +5,7 @@
   "uuid": "515fe07e-bfc6-11fa-b3de-0242ac130004",
   "frcYear": "2024",
   "mavenUrls": [
-    "https://maven.photonvision.org/repository/bleedingedge"
+    "https://maven.photonvision.org/bleedingedge"
   ],
   "jsonUrl": "https://maven.photonvision.org/repository/internal/org/photonvision/photonlib-json/1.0/photonlib-json-1.0.json",
   "jniDependencies": [],
