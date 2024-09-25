@@ -35,7 +35,6 @@ import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.vision.VisionSupplier;
 import frc.robot.vision.photonvision.BreadPhotonCamera;
 import frc.robot.vision.photonvision.PhotonAprilTagVision;
-import frc.robot.vision.photonvision.PhotonNoteDetection;
 import org.photonvision.PhotonCamera;
 
 public class RobotContainer {
@@ -73,8 +72,8 @@ public class RobotContainer {
 
   public static final PhotonAprilTagVision aprilTagVision =
       new PhotonAprilTagVision(frontLeftCamera, frontRightCamera, backLeftCamera, backRightCamera);
-  public static final PhotonNoteDetection noteDetection =
-      new PhotonNoteDetection(leftObjCamera, rightObjCamera);
+  // public static final PhotonNoteDetection noteDetection =
+  //     new PhotonNoteDetection(leftObjCamera, rightObjCamera);
   // public static final PhotonNoteDetection noteDetection = new PhotonNoteDetection();
   public static final VisionSupplier visionSupplier = new VisionSupplier();
   public static AutonomousSelector autonomousSelector;

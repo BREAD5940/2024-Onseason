@@ -37,8 +37,8 @@ public class PhotonAprilTagVision extends SubsystemBase {
   private double stdDevScalarAuto = 1.0;
   private double thetaStdDevCoefficientAuto = 0.1;
 
-  private double stdDevScalarShooting = 0.1;
-  private double thetaStdDevCoefficientShooting = 0.0002;
+  private double stdDevScalarShooting = 0.2;
+  private double thetaStdDevCoefficientShooting = 0.075;
 
   private PolynomialRegression xyStdDevModel =
       new PolynomialRegression(
@@ -181,6 +181,10 @@ public class PhotonAprilTagVision extends SubsystemBase {
         //     || target.getFiducialId() == 8)) {
         //   continue;
         // }
+
+        if (aprilTags.getTagPose(target.getFiducialId()).isEmpty()) {
+          continue;
+        }
 
         Pose3d tagPos = aprilTags.getTagPose(target.getFiducialId()).get();
 

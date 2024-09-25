@@ -69,7 +69,7 @@ public class SixNoteAmpSide extends SequentialCommandGroup {
                                 > Units.inchesToMeters(200.0)),
                     new InstantCommand(
                         () -> superstructure.requestVisionSpeaker(true, false, false)))),
-        new StationaryShootCommand(swerve, superstructure, shooter),
+        new StationaryShootCommand(swerve, superstructure, shooter, 0, 0),
         new TrajectoryFollowerCommand(
                 () -> Robot.sixNoteAmpSideD, swerve, false, () -> superstructure.hasPiece())
             .beforeStarting(

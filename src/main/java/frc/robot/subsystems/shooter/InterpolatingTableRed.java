@@ -15,26 +15,29 @@ public class InterpolatingTableRed {
       new TreeMap<>(
           Map.ofEntries(
               entry(Units.inchesToMeters(50.2), new ShotParameter(-50, 2800, 2000, 0.2)), // 3 feet
-              entry(Units.inchesToMeters(73.9), new ShotParameter(-42, 2800, 2000, 0.15)), // 5 feet
               entry(
-                  Units.inchesToMeters(99.75), new ShotParameter(-34, 2800, 2000, 0.05)), // 7 feet
+                  Units.inchesToMeters(70.3600640440825),
+                  new ShotParameter(-42, 2800, 2000, 0.15)), // 5 feet
               entry(
-                  Units.inchesToMeters(121.0),
+                  Units.inchesToMeters(93.19887315858809),
+                  new ShotParameter(-34, 2800, 2000, 0.05)), // 7 feet
+              entry(
+                  Units.inchesToMeters(115.63474279582495),
                   new ShotParameter(-28.5, 2800, 2000, 0.015)), // 9 feet
               entry(
-                  Units.inchesToMeters(147.5),
+                  Units.inchesToMeters(144.74300744842165),
                   new ShotParameter(-25.5, 2800, 2000, 0.015)), // 11 feet
               entry(
-                  Units.inchesToMeters(170.0),
+                  Units.inchesToMeters(159.77018646646147),
                   new ShotParameter(-23.5, 2800, 2000, 0.015)), // 13 feet
               entry(
-                  Units.inchesToMeters(191.0),
+                  Units.inchesToMeters(188.42587105703836),
                   new ShotParameter(-21, 2800, 2000, 0.015)), // 15 feet
               entry(
-                  Units.inchesToMeters(214.0),
+                  Units.inchesToMeters(211.29391027830243),
                   new ShotParameter(-19.5, 2800, 2000, 0.015)), // 17 feet
               entry(
-                  Units.inchesToMeters(239.0),
+                  Units.inchesToMeters(236.76671547817494),
                   new ShotParameter(-18.25, 3200, 2100, 0.015)) // 19 feet
               ));
 

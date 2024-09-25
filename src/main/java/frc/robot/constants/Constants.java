@@ -295,7 +295,7 @@ public class Constants {
 
         PIVOT_NEUTRAL_ANGLE = Rotation2d.fromDegrees(0.0);
 
-        PIVOT_IDLE_ANGLE = Rotation2d.fromDegrees(-27);
+        PIVOT_IDLE_ANGLE = Rotation2d.fromDegrees(-23);
 
         PIVOT_INTAKE_ANGLE = Rotation2d.fromDegrees(-27);
 

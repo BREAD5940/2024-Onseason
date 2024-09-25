@@ -158,10 +158,10 @@ public class Shooter extends SubsystemBase {
   }
 
   public void requestFender() {
-    desiredLeftRPM = Robot.leftSpeed.get();
-    desiredRightRPM = Robot.rightSpeed.get();
-    // desiredLeftRPM = SHOOTER_LEFT_FENDER_RPM;
-    // desiredRightRPM = SHOOTER_RIGHT_FENDER_RPM;
+    // desiredLeftRPM = Robot.leftSpeed.get();
+    // desiredRightRPM = Robot.rightSpeed.get();
+    desiredLeftRPM = SHOOTER_LEFT_FENDER_RPM;
+    desiredRightRPM = SHOOTER_RIGHT_FENDER_RPM;
     unsetAllRequests();
     requestFender = true;
   }

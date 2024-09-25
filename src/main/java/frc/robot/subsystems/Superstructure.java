@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import static frc.robot.constants.Constants.Elevator.*;
 import static frc.robot.constants.Constants.Pivot.*;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -65,6 +64,8 @@ public class Superstructure extends SubsystemBase {
   private boolean overrideVision = false;
   private double overrideElevatorHeight = 0.0;
   private double overridePivotAngle = 0.0;
+  private double autoAngleAddBlue = 0;
+  private double autoAngleAddRed = 0;
 
   /* System States */
   public enum SuperstructureState {
@@ -227,8 +228,12 @@ public class Superstructure extends SubsystemBase {
       double angleAddition =
           (Robot.alliance == Alliance.Red) ? angleAdditionRed.get() : angleAdditionBlue.get();
 
+      double autoAngleAddition =
+          (Robot.alliance == Alliance.Red) ? autoAngleAddRed : autoAngleAddBlue;
+
       elevatorPivot.requestPursueSetpoint(
-          Rotation2d.fromDegrees((shot.pivotAngleDeg + angleAddition)), shot.elevatorHeight);
+          Rotation2d.fromDegrees((shot.pivotAngleDeg + angleAddition + autoAngleAddition)),
+          shot.elevatorHeight);
 
       Logger.recordOutput("Vision/Shot/ElevatorHeight", shot.elevatorHeight);
       Logger.recordOutput("Vision/Shot/PivotAngleDeg", shot.pivotAngleDeg);
@@ -505,15 +510,30 @@ public class Superstructure extends SubsystemBase {
       boolean set,
       boolean wantsShoot,
       boolean wantsShootOverDefense,
-      double overridePivotAngle,
-      double overrideElevatorHeight) {
+      double autoAngleAddBlue,
+      double autoAngleAddRed) {
     requestVisionSpeaker = set;
     this.wantsShoot = wantsShoot;
     this.wantsShootOverDefense = wantsShootOverDefense;
-    this.overrideVision = true;
-    this.overridePivotAngle = overridePivotAngle;
-    this.overrideElevatorHeight = overrideElevatorHeight;
+    this.overrideVision = false;
+
+    this.autoAngleAddBlue = autoAngleAddBlue;
+    this.autoAngleAddRed = autoAngleAddRed;
   }
+
+  // public void requestVisionSpeaker(
+  //     boolean set,
+  //     boolean wantsShoot,
+  //     boolean wantsShootOverDefense,
+  //     double overridePivotAngle,
+  //     double overrideElevatorHeight) {
+  //   requestVisionSpeaker = set;
+  //   this.wantsShoot = wantsShoot;
+  //   this.wantsShootOverDefense = wantsShootOverDefense;
+  //   this.overrideVision = true;
+  //   this.overridePivotAngle = overridePivotAngle;
+  //   this.overrideElevatorHeight = overrideElevatorHeight;
+  // }
 
   public void requestAmp(boolean set, boolean wantsShoot) {
     requestAmp = set;

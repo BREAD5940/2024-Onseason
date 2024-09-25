@@ -14,7 +14,9 @@ public class SODInterpolatingTableRed {
   public static TreeMap<Double, ShotParameter> table =
       new TreeMap<>(
           Map.ofEntries(
-              entry(Units.inchesToMeters(114.5), new ShotParameter(-22, 2500, 1500, 0.6)),
+              entry(
+                  Units.inchesToMeters(113.81970551620832),
+                  new ShotParameter(-22, 2500, 1500, 0.6)),
               entry(Units.inchesToMeters(133.5), new ShotParameter(-18.5, 2500, 1500, 0.6))));
 
   public static ShotParameter get(double distanceToTarget) {
