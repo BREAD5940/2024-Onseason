@@ -14,30 +14,32 @@ public class InterpolatingTableRed {
   public static TreeMap<Double, ShotParameter> table =
       new TreeMap<>(
           Map.ofEntries(
-              entry(Units.inchesToMeters(50.2), new ShotParameter(-50, 2800, 2000, 0.2)), // 3 feet
               entry(
-                  Units.inchesToMeters(70.3600640440825),
+                  Units.inchesToMeters(51.190304936947676),
+                  new ShotParameter(-50, 2800, 2000, 0.2)), // 3 feet
+              entry(
+                  Units.inchesToMeters(71.79757741208864),
                   new ShotParameter(-42, 2800, 2000, 0.15)), // 5 feet
               entry(
-                  Units.inchesToMeters(93.19887315858809),
+                  Units.inchesToMeters(95.17512142976624),
                   new ShotParameter(-34, 2800, 2000, 0.05)), // 7 feet
               entry(
-                  Units.inchesToMeters(115.63474279582495),
+                  Units.inchesToMeters(119.61357436402967),
                   new ShotParameter(-28.5, 2800, 2000, 0.015)), // 9 feet
               entry(
-                  Units.inchesToMeters(144.74300744842165),
+                  Units.inchesToMeters(145.4206472677241),
                   new ShotParameter(-25.5, 2800, 2000, 0.015)), // 11 feet
               entry(
-                  Units.inchesToMeters(159.77018646646147),
+                  Units.inchesToMeters(167.41538306777346), // 10 mayve check
                   new ShotParameter(-23.5, 2800, 2000, 0.015)), // 13 feet
               entry(
-                  Units.inchesToMeters(188.42587105703836),
+                  Units.inchesToMeters(192.10640639325774),
                   new ShotParameter(-21, 2800, 2000, 0.015)), // 15 feet
               entry(
-                  Units.inchesToMeters(211.29391027830243),
+                  Units.inchesToMeters(216.67763866698337),
                   new ShotParameter(-19.5, 2800, 2000, 0.015)), // 17 feet
               entry(
-                  Units.inchesToMeters(236.76671547817494),
+                  Units.inchesToMeters(240.2850210919894), // 16
                   new ShotParameter(-18.25, 3200, 2100, 0.015)) // 19 feet
               ));
 

@@ -47,7 +47,7 @@ public class SourceSideRush12 extends SequentialCommandGroup {
                               shooter.requestVisionSpeaker(false);
                               superstructure.requestVisionSpeaker(true, false, false);
                             })),
-                new StationaryShootCommand(swerve, superstructure, shooter),
+                new StationaryShootCommand(swerve, superstructure, shooter, -0.15, -0.3),
                 new TrajectoryFollowerCommand(() -> Robot.ssrFromShootPoseB, swerve, () -> false),
                 new WaitUntilCommand(() -> superstructure.hasPiece() || intake.hasPiece())
                     .withTimeout(0.3),
@@ -61,7 +61,7 @@ public class SourceSideRush12 extends SequentialCommandGroup {
                                       shooter.requestVisionSpeaker(false);
                                       superstructure.requestVisionSpeaker(true, false, false);
                                     })),
-                        new StationaryShootCommand(swerve, superstructure, shooter),
+                        new StationaryShootCommand(swerve, superstructure, shooter, -0.15, -0.3),
                         new TrajectoryFollowerCommand(
                                 () -> Robot.ssrPreloadShoot, swerve, () -> false)
                             .deadlineWith(
@@ -70,7 +70,7 @@ public class SourceSideRush12 extends SequentialCommandGroup {
                                       shooter.requestVisionSpeaker(false);
                                       superstructure.requestVisionSpeaker(true, false, false);
                                     })),
-                        new StationaryShootCommand(swerve, superstructure, shooter)),
+                        new StationaryShootCommand(swerve, superstructure, shooter, -0.15, -0.3)),
                     new SequentialCommandGroup(
                         new TrajectoryFollowerCommand(
                             () -> Robot.ssrPivotC, swerve, false, () -> false),
@@ -82,7 +82,7 @@ public class SourceSideRush12 extends SequentialCommandGroup {
                                       shooter.requestVisionSpeaker(false);
                                       superstructure.requestVisionSpeaker(true, false, false);
                                     })),
-                        new StationaryShootCommand(swerve, superstructure, shooter),
+                        new StationaryShootCommand(swerve, superstructure, shooter, -0.15, -0.3),
                         new TrajectoryFollowerCommand(
                                 () -> Robot.ssrPreloadShoot, swerve, false, () -> false)
                             .deadlineWith(
@@ -91,7 +91,7 @@ public class SourceSideRush12 extends SequentialCommandGroup {
                                       shooter.requestVisionSpeaker(false);
                                       superstructure.requestVisionSpeaker(true, false, false);
                                     })),
-                        new StationaryShootCommand(swerve, superstructure, shooter)),
+                        new StationaryShootCommand(swerve, superstructure, shooter, -0.15, -0.3)),
                     () -> superstructure.hasPiece() || intake.hasPiece())),
             new SequentialCommandGroup(
                 new TrajectoryFollowerCommand(() -> Robot.ssrPivotB, swerve, false, () -> false),
@@ -107,7 +107,7 @@ public class SourceSideRush12 extends SequentialCommandGroup {
                                       shooter.requestVisionSpeaker(false);
                                       superstructure.requestVisionSpeaker(true, false, false);
                                     })),
-                        new StationaryShootCommand(swerve, superstructure, shooter),
+                        new StationaryShootCommand(swerve, superstructure, shooter, -0.15, -0.3),
                         new TrajectoryFollowerCommand(
                             () -> Robot.ssrFromShootPoseC, swerve, false, () -> false),
                         new TrajectoryFollowerCommand(
@@ -118,7 +118,7 @@ public class SourceSideRush12 extends SequentialCommandGroup {
                                       shooter.requestVisionSpeaker(false);
                                       superstructure.requestVisionSpeaker(true, false, false);
                                     })),
-                        new StationaryShootCommand(swerve, superstructure, shooter),
+                        new StationaryShootCommand(swerve, superstructure, shooter, -0.15, -0.3),
                         new TrajectoryFollowerCommand(
                                 () -> Robot.ssrPreloadShoot, swerve, () -> false)
                             .deadlineWith(
@@ -127,7 +127,7 @@ public class SourceSideRush12 extends SequentialCommandGroup {
                                       shooter.requestVisionSpeaker(false);
                                       superstructure.requestVisionSpeaker(true, false, false);
                                     })),
-                        new StationaryShootCommand(swerve, superstructure, shooter)),
+                        new StationaryShootCommand(swerve, superstructure, shooter, -0.15, -0.3)),
                     new SequentialCommandGroup(
                         new TrajectoryFollowerCommand(
                             () -> Robot.ssrPivotC, swerve, false, () -> false),
@@ -139,7 +139,7 @@ public class SourceSideRush12 extends SequentialCommandGroup {
                                       shooter.requestVisionSpeaker(false);
                                       superstructure.requestVisionSpeaker(true, false, false);
                                     })),
-                        new StationaryShootCommand(swerve, superstructure, shooter),
+                        new StationaryShootCommand(swerve, superstructure, shooter, -0.15, -0.3),
                         new TrajectoryFollowerCommand(
                                 () -> Robot.ssrPreloadShoot, swerve, false, () -> false)
                             .deadlineWith(
@@ -148,7 +148,7 @@ public class SourceSideRush12 extends SequentialCommandGroup {
                                       shooter.requestVisionSpeaker(false);
                                       superstructure.requestVisionSpeaker(true, false, false);
                                     })),
-                        new StationaryShootCommand(swerve, superstructure, shooter)),
+                        new StationaryShootCommand(swerve, superstructure, shooter, -0.15, -0.3)),
                     () -> superstructure.hasPiece() || intake.hasPiece())),
             () -> superstructure.hasPiece() || intake.hasPiece()));
   }

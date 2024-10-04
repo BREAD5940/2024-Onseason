@@ -34,7 +34,7 @@ public class PhotonAprilTagVision extends SubsystemBase {
   /* For shooting vs. path following in auto */
   private double singleTagStdDevScalar = 100.0;
 
-  private double stdDevScalarAuto = 1.0;
+  private double stdDevScalarAuto = 0.5940;
   private double thetaStdDevCoefficientAuto = 0.1;
 
   private double stdDevScalarShooting = 0.2;

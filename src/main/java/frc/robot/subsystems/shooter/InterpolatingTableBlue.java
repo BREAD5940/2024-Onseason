@@ -15,31 +15,31 @@ public class InterpolatingTableBlue {
       new TreeMap<>(
           Map.ofEntries(
               entry(
-                  Units.inchesToMeters(52.98391497884648),
+                  Units.inchesToMeters(55.52922002054039),
                   new ShotParameter(-50, 2800, 2000, 0.2)), // 3 feet
               entry(
-                  Units.inchesToMeters(75.58317704313004),
+                  Units.inchesToMeters(76.66599848060716),
                   new ShotParameter(-42, 2800, 2000, 0.15)), // 5 feet
               entry(
-                  Units.inchesToMeters(98.6221813946583),
+                  Units.inchesToMeters(99.67631278834472),
                   new ShotParameter(-34, 2800, 2000, 0.05)), // 7 feet
               entry(
-                  Units.inchesToMeters(120.8518443837398),
+                  Units.inchesToMeters(122.4021877148048),
                   new ShotParameter(-28.5, 2800, 2000, 0.015)), // 9 feet
               entry(
-                  Units.inchesToMeters(145.88379967304252),
+                  Units.inchesToMeters(147.75119260435238),
                   new ShotParameter(-25.5, 2800, 2000, 0.015)), // 11 feet
               entry(
-                  Units.inchesToMeters(172.8301935879358),
+                  Units.inchesToMeters(172.26747221580885),
                   new ShotParameter(-23.5, 2800, 2000, 0.015)), // 13 feet
               entry(
-                  Units.inchesToMeters(197.2502943739088),
+                  Units.inchesToMeters(196.5281843936359), // 12
                   new ShotParameter(-21, 2800, 2000, 0.015)), // 15 feet
               entry(
-                  Units.inchesToMeters(220.37003190905122),
+                  Units.inchesToMeters(221.60080048571137), // 14
                   new ShotParameter(-19.5, 2800, 2000, 0.015)), // 17 feet
               entry(
-                  Units.inchesToMeters(244.48903752524166),
+                  Units.inchesToMeters(244.09283987001777), // 16
                   new ShotParameter(-18.25, 3200, 2100, 0.015)) // 19 feet
               ));
 

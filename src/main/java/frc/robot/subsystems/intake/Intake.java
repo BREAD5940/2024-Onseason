@@ -42,6 +42,8 @@ public class Intake extends SubsystemBase {
     Logger.processInputs("Intake", inputs);
 
     Logger.recordOutput("Intake/SystemState", systemState);
+    Logger.recordOutput("Intake/hasPieceBeamBreak", hasPiece());
+    // Logger.recordOutput("Intake/hasPieceCurrent", hasPieceCurrent());
 
     // Handle statemachine logic
     IntakeState nextSystemState = systemState;
@@ -85,6 +87,13 @@ public class Intake extends SubsystemBase {
   public boolean hasPiece() {
     return inputs.beamBreakTriggered;
   }
+
+  // public boolean hasPieceCurrent() {
+  //   return (stateStartTime > 0.25
+  //           && Math.abs(inputs.intakeCurrentAmps) > 65
+  //           && Math.abs(inputs.intakeVelocityRPM) < 4500)
+  //       && DriverStation.isEnabled() == true;
+  // }
 
   public IntakeState getSystemState() {
     return systemState;
