@@ -3,7 +3,10 @@ package frc.robot.constants;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import frc.robot.constants.Constants.DriveConfig;
+import frc.robot.constants.Constants.RobotType;
 import frc.robot.subsystems.shooter.ShotParameter;
 
 // By default these constants are the **Beta** constants
@@ -16,6 +19,41 @@ public class Constants {
   public static final double FALCON_FREE_SPEED = 6380.0;
   public static final double KRAKEN_FREE_SPEED = 6000.0;
   public static final double GOAL_INWARD_SHIFT = 0.0;
+
+  public static final DriveConfig driveConfig =
+      new DriveConfig(
+          Units.inchesToMeters(2.01834634),
+          Units.inchesToMeters(20.75),
+          Units.inchesToMeters(20.75),
+          Units.inchesToMeters(37),
+          Units.inchesToMeters(33),
+          Units.feetToMeters(12.16),
+          Units.feetToMeters(21.32),
+          7.93,
+          29.89);
+
+  public static final Translation2d[] moduleTranslations =
+      new Translation2d[] {
+        new Translation2d(driveConfig.trackWidthX() / 2.0, driveConfig.trackWidthY() / 2.0),
+        new Translation2d(driveConfig.trackWidthX() / 2.0, -driveConfig.trackWidthY() / 2.0),
+        new Translation2d(-driveConfig.trackWidthX() / 2.0, driveConfig.trackWidthY() / 2.0),
+        new Translation2d(-driveConfig.trackWidthX() / 2.0, -driveConfig.trackWidthY() / 2.0)
+      };
+
+  public record DriveConfig(
+      double wheelRadius,
+      double trackWidthX,
+      double trackWidthY,
+      double bumperWidthX,
+      double bumperWidthY,
+      double maxLinearVelocity,
+      double maxLinearAcceleration,
+      double maxAngularVelocity,
+      double maxAngularAcceleration) {
+    public double driveBaseRadius() {
+      return Math.hypot(trackWidthX / 2.0, trackWidthY / 2.0);
+    }
+  }
 
   public enum RobotType {
     BETA,

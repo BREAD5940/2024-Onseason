@@ -2,6 +2,7 @@ package frc.robot.autonomous;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.autonomous.modes.AmpSideRush;
 import frc.robot.autonomous.modes.CheekyThreePiece;
@@ -16,6 +17,7 @@ import frc.robot.autonomous.modes.SixNoteAmpSideAlternate;
 import frc.robot.autonomous.modes.SourceSideRush12;
 import frc.robot.autonomous.modes.SourceSideRush21;
 import frc.robot.autonomous.modes.ThreeNoteCenter;
+import frc.robot.commands.WheelRadiusCharacterization;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
@@ -55,6 +57,12 @@ public class AutonomousSelector {
         "SOURCE_SIDE_RUSH_21", new SourceSideRush21(superstructure, swerve, shooter, intake));
     autonomousSelector.addOption(
         "AMP_SIDE_RUSH", new AmpSideRush(superstructure, swerve, shooter, intake));
+    autonomousSelector.addOption(
+        "WHEEL_RADIUS_CHARACTERIZATION",
+        new InstantCommand(() -> swerve.requestOrientModules(swerve.getCircleOrientations()))
+            .andThen(
+                new WheelRadiusCharacterization(
+                    swerve, WheelRadiusCharacterization.Direction.COUNTER_CLOCKWISE)));
 
     SmartDashboard.putData("Autonomus Selector", autonomousSelector);
   }

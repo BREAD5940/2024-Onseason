@@ -464,6 +464,10 @@ public class BreadSwerveModule {
     return m_internalState;
   }
 
+  public double getPosition() {
+    return m_internalState.angle.getRadians();
+  }
+
   /**
    * Get the current state of the module.
    *

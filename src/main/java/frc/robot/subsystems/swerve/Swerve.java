@@ -7,6 +7,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -14,9 +15,12 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commons.TimestampedVisionUpdate;
+import frc.robot.constants.Constants;
 import frc.robot.subsystems.swerve.BreadSwerveModule.DriveRequestType;
 import frc.robot.subsystems.swerve.BreadSwerveRequest.FieldCentric;
+import frc.robot.subsystems.swerve.BreadSwerveRequest.PointWheelsAt;
 import frc.robot.subsystems.swerve.BreadSwerveRequest.RobotCentric;
+import java.util.Arrays;
 import java.util.List;
 import org.littletonrobotics.junction.Logger;
 
@@ -31,6 +35,10 @@ public class Swerve extends SubsystemBase {
 
   private boolean requestVelocity = false;
   private boolean requestPercent = false;
+  private boolean requestWheelRadiusCharacterization = false;
+  private boolean requestOrientModules = false;
+  private Rotation2d[] orientations = new Rotation2d[] {};
+  private double characterizationInput = 0.0;
   private boolean isBrakeMode = true;
   private Timer lastMovementTimer = new Timer();
 
@@ -95,6 +103,10 @@ public class Swerve extends SubsystemBase {
       /* State transitions */
       if (requestVelocity) {
         nextSystemState = SwerveState.VELOCITY;
+      } else if (requestPercent) {
+        nextSystemState = SwerveState.PERCENT;
+      } else {
+        nextSystemState = SwerveState.ORIENT_MODULES;
       }
     } else if (systemState == SwerveState.VELOCITY) {
       /* State outputs */
@@ -117,8 +129,46 @@ public class Swerve extends SubsystemBase {
       /* State transitions */
       if (requestPercent) {
         nextSystemState = SwerveState.PERCENT;
+      } else if (requestWheelRadiusCharacterization) {
+        nextSystemState = SwerveState.WHEEL_RADIUS_CHARACTERIZATION;
+      } else if (requestOrientModules) {
+        nextSystemState = SwerveState.ORIENT_MODULES;
+      }
+    } else if (systemState == SwerveState.WHEEL_RADIUS_CHARACTERIZATION) {
+      drivetrain.setControl(
+          new RobotCentric()
+              .withVelocityX(0)
+              .withVelocityY(0)
+              .withRotationalRate(characterizationInput)
+              .withDriveRequestType(DriveRequestType.Velocity));
+
+      /* State transitions */
+      if (requestPercent) {
+        nextSystemState = SwerveState.PERCENT;
+      } else if (requestVelocity) {
+        nextSystemState = SwerveState.VELOCITY;
+      } else if (requestOrientModules) {
+        nextSystemState = SwerveState.ORIENT_MODULES;
+      }
+    } else if (systemState == SwerveState.ORIENT_MODULES) {
+      Rotation2d[] circleOrientation = getCircleOrientations();
+
+      for (int i = 0; i <= 3; i++) {
+        Rotation2d currentOrientation = circleOrientation[i];
+
+        drivetrain.setControl(new PointWheelsAt().withModuleDirection(currentOrientation));
+      }
+
+      /* State transitions */
+      if (requestPercent) {
+        nextSystemState = SwerveState.PERCENT;
+      } else if (requestVelocity) {
+        nextSystemState = SwerveState.VELOCITY;
+      } else if (requestWheelRadiusCharacterization) {
+        nextSystemState = SwerveState.WHEEL_RADIUS_CHARACTERIZATION;
       }
     }
+
     systemState = nextSystemState;
 
     /* If the driver station is enabled, set the modules to break. Otherwise set them to coast */
@@ -149,6 +199,8 @@ public class Swerve extends SubsystemBase {
   public void requestVelocity(ChassisSpeeds speeds, boolean fieldRelative) {
     requestVelocity = true;
     requestPercent = false;
+    requestWheelRadiusCharacterization = false;
+    requestOrientModules = false;
 
     this.desired = speeds;
     this.fieldRelative = fieldRelative;
@@ -160,9 +212,29 @@ public class Swerve extends SubsystemBase {
   public void requestPercent(ChassisSpeeds speeds, boolean fieldRelative) {
     requestVelocity = false;
     requestPercent = true;
+    requestWheelRadiusCharacterization = false;
+    requestOrientModules = false;
 
     this.desired = speeds;
     this.fieldRelative = fieldRelative;
+  }
+
+  public void requestOrientModules(Rotation2d[] orientations) {
+    requestVelocity = false;
+    requestPercent = true;
+    requestWheelRadiusCharacterization = false;
+    requestOrientModules = true;
+
+    this.orientations = orientations;
+  }
+
+  public void requestWheelRadiusCharacterization(double thetaSpeed) {
+    requestWheelRadiusCharacterization = true;
+    requestPercent = false;
+    requestVelocity = false;
+    requestOrientModules = false;
+
+    this.characterizationInput = thetaSpeed;
   }
 
   /* Adds vision data to the pose estimator built into the drivetrain class */
@@ -177,6 +249,24 @@ public class Swerve extends SubsystemBase {
       drivetrain.addAutoVisionMeasurement(
           autoUpdate.pose(), autoUpdate.timestamp(), autoUpdate.stdDevs());
     }
+  }
+
+  // public double[] getWheelRadiusCharacterizationPosition() {
+  //   // double[] modulePositions =
+  //   //     new double[] {
+  //   //       this.drivetrain.m_modulePositions[0].angle.getRadians(),
+  //   //       this.drivetrain.m_modulePositions[1].angle.getRadians(),
+  //   //       this.drivetrain.m_modulePositions[2].angle.getRadians(),
+  //   //       this.drivetrain.m_modulePositions[3].angle.getRadians(),
+  //   //     };
+  //   // return modulePositions;
+
+  //   double[] p = new double[] { 0 };
+  //   return p;
+  // }
+
+  public double[] getWheelRadiusCharacterizationPosition() {
+    return Arrays.stream(drivetrain.Modules).mapToDouble(BreadSwerveModule::getPosition).toArray();
   }
 
   /* Resets the pose estimate of the robot */
@@ -223,9 +313,17 @@ public class Swerve extends SubsystemBase {
         < SWERVE_ANGULAR_ERROR_TOLERANCE_RAD_P_S;
   }
 
+  public Rotation2d[] getCircleOrientations() {
+    return Arrays.stream(Constants.moduleTranslations)
+        .map(translation -> translation.getAngle().plus(new Rotation2d(Math.PI / 2.0)))
+        .toArray(Rotation2d[]::new);
+  }
+
   /* Swerve State */
   public enum SwerveState {
     VELOCITY,
-    PERCENT
+    PERCENT,
+    WHEEL_RADIUS_CHARACTERIZATION,
+    ORIENT_MODULES
   }
 }
