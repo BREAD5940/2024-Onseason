@@ -39,4 +39,7 @@ public interface PivotIO {
 
   /** Updates tunable numbers */
   public default void updateTunableNumbers() {}
+  
+  /* Check Alerts */
+  public default void checkFaultStatus() {}
 }

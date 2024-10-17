@@ -134,6 +134,8 @@ public class Shooter extends SubsystemBase {
       stateStartTime = BreadUtil.getFPGATimeSeconds();
       systemState = nextSystemState;
     }
+    
+    io.checkFaultStatus();
   }
 
   /* Returns whether or not the shooter is spinning */

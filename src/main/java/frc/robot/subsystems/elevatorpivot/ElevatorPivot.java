@@ -155,6 +155,8 @@ public class ElevatorPivot {
       mStateStartTime = BreadUtil.getFPGATimeSeconds();
       systemState = nextSystemState;
     }
+    pivotIO.checkFaultStatus();
+    elevatorIO.checkFaultStatus();
   }
 
   /* Returns the current system state of the elevator/pivot */

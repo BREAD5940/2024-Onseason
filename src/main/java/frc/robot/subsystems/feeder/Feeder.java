@@ -105,6 +105,8 @@ public class Feeder {
       stateStartTime = BreadUtil.getFPGATimeSeconds();
       systemState = nextSystemState;
     }
+    /* Check Alerts */
+    io.checkFaultStatus();
   }
 
   public boolean hasPiece() {

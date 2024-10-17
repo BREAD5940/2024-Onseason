@@ -52,4 +52,7 @@ public interface IntakeIO {
 
   /* Updates the tunable numbers. */
   public default void updateTunableNumbers() {}
+
+  /** Subsystem OK Check */
+  public default void checkFaultStatus() {}
 }

@@ -17,9 +17,18 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.commons.Alert;
+import frc.robot.commons.Alert.AlertType;
 import frc.robot.commons.LoggedTunableNumber;
 
 public class ElevatorIOKrakenX60 implements ElevatorIO {
+  
+  /* Alerts */
+  Alert isAliveAlertLeader = new Alert("Elevator Leader is not Alive", AlertType.ERROR);
+  Alert isOverheatingAlertLeader = new Alert("Elevator Leader Motor Overheat", AlertType.WARNING);
+
+  Alert isAliveAlertFollower = new Alert("Elevator Follower is not Alive", AlertType.ERROR);
+  Alert isOverheatingAlertFollower = new Alert("Elevator Follower Motor Overheat", AlertType.WARNING);
 
   /* Hardware */
   private final TalonFX leader;
@@ -239,5 +248,13 @@ public class ElevatorIOKrakenX60 implements ElevatorIO {
 
   private double rotationsToMeters(double rotations) {
     return rotations * (Math.PI * ELEVATOR_SPOOL_DIAMETER) / ELEVATOR_GEAR_RATIO;
+  }
+  
+  @Override
+  public void checkFaultStatus() {
+    isAliveAlertLeader.set(leader.isAlive());
+    isAliveAlertFollower.set(follower.isAlive());
+    isOverheatingAlertLeader.set(leader.getFault_DeviceTemp().getValue());
+    isOverheatingAlertFollower.set(follower.getFault_DeviceTemp().getValue());
   }
 }
