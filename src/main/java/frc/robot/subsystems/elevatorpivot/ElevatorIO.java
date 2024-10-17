@@ -34,7 +34,4 @@ public interface ElevatorIO {
 
   /* Updates tunable numbers if neccesary */
   public default void updateTunableNumbers() {}
-
-  /* Check Alerts */
-  public default void checkFaultStatus() {}
 }

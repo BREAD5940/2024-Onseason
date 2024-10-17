@@ -26,16 +26,10 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
-import frc.robot.commons.Alert;
-import frc.robot.commons.Alert.AlertType;
 import frc.robot.commons.AveragingFilter;
 import frc.robot.commons.LoggedTunableNumber;
 
 public class PivotIOKrakenX60 implements PivotIO {
-
-  /* Alerts */
-  Alert isAliveAlert = new Alert("Pivot Motor is not Alive", AlertType.ERROR);
-  Alert isOverheatingAlert = new Alert("Pivot Motor Overheat", AlertType.WARNING);
 
   /* Hardware */
   private final TalonFX pivot = new TalonFX(PIVOT_ID);
@@ -248,11 +242,5 @@ public class PivotIOKrakenX60 implements PivotIO {
       pivotConfigurator.apply(slot0Configs);
       pivotConfigurator.apply(pivotMotionMagicConfigs);
     }
-  }
-
-  @Override
-  public void checkFaultStatus() {
-    isAliveAlert.set(pivot.isAlive());
-    isOverheatingAlert.set(pivot.getFault_DeviceTemp().getValue());
   }
 }

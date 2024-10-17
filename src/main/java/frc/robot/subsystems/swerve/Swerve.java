@@ -55,11 +55,6 @@ public class Swerve extends SubsystemBase {
   public void periodic() {
     handleTelemetry();
     handleStatemachineLogic();
-    int i = 0;
-    while (drivetrain.getModule(i) != null || i <= 5) { /* Defensive Failsafe to prevent infinite loop, assuming less than five modules */
-      drivetrain.getModule(i).checkFaultStatus();
-      i++;
-    }
   }
 
   /* Telemetry function */

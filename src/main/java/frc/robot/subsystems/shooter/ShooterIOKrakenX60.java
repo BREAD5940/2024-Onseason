@@ -16,19 +16,10 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.util.Units;
 import frc.robot.RobotContainer;
-import frc.robot.commons.Alert;
-import frc.robot.commons.Alert.AlertType;
 import frc.robot.commons.LoggedTunableNumber;
 import frc.robot.subsystems.Superstructure.SuperstructureState;
 
 public class ShooterIOKrakenX60 implements ShooterIO {
-  
-  /* Alerts */
-  Alert isAliveAlertLeft = new Alert("Left Shooter Motor is not Alive", AlertType.ERROR);
-  Alert isOverheatingAlertLeft = new Alert("Left Shooter Motor Motor Overheat", AlertType.WARNING);
-
-  Alert isAliveAlertRight = new Alert("Right Shooter Motor is not Alive", AlertType.ERROR);
-  Alert isOverheatingAlertRight = new Alert("Right Shooter Motor Motor Overheat", AlertType.WARNING);
 
   /* Hardware */
   private final TalonFX left = new TalonFX(SHOOTER_LEFT_ID);
@@ -307,13 +298,5 @@ public class ShooterIOKrakenX60 implements ShooterIO {
 
       rightConfigurator.apply(rightShooterSlot0Configs);
     }
-  }
-
-  @Override
-  public void checkFaultStatus() {
-    isAliveAlertRight.set(right.isAlive());
-    isAliveAlertLeft.set(left.isAlive());
-    isOverheatingAlertRight.set(right.getFault_DeviceTemp().getValue());
-    isOverheatingAlertLeft.set(left.getFault_DeviceTemp().getValue());
   }
 }

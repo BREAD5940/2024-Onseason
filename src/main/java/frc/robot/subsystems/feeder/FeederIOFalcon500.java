@@ -18,15 +18,9 @@ import com.ctre.phoenix6.signals.ReverseLimitSourceValue;
 import com.ctre.phoenix6.signals.ReverseLimitValue;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
-import frc.robot.commons.Alert;
-import frc.robot.commons.Alert.AlertType;
 import frc.robot.commons.LoggedTunableNumber;
 
 public class FeederIOFalcon500 implements FeederIO {
-  
-  /* Alerts */
-  Alert isAliveAlert = new Alert("Feeder Motor is not Alive", AlertType.ERROR);
-  Alert isOverheatingAlert = new Alert("Feeder Motor Overheat", AlertType.WARNING);
 
   /* Hardware */
   private final TalonFX motor = new TalonFX(FEEDER_ID);
@@ -170,10 +164,5 @@ public class FeederIOFalcon500 implements FeederIO {
 
       configurator.apply(slot0Configs);
     }
-  }
-  @Override
-  public void checkFaultStatus() {
-    isAliveAlert.set(motor.isAlive());
-    isOverheatingAlert.set(motor.getFault_DeviceTemp().getValue());
   }
 }

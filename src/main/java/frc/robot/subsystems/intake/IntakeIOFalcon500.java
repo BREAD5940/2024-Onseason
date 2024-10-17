@@ -15,16 +15,9 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.DigitalInput;
-import frc.robot.commons.Alert;
-import frc.robot.commons.Alert.AlertType;
 import frc.robot.commons.LoggedTunableNumber;
 
 public class IntakeIOFalcon500 implements IntakeIO {
-
-  /* Alerts */
-  Alert isAliveAlert = new Alert("Intake Motor is not Alive", AlertType.ERROR);
-  Alert isConnectedAlert = new Alert("Intake Motor not Connected", AlertType.ERROR);
-  Alert isOverheatingAlert = new Alert("Intake Motor Overheat", AlertType.WARNING);
 
   /* Hardware */
   private final TalonFX intake = new TalonFX(INTAKE_ID, "dabus");
@@ -247,12 +240,5 @@ public class IntakeIOFalcon500 implements IntakeIO {
 
       vectorConfigurator.apply(vectorSlot0Configs);
     }
-  }
-
-  @Override
-  public void checkFaultStatus() {
-    isAliveAlert.set(intake.isAlive());
-    isConnectedAlert.set(BaseStatusSignal.refreshAll(vectorVelocity, supplyVector).isOK());
-    isOverheatingAlert.set(intake.getFault_DeviceTemp().getValue());
   }
 }

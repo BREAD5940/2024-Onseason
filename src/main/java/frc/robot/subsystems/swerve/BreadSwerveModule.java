@@ -27,8 +27,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
-import frc.robot.commons.Alert;
-import frc.robot.commons.Alert.AlertType;
 
 /**
  * Swerve Module class that encapsulates a swerve module powered by CTR Electronics devices.
@@ -65,13 +63,6 @@ public class BreadSwerveModule {
      */
     Velocity,
   }
-
-  /* Alerts */
-  Alert isAliveAlertDrive = new Alert("Swerve Drive Motor is not Alive", AlertType.ERROR);
-  Alert isOverheatingAlertDrive = new Alert("Swerve Drive Motor Motor Overheat", AlertType.WARNING);
-
-  Alert isAliveAlertSteer = new Alert("Swerve Steer Motor is not Alive", AlertType.ERROR);
-  Alert isOverheatingAlertSteer = new Alert("Swerve Steer Motor Motor Overheat", AlertType.WARNING);
 
   private final TalonFX m_driveMotor;
   private final TalonFX m_steerMotor;
@@ -559,13 +550,5 @@ public class BreadSwerveModule {
   public double getSupplyCurrent() {
     BaseStatusSignal.refreshAll(m_supplyCurrent);
     return m_supplyCurrent.getValue();
-  }
-
-  /* Check Alerts */
-  public void checkFaultStatus() {
-    isAliveAlertDrive.set(m_driveMotor.isAlive());
-    isAliveAlertSteer.set(m_steerMotor.isAlive());
-    isOverheatingAlertDrive.set(m_driveMotor.getFault_DeviceTemp().getValue());
-    isOverheatingAlertSteer.set(m_steerMotor.getFault_DeviceTemp().getValue());
   }
 }

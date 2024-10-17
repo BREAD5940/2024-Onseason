@@ -35,7 +35,4 @@ public interface FeederIO {
 
   /** Updates the tunable numbers */
   public default void updateTunableNumbers() {}
-  
-  /* Alerts */
-  public default void checkFaultStatus() {}
 }

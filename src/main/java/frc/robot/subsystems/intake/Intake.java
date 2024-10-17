@@ -40,6 +40,7 @@ public class Intake extends SubsystemBase {
     io.updateInputs(inputs);
     io.updateTunableNumbers();
     Logger.processInputs("Intake", inputs);
+
     Logger.recordOutput("Intake/SystemState", systemState);
     Logger.recordOutput("Intake/hasPieceBeamBreak", hasPiece());
     // Logger.recordOutput("Intake/hasPieceCurrent", hasPieceCurrent());
@@ -81,9 +82,6 @@ public class Intake extends SubsystemBase {
       stateStartTime = BreadUtil.getFPGATimeSeconds();
       systemState = nextSystemState;
     }
-
-    /* Check Alerts */
-    io.checkFaultStatus();
   }
 
   public boolean hasPiece() {
