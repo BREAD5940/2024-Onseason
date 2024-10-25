@@ -16,6 +16,9 @@ import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.commons.LoggedTunableNumber;
 
@@ -24,6 +27,25 @@ public class ElevatorIOKrakenX60 implements ElevatorIO {
   /* Hardware */
   private final TalonFX leader;
   private final TalonFX follower;
+
+  /* NetworkTables */
+  private final NetworkTableEntry elevatorFaultEntry;
+  private final NetworkTableEntry elevatorUndervoltageFaultEntry;
+  private final NetworkTableEntry elevatorBootDuringEnableFaultEntry;
+  private final NetworkTableEntry elevatorBridgeBrownoutFaultEntry;
+  private final NetworkTableEntry elevatorDeviceTempFaultEntry;
+  private final NetworkTableEntry elevatorForwardHardLimitFaultEntry;
+  private final NetworkTableEntry elevatorForwardSoftLimitFaultEntry;
+  private final NetworkTableEntry elevatorHardwareFaultEntry;
+  private final NetworkTableEntry elevatorMissingDifferentialFXFaultEntry;
+  private final NetworkTableEntry elevatorOverSupplyVFaultEntry;
+  private final NetworkTableEntry elevatorProcTempFaultEntry;
+  private final NetworkTableEntry elevatorReverseHardLimitFaultEntry;
+  private final NetworkTableEntry elevatorReverseSoftLimitFaultEntry;
+  private final NetworkTableEntry elevatorStatorCurrLimitFaultEntry;
+  private final NetworkTableEntry elevatorSupplyCurrLimitFaultEntry;
+  private final NetworkTableEntry elevatorUnlicensedFeatureInUseFaultEntry;
+  private final NetworkTableEntry elevatorUnstableSupplyVFaultEntry;
 
   /* Configurators */
   private TalonFXConfigurator leaderConfigurator;
@@ -65,6 +87,27 @@ public class ElevatorIOKrakenX60 implements ElevatorIO {
 
     this.leaderConfigurator = leader.getConfigurator();
     this.followerConfigurator = follower.getConfigurator();
+
+    /* Initialize NetworkTables entries */
+    NetworkTable table = NetworkTableInstance.getDefault().getTable("Elevator");
+    elevatorFaultEntry = table.getEntry("ElevatorFault");
+    elevatorUndervoltageFaultEntry = table.getEntry("ElevatorUndervoltageFault");
+    elevatorBootDuringEnableFaultEntry = table.getEntry("ElevatorBootDuringEnableFault");
+    elevatorBridgeBrownoutFaultEntry = table.getEntry("ElevatorBridgeBrownoutFault");
+    elevatorDeviceTempFaultEntry = table.getEntry("ElevatorDeviceTempFault");
+    elevatorForwardHardLimitFaultEntry = table.getEntry("ElevatorForwardHardLimitFault");
+    elevatorForwardSoftLimitFaultEntry = table.getEntry("ElevatorForwardSoftLimitFault");
+    elevatorHardwareFaultEntry = table.getEntry("ElevatorHardwareFault");
+    elevatorMissingDifferentialFXFaultEntry = table.getEntry("ElevatorMissingDifferentialFXFault");
+    elevatorOverSupplyVFaultEntry = table.getEntry("ElevatorOverSupplyVFault");
+    elevatorProcTempFaultEntry = table.getEntry("ElevatorProcTempFault");
+    elevatorReverseHardLimitFaultEntry = table.getEntry("ElevatorReverseHardLimitFault");
+    elevatorReverseSoftLimitFaultEntry = table.getEntry("ElevatorReverseSoftLimitFault");
+    elevatorStatorCurrLimitFaultEntry = table.getEntry("ElevatorStatorCurrLimitFault");
+    elevatorSupplyCurrLimitFaultEntry = table.getEntry("ElevatorSupplyCurrLimitFault");
+    elevatorUnlicensedFeatureInUseFaultEntry =
+        table.getEntry("ElevatorUnlicensedFeatureInUseFault");
+    elevatorUnstableSupplyVFaultEntry = table.getEntry("ElevatorUnstableSupplyVFault");
 
     /* Create configs */
     currentLimitsConfigs = new CurrentLimitsConfigs();
@@ -156,6 +199,27 @@ public class ElevatorIOKrakenX60 implements ElevatorIO {
     }
     prevClosedLoopReferenceSlope = inputs.motionMagicVelocityTarget;
     prevReferenceSlopeTimestamp = currentTime;
+
+    // Push elevator faults to NetworkTables
+    elevatorFaultEntry.setBoolean(leader.getFault_DeviceTemp().getValue());
+    elevatorUndervoltageFaultEntry.setBoolean(leader.getFault_Undervoltage().getValue());
+    elevatorBootDuringEnableFaultEntry.setBoolean(leader.getFault_BootDuringEnable().getValue());
+    elevatorBridgeBrownoutFaultEntry.setBoolean(leader.getFault_BridgeBrownout().getValue());
+    elevatorDeviceTempFaultEntry.setBoolean(leader.getFault_DeviceTemp().getValue());
+    elevatorForwardHardLimitFaultEntry.setBoolean(leader.getFault_ForwardHardLimit().getValue());
+    elevatorForwardSoftLimitFaultEntry.setBoolean(leader.getFault_ForwardSoftLimit().getValue());
+    elevatorHardwareFaultEntry.setBoolean(leader.getFault_Hardware().getValue());
+    elevatorMissingDifferentialFXFaultEntry.setBoolean(
+        leader.getFault_MissingDifferentialFX().getValue());
+    elevatorOverSupplyVFaultEntry.setBoolean(leader.getFault_OverSupplyV().getValue());
+    elevatorProcTempFaultEntry.setBoolean(leader.getFault_ProcTemp().getValue());
+    elevatorReverseHardLimitFaultEntry.setBoolean(leader.getFault_ReverseHardLimit().getValue());
+    elevatorReverseSoftLimitFaultEntry.setBoolean(leader.getFault_ReverseSoftLimit().getValue());
+    elevatorStatorCurrLimitFaultEntry.setBoolean(leader.getFault_StatorCurrLimit().getValue());
+    elevatorSupplyCurrLimitFaultEntry.setBoolean(leader.getFault_SupplyCurrLimit().getValue());
+    elevatorUnlicensedFeatureInUseFaultEntry.setBoolean(
+        leader.getFault_UnlicensedFeatureInUse().getValue());
+    elevatorUnstableSupplyVFaultEntry.setBoolean(leader.getFault_UnstableSupplyV().getValue());
   }
 
   @Override

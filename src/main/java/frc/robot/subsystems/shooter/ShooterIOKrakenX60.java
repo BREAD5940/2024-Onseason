@@ -15,6 +15,9 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.RobotContainer;
 import frc.robot.commons.LoggedTunableNumber;
 import frc.robot.subsystems.Superstructure.SuperstructureState;
@@ -68,6 +71,43 @@ public class ShooterIOKrakenX60 implements ShooterIO {
   LoggedTunableNumber leftShooterKp = new LoggedTunableNumber("LeftShooter/kP", 0.4);
   LoggedTunableNumber leftShooterKi = new LoggedTunableNumber("LeftShooter/kI", 0.0);
   LoggedTunableNumber leftShooterKd = new LoggedTunableNumber("LeftShooter/kD", 0.0);
+
+  /* NetworkTables */
+  private final NetworkTableEntry leftShooterFaultEntry;
+  private final NetworkTableEntry leftShooterUndervoltageFaultEntry;
+  private final NetworkTableEntry leftShooterBootDuringEnableFaultEntry;
+  private final NetworkTableEntry leftShooterBridgeBrownoutFaultEntry;
+  private final NetworkTableEntry leftShooterDeviceTempFaultEntry;
+  private final NetworkTableEntry leftShooterForwardHardLimitFaultEntry;
+  private final NetworkTableEntry leftShooterForwardSoftLimitFaultEntry;
+  private final NetworkTableEntry leftShooterHardwareFaultEntry;
+  private final NetworkTableEntry leftShooterMissingDifferentialFXFaultEntry;
+  private final NetworkTableEntry leftShooterOverSupplyVFaultEntry;
+  private final NetworkTableEntry leftShooterProcTempFaultEntry;
+  private final NetworkTableEntry leftShooterReverseHardLimitFaultEntry;
+  private final NetworkTableEntry leftShooterReverseSoftLimitFaultEntry;
+  private final NetworkTableEntry leftShooterStatorCurrLimitFaultEntry;
+  private final NetworkTableEntry leftShooterSupplyCurrLimitFaultEntry;
+  private final NetworkTableEntry leftShooterUnlicensedFeatureInUseFaultEntry;
+  private final NetworkTableEntry leftShooterUnstableSupplyVFaultEntry;
+
+  private final NetworkTableEntry rightShooterFaultEntry;
+  private final NetworkTableEntry rightShooterUndervoltageFaultEntry;
+  private final NetworkTableEntry rightShooterBootDuringEnableFaultEntry;
+  private final NetworkTableEntry rightShooterBridgeBrownoutFaultEntry;
+  private final NetworkTableEntry rightShooterDeviceTempFaultEntry;
+  private final NetworkTableEntry rightShooterForwardHardLimitFaultEntry;
+  private final NetworkTableEntry rightShooterForwardSoftLimitFaultEntry;
+  private final NetworkTableEntry rightShooterHardwareFaultEntry;
+  private final NetworkTableEntry rightShooterMissingDifferentialFXFaultEntry;
+  private final NetworkTableEntry rightShooterOverSupplyVFaultEntry;
+  private final NetworkTableEntry rightShooterProcTempFaultEntry;
+  private final NetworkTableEntry rightShooterReverseHardLimitFaultEntry;
+  private final NetworkTableEntry rightShooterReverseSoftLimitFaultEntry;
+  private final NetworkTableEntry rightShooterStatorCurrLimitFaultEntry;
+  private final NetworkTableEntry rightShooterSupplyCurrLimitFaultEntry;
+  private final NetworkTableEntry rightShooterUnlicensedFeatureInUseFaultEntry;
+  private final NetworkTableEntry rightShooterUnstableSupplyVFaultEntry;
 
   public ShooterIOKrakenX60() {
     /* Instantiate configuators */
@@ -157,6 +197,48 @@ public class ShooterIOKrakenX60 implements ShooterIO {
         statorRight,
         supplyLeft,
         supplyRight);
+
+    /* Initialize NetworkTables entries */
+    NetworkTable table = NetworkTableInstance.getDefault().getTable("Shooter");
+    leftShooterFaultEntry = table.getEntry("LeftShooterFault");
+    leftShooterUndervoltageFaultEntry = table.getEntry("LeftShooterUndervoltageFault");
+    leftShooterBootDuringEnableFaultEntry = table.getEntry("LeftShooterBootDuringEnableFault");
+    leftShooterBridgeBrownoutFaultEntry = table.getEntry("LeftShooterBridgeBrownoutFault");
+    leftShooterDeviceTempFaultEntry = table.getEntry("LeftShooterDeviceTempFault");
+    leftShooterForwardHardLimitFaultEntry = table.getEntry("LeftShooterForwardHardLimitFault");
+    leftShooterForwardSoftLimitFaultEntry = table.getEntry("LeftShooterForwardSoftLimitFault");
+    leftShooterHardwareFaultEntry = table.getEntry("LeftShooterHardwareFault");
+    leftShooterMissingDifferentialFXFaultEntry =
+        table.getEntry("LeftShooterMissingDifferentialFXFault");
+    leftShooterOverSupplyVFaultEntry = table.getEntry("LeftShooterOverSupplyVFault");
+    leftShooterProcTempFaultEntry = table.getEntry("LeftShooterProcTempFault");
+    leftShooterReverseHardLimitFaultEntry = table.getEntry("LeftShooterReverseHardLimitFault");
+    leftShooterReverseSoftLimitFaultEntry = table.getEntry("LeftShooterReverseSoftLimitFault");
+    leftShooterStatorCurrLimitFaultEntry = table.getEntry("LeftShooterStatorCurrLimitFault");
+    leftShooterSupplyCurrLimitFaultEntry = table.getEntry("LeftShooterSupplyCurrLimitFault");
+    leftShooterUnlicensedFeatureInUseFaultEntry =
+        table.getEntry("LeftShooterUnlicensedFeatureInUseFault");
+    leftShooterUnstableSupplyVFaultEntry = table.getEntry("LeftShooterUnstableSupplyVFault");
+
+    rightShooterFaultEntry = table.getEntry("RightShooterFault");
+    rightShooterUndervoltageFaultEntry = table.getEntry("RightShooterUndervoltageFault");
+    rightShooterBootDuringEnableFaultEntry = table.getEntry("RightShooterBootDuringEnableFault");
+    rightShooterBridgeBrownoutFaultEntry = table.getEntry("RightShooterBridgeBrownoutFault");
+    rightShooterDeviceTempFaultEntry = table.getEntry("RightShooterDeviceTempFault");
+    rightShooterForwardHardLimitFaultEntry = table.getEntry("RightShooterForwardHardLimitFault");
+    rightShooterForwardSoftLimitFaultEntry = table.getEntry("RightShooterForwardSoftLimitFault");
+    rightShooterHardwareFaultEntry = table.getEntry("RightShooterHardwareFault");
+    rightShooterMissingDifferentialFXFaultEntry =
+        table.getEntry("RightShooterMissingDifferentialFXFault");
+    rightShooterOverSupplyVFaultEntry = table.getEntry("RightShooterOverSupplyVFault");
+    rightShooterProcTempFaultEntry = table.getEntry("RightShooterProcTempFault");
+    rightShooterReverseHardLimitFaultEntry = table.getEntry("RightShooterReverseHardLimitFault");
+    rightShooterReverseSoftLimitFaultEntry = table.getEntry("RightShooterReverseSoftLimitFault");
+    rightShooterStatorCurrLimitFaultEntry = table.getEntry("RightShooterStatorCurrLimitFault");
+    rightShooterSupplyCurrLimitFaultEntry = table.getEntry("RightShooterSupplyCurrLimitFault");
+    rightShooterUnlicensedFeatureInUseFaultEntry =
+        table.getEntry("RightShooterUnlicensedFeatureInUseFault");
+    rightShooterUnstableSupplyVFaultEntry = table.getEntry("RightShooterUnstableSupplyVFault");
   }
 
   @Override
@@ -188,6 +270,48 @@ public class ShooterIOKrakenX60 implements ShooterIO {
     inputs.shooterRightSetpointRPM = desiredRight;
 
     inputs.shooterCurrentAmps = new double[] {supplyLeft.getValue(), supplyRight.getValue()};
+
+    // Push left shooter faults to NetworkTables
+    leftShooterFaultEntry.setBoolean(left.getFault_DeviceTemp().getValue());
+    leftShooterUndervoltageFaultEntry.setBoolean(left.getFault_Undervoltage().getValue());
+    leftShooterBootDuringEnableFaultEntry.setBoolean(left.getFault_BootDuringEnable().getValue());
+    leftShooterBridgeBrownoutFaultEntry.setBoolean(left.getFault_BridgeBrownout().getValue());
+    leftShooterDeviceTempFaultEntry.setBoolean(left.getFault_DeviceTemp().getValue());
+    leftShooterForwardHardLimitFaultEntry.setBoolean(left.getFault_ForwardHardLimit().getValue());
+    leftShooterForwardSoftLimitFaultEntry.setBoolean(left.getFault_ForwardSoftLimit().getValue());
+    leftShooterHardwareFaultEntry.setBoolean(left.getFault_Hardware().getValue());
+    leftShooterMissingDifferentialFXFaultEntry.setBoolean(
+        left.getFault_MissingDifferentialFX().getValue());
+    leftShooterOverSupplyVFaultEntry.setBoolean(left.getFault_OverSupplyV().getValue());
+    leftShooterProcTempFaultEntry.setBoolean(left.getFault_ProcTemp().getValue());
+    leftShooterReverseHardLimitFaultEntry.setBoolean(left.getFault_ReverseHardLimit().getValue());
+    leftShooterReverseSoftLimitFaultEntry.setBoolean(left.getFault_ReverseSoftLimit().getValue());
+    leftShooterStatorCurrLimitFaultEntry.setBoolean(left.getFault_StatorCurrLimit().getValue());
+    leftShooterSupplyCurrLimitFaultEntry.setBoolean(left.getFault_SupplyCurrLimit().getValue());
+    leftShooterUnlicensedFeatureInUseFaultEntry.setBoolean(
+        left.getFault_UnlicensedFeatureInUse().getValue());
+    leftShooterUnstableSupplyVFaultEntry.setBoolean(left.getFault_UnstableSupplyV().getValue());
+
+    // Push right shooter faults to NetworkTables
+    rightShooterFaultEntry.setBoolean(right.getFault_DeviceTemp().getValue());
+    rightShooterUndervoltageFaultEntry.setBoolean(right.getFault_Undervoltage().getValue());
+    rightShooterBootDuringEnableFaultEntry.setBoolean(right.getFault_BootDuringEnable().getValue());
+    rightShooterBridgeBrownoutFaultEntry.setBoolean(right.getFault_BridgeBrownout().getValue());
+    rightShooterDeviceTempFaultEntry.setBoolean(right.getFault_DeviceTemp().getValue());
+    rightShooterForwardHardLimitFaultEntry.setBoolean(right.getFault_ForwardHardLimit().getValue());
+    rightShooterForwardSoftLimitFaultEntry.setBoolean(right.getFault_ForwardSoftLimit().getValue());
+    rightShooterHardwareFaultEntry.setBoolean(right.getFault_Hardware().getValue());
+    rightShooterMissingDifferentialFXFaultEntry.setBoolean(
+        right.getFault_MissingDifferentialFX().getValue());
+    rightShooterOverSupplyVFaultEntry.setBoolean(right.getFault_OverSupplyV().getValue());
+    rightShooterProcTempFaultEntry.setBoolean(right.getFault_ProcTemp().getValue());
+    rightShooterReverseHardLimitFaultEntry.setBoolean(right.getFault_ReverseHardLimit().getValue());
+    rightShooterReverseSoftLimitFaultEntry.setBoolean(right.getFault_ReverseSoftLimit().getValue());
+    rightShooterStatorCurrLimitFaultEntry.setBoolean(right.getFault_StatorCurrLimit().getValue());
+    rightShooterSupplyCurrLimitFaultEntry.setBoolean(right.getFault_SupplyCurrLimit().getValue());
+    rightShooterUnlicensedFeatureInUseFaultEntry.setBoolean(
+        right.getFault_UnlicensedFeatureInUse().getValue());
+    rightShooterUnstableSupplyVFaultEntry.setBoolean(right.getFault_UnstableSupplyV().getValue());
   }
 
   @Override

@@ -1,6 +1,9 @@
 package frc.robot.subsystems.intake;
 
-import static frc.robot.constants.Constants.Intake.*;
+import static frc.robot.constants.Constants.Intake.INTAKE_ID;
+import static frc.robot.constants.Constants.Intake.INTAKE_INVERSION;
+import static frc.robot.constants.Constants.Intake.VECTOR_ID;
+import static frc.robot.constants.Constants.Intake.VECTOR_INVERSION;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
@@ -14,11 +17,13 @@ import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.commons.LoggedTunableNumber;
 
 public class IntakeIOFalcon500 implements IntakeIO {
-
   /* Hardware */
   private final TalonFX intake = new TalonFX(INTAKE_ID, "dabus");
   private final TalonFX vector = new TalonFX(VECTOR_ID, "dabus");
@@ -57,6 +62,25 @@ public class IntakeIOFalcon500 implements IntakeIO {
   /* Status Signals */
   private StatusSignal<Double> vectorVelocity;
   private StatusSignal<Double> supplyVector;
+
+  /* NetworkTables */
+  private final NetworkTableEntry intakeFaultEntry;
+  private final NetworkTableEntry intakeUndervoltageFaultEntry;
+  private final NetworkTableEntry intakeBootDuringEnableFaultEntry;
+  private final NetworkTableEntry intakeBridgeBrownoutFaultEntry;
+  private final NetworkTableEntry intakeDeviceTempFaultEntry;
+  private final NetworkTableEntry intakeForwardHardLimitFaultEntry;
+  private final NetworkTableEntry intakeForwardSoftLimitFaultEntry;
+  private final NetworkTableEntry intakeHardwareFaultEntry;
+  private final NetworkTableEntry intakeMissingDifferentialFXFaultEntry;
+  private final NetworkTableEntry intakeOverSupplyVFaultEntry;
+  private final NetworkTableEntry intakeProcTempFaultEntry;
+  private final NetworkTableEntry intakeReverseHardLimitFaultEntry;
+  private final NetworkTableEntry intakeReverseSoftLimitFaultEntry;
+  private final NetworkTableEntry intakeStatorCurrLimitFaultEntry;
+  private final NetworkTableEntry intakeSupplyCurrLimitFaultEntry;
+  private final NetworkTableEntry intakeUnlicensedFeatureInUseFaultEntry;
+  private final NetworkTableEntry intakeUnstableSupplyVFaultEntry;
 
   public IntakeIOFalcon500() {
     /* Instantiate configuator */
@@ -129,6 +153,26 @@ public class IntakeIOFalcon500 implements IntakeIO {
     supplyVector = vector.getSupplyCurrent();
 
     BaseStatusSignal.setUpdateFrequencyForAll(50, vectorVelocity, supplyVector);
+
+    /* Initialize NetworkTables entry */
+    NetworkTable table = NetworkTableInstance.getDefault().getTable("Intake");
+    intakeFaultEntry = table.getEntry("IntakeFault");
+    intakeUndervoltageFaultEntry = table.getEntry("IntakeUndervoltageFault");
+    intakeBootDuringEnableFaultEntry = table.getEntry("IntakeBootDuringEnableFault");
+    intakeBridgeBrownoutFaultEntry = table.getEntry("IntakeBridgeBrownoutFault");
+    intakeDeviceTempFaultEntry = table.getEntry("IntakeDeviceTempFault");
+    intakeForwardHardLimitFaultEntry = table.getEntry("IntakeForwardHardLimitFault");
+    intakeForwardSoftLimitFaultEntry = table.getEntry("IntakeForwardSoftLimitFault");
+    intakeHardwareFaultEntry = table.getEntry("IntakeHardwareFault");
+    intakeMissingDifferentialFXFaultEntry = table.getEntry("IntakeMissingDifferentialFXFault");
+    intakeOverSupplyVFaultEntry = table.getEntry("IntakeOverSupplyVFault");
+    intakeProcTempFaultEntry = table.getEntry("IntakeProcTempFault");
+    intakeReverseHardLimitFaultEntry = table.getEntry("IntakeReverseHardLimitFault");
+    intakeReverseSoftLimitFaultEntry = table.getEntry("IntakeReverseSoftLimitFault");
+    intakeStatorCurrLimitFaultEntry = table.getEntry("IntakeStatorCurrLimitFault");
+    intakeSupplyCurrLimitFaultEntry = table.getEntry("IntakeSupplyCurrLimitFault");
+    intakeUnlicensedFeatureInUseFaultEntry = table.getEntry("IntakeUnlicensedFeatureInUseFault");
+    intakeUnstableSupplyVFaultEntry = table.getEntry("IntakeUnstableSupplyVFault");
   }
 
   @Override
@@ -150,6 +194,27 @@ public class IntakeIOFalcon500 implements IntakeIO {
     // inputs.beamBreakTriggered = beamBreak.getVoltage() > 0.8;
     // inputs.beamBreakRawVoltage = beamBreak.getVoltage();
     inputs.beamBreakTriggered = beamBreak.get();
+
+    // Push intake faults to NetworkTables
+    intakeFaultEntry.setBoolean(intake.getFault_DeviceTemp().getValue());
+    intakeUndervoltageFaultEntry.setBoolean(intake.getFault_Undervoltage().getValue());
+    intakeBootDuringEnableFaultEntry.setBoolean(intake.getFault_BootDuringEnable().getValue());
+    intakeBridgeBrownoutFaultEntry.setBoolean(intake.getFault_BridgeBrownout().getValue());
+    intakeDeviceTempFaultEntry.setBoolean(intake.getFault_DeviceTemp().getValue());
+    intakeForwardHardLimitFaultEntry.setBoolean(intake.getFault_ForwardHardLimit().getValue());
+    intakeForwardSoftLimitFaultEntry.setBoolean(intake.getFault_ForwardSoftLimit().getValue());
+    intakeHardwareFaultEntry.setBoolean(intake.getFault_Hardware().getValue());
+    intakeMissingDifferentialFXFaultEntry.setBoolean(
+        intake.getFault_MissingDifferentialFX().getValue());
+    intakeOverSupplyVFaultEntry.setBoolean(intake.getFault_OverSupplyV().getValue());
+    intakeProcTempFaultEntry.setBoolean(intake.getFault_ProcTemp().getValue());
+    intakeReverseHardLimitFaultEntry.setBoolean(intake.getFault_ReverseHardLimit().getValue());
+    intakeReverseSoftLimitFaultEntry.setBoolean(intake.getFault_ReverseSoftLimit().getValue());
+    intakeStatorCurrLimitFaultEntry.setBoolean(intake.getFault_StatorCurrLimit().getValue());
+    intakeSupplyCurrLimitFaultEntry.setBoolean(intake.getFault_SupplyCurrLimit().getValue());
+    intakeUnlicensedFeatureInUseFaultEntry.setBoolean(
+        intake.getFault_UnlicensedFeatureInUse().getValue());
+    intakeUnstableSupplyVFaultEntry.setBoolean(intake.getFault_UnstableSupplyV().getValue());
   }
 
   @Override

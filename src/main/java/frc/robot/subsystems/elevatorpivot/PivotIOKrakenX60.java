@@ -1,6 +1,13 @@
 package frc.robot.subsystems.elevatorpivot;
 
-import static frc.robot.constants.Constants.Pivot.*;
+import static frc.robot.constants.Constants.Pivot.PIVOT_AZIMUTH_ID;
+import static frc.robot.constants.Constants.Pivot.PIVOT_ENCODER_INVERSION;
+import static frc.robot.constants.Constants.Pivot.PIVOT_GEAR_RATIO;
+import static frc.robot.constants.Constants.Pivot.PIVOT_ID;
+import static frc.robot.constants.Constants.Pivot.PIVOT_INVERSION;
+import static frc.robot.constants.Constants.Pivot.PIVOT_MAGNET_OFFSET;
+import static frc.robot.constants.Constants.Pivot.PIVOT_MAX_ANGLE;
+import static frc.robot.constants.Constants.Pivot.PIVOT_MIN_ANGLE;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;
@@ -26,6 +33,9 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.commons.AveragingFilter;
 import frc.robot.commons.LoggedTunableNumber;
 
@@ -34,6 +44,25 @@ public class PivotIOKrakenX60 implements PivotIO {
   /* Hardware */
   private final TalonFX pivot = new TalonFX(PIVOT_ID);
   private final CANcoder azimuth = new CANcoder(PIVOT_AZIMUTH_ID);
+
+  // Networktables :D
+  private final NetworkTableEntry pivotBridgeBrownoutFaultEntry;
+  private final NetworkTableEntry pivotFaultEntry;
+  private final NetworkTableEntry pivotBootDuringEnableFaultEntry;
+  private final NetworkTableEntry pivotUndervoltageFaultEntry;
+  private final NetworkTableEntry pivotDeviceTempFaultEntry;
+  private final NetworkTableEntry pivotForwardSoftLimitFaultEntry;
+  private final NetworkTableEntry pivotHardwareFaultEntry;
+  private final NetworkTableEntry pivotMissingDifferentialFXFaultEntry;
+  private final NetworkTableEntry pivotOverSupplyVFaultEntry;
+  private final NetworkTableEntry pivotProcTempFaultEntry;
+  private final NetworkTableEntry pivotReverseHardLimitFaultEntry;
+  private final NetworkTableEntry pivotReverseSoftLimitFaultEntry;
+  private final NetworkTableEntry pivotStatorCurrLimitFaultEntry;
+  private final NetworkTableEntry pivotSupplyCurrLimitFaultEntry;
+  private final NetworkTableEntry pivotUnlicensedFeatureInUseFaultEntry;
+  private final NetworkTableEntry pivotUnstableSupplyVFaultEntry;
+  private final NetworkTableEntry pivotForwardHardLimitFaultEntry;
 
   /* Configurators */
   private TalonFXConfigurator pivotConfigurator;
@@ -75,6 +104,26 @@ public class PivotIOKrakenX60 implements PivotIO {
   private double prevError = 0.0;
 
   public PivotIOKrakenX60() {
+    // Networktables
+    NetworkTable table = NetworkTableInstance.getDefault().getTable("pivot");
+    pivotFaultEntry = table.getEntry("PivotFault");
+    pivotUndervoltageFaultEntry = table.getEntry("PivotUndervoltageFault");
+    pivotBootDuringEnableFaultEntry = table.getEntry("PivotBootDuringEnableFault");
+    pivotBridgeBrownoutFaultEntry = table.getEntry("PivotBridgeBrownoutFault");
+    pivotDeviceTempFaultEntry = table.getEntry("PivotDeviceTempFault");
+    pivotForwardHardLimitFaultEntry = table.getEntry("PivotForwardHardLimitFault");
+    pivotForwardSoftLimitFaultEntry = table.getEntry("PivotForwardSoftLimitFault");
+    pivotHardwareFaultEntry = table.getEntry("PivotHardwareFault");
+    pivotMissingDifferentialFXFaultEntry = table.getEntry("PivotMissingDifferentialFXFault");
+    pivotOverSupplyVFaultEntry = table.getEntry("PivotOverSupplyVFault");
+    pivotProcTempFaultEntry = table.getEntry("PivotProcTempFault");
+    pivotReverseHardLimitFaultEntry = table.getEntry("PivotReverseHardLimitFault");
+    pivotReverseSoftLimitFaultEntry = table.getEntry("PivotReverseSoftLimitFault");
+    pivotStatorCurrLimitFaultEntry = table.getEntry("PivotStatorCurrLimitFault");
+    pivotSupplyCurrLimitFaultEntry = table.getEntry("PivotSupplyCurrLimitFault");
+    pivotUnlicensedFeatureInUseFaultEntry = table.getEntry("PivotUnlicensedFeatureInUseFault");
+    pivotUnstableSupplyVFaultEntry = table.getEntry("PivotUnstableSupplyVFault");
+
     /* Configurators */
     pivotConfigurator = pivot.getConfigurator();
     azimuthConfigurator = azimuth.getConfigurator();
@@ -182,6 +231,26 @@ public class PivotIOKrakenX60 implements PivotIO {
     deltaErrorFilter.addSample(err - prevError);
     inputs.deltaError = deltaErrorFilter.getAverage();
     prevError = err;
+
+    pivotFaultEntry.setBoolean(pivot.getFault_DeviceTemp().getValue());
+    pivotUndervoltageFaultEntry.setBoolean(pivot.getFault_Undervoltage().getValue());
+    pivotBootDuringEnableFaultEntry.setBoolean(pivot.getFault_BootDuringEnable().getValue());
+    pivotBridgeBrownoutFaultEntry.setBoolean(pivot.getFault_BridgeBrownout().getValue());
+    pivotDeviceTempFaultEntry.setBoolean(pivot.getFault_DeviceTemp().getValue());
+    pivotForwardHardLimitFaultEntry.setBoolean(pivot.getFault_ForwardHardLimit().getValue());
+    pivotForwardSoftLimitFaultEntry.setBoolean(pivot.getFault_ForwardSoftLimit().getValue());
+    pivotHardwareFaultEntry.setBoolean(pivot.getFault_Hardware().getValue());
+    pivotMissingDifferentialFXFaultEntry.setBoolean(
+        pivot.getFault_MissingDifferentialFX().getValue());
+    pivotOverSupplyVFaultEntry.setBoolean(pivot.getFault_OverSupplyV().getValue());
+    pivotProcTempFaultEntry.setBoolean(pivot.getFault_ProcTemp().getValue());
+    pivotReverseHardLimitFaultEntry.setBoolean(pivot.getFault_ReverseHardLimit().getValue());
+    pivotReverseSoftLimitFaultEntry.setBoolean(pivot.getFault_ReverseSoftLimit().getValue());
+    pivotStatorCurrLimitFaultEntry.setBoolean(pivot.getFault_StatorCurrLimit().getValue());
+    pivotSupplyCurrLimitFaultEntry.setBoolean(pivot.getFault_SupplyCurrLimit().getValue());
+    pivotUnlicensedFeatureInUseFaultEntry.setBoolean(
+        pivot.getFault_UnlicensedFeatureInUse().getValue());
+    pivotUnstableSupplyVFaultEntry.setBoolean(pivot.getFault_UnstableSupplyV().getValue());
   }
 
   @Override

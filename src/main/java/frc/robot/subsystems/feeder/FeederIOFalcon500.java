@@ -18,6 +18,9 @@ import com.ctre.phoenix6.signals.ReverseLimitSourceValue;
 import com.ctre.phoenix6.signals.ReverseLimitValue;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.commons.LoggedTunableNumber;
 
 public class FeederIOFalcon500 implements FeederIO {
@@ -49,6 +52,25 @@ public class FeederIOFalcon500 implements FeederIO {
   LoggedTunableNumber kD = new LoggedTunableNumber("Feeder/kD", 0.0);
 
   private double setpoint;
+
+  /* NetworkTables */
+  private final NetworkTableEntry feederFaultEntry;
+  private final NetworkTableEntry feederUndervoltageFaultEntry;
+  private final NetworkTableEntry feederBootDuringEnableFaultEntry;
+  private final NetworkTableEntry feederBridgeBrownoutFaultEntry;
+  private final NetworkTableEntry feederDeviceTempFaultEntry;
+  private final NetworkTableEntry feederForwardHardLimitFaultEntry;
+  private final NetworkTableEntry feederForwardSoftLimitFaultEntry;
+  private final NetworkTableEntry feederHardwareFaultEntry;
+  private final NetworkTableEntry feederMissingDifferentialFXFaultEntry;
+  private final NetworkTableEntry feederOverSupplyVFaultEntry;
+  private final NetworkTableEntry feederProcTempFaultEntry;
+  private final NetworkTableEntry feederReverseHardLimitFaultEntry;
+  private final NetworkTableEntry feederReverseSoftLimitFaultEntry;
+  private final NetworkTableEntry feederStatorCurrLimitFaultEntry;
+  private final NetworkTableEntry feederSupplyCurrLimitFaultEntry;
+  private final NetworkTableEntry feederUnlicensedFeatureInUseFaultEntry;
+  private final NetworkTableEntry feederUnstableSupplyVFaultEntry;
 
   public FeederIOFalcon500() {
     /* Instantiate configurator */
@@ -97,6 +119,26 @@ public class FeederIOFalcon500 implements FeederIO {
         50, position, velocity, current, temperature, beamBreak);
 
     motor.optimizeBusUtilization();
+
+    /* Initialize NetworkTables entries */
+    NetworkTable table = NetworkTableInstance.getDefault().getTable("Feeder");
+    feederFaultEntry = table.getEntry("FeederFault");
+    feederUndervoltageFaultEntry = table.getEntry("FeederUndervoltageFault");
+    feederBootDuringEnableFaultEntry = table.getEntry("FeederBootDuringEnableFault");
+    feederBridgeBrownoutFaultEntry = table.getEntry("FeederBridgeBrownoutFault");
+    feederDeviceTempFaultEntry = table.getEntry("FeederDeviceTempFault");
+    feederForwardHardLimitFaultEntry = table.getEntry("FeederForwardHardLimitFault");
+    feederForwardSoftLimitFaultEntry = table.getEntry("FeederForwardSoftLimitFault");
+    feederHardwareFaultEntry = table.getEntry("FeederHardwareFault");
+    feederMissingDifferentialFXFaultEntry = table.getEntry("FeederMissingDifferentialFXFault");
+    feederOverSupplyVFaultEntry = table.getEntry("FeederOverSupplyVFault");
+    feederProcTempFaultEntry = table.getEntry("FeederProcTempFault");
+    feederReverseHardLimitFaultEntry = table.getEntry("FeederReverseHardLimitFault");
+    feederReverseSoftLimitFaultEntry = table.getEntry("FeederReverseSoftLimitFault");
+    feederStatorCurrLimitFaultEntry = table.getEntry("FeederStatorCurrLimitFault");
+    feederSupplyCurrLimitFaultEntry = table.getEntry("FeederSupplyCurrLimitFault");
+    feederUnlicensedFeatureInUseFaultEntry = table.getEntry("FeederUnlicensedFeatureInUseFault");
+    feederUnstableSupplyVFaultEntry = table.getEntry("FeederUnstableSupplyVFault");
   }
 
   @Override
@@ -111,6 +153,27 @@ public class FeederIOFalcon500 implements FeederIO {
     inputs.beamBreakTriggered = beamBreakDebounce.calculate(beamBreak.getValue().value == 1);
     inputs.rawBeamBreakTriggered = beamBreak.getValue().value == 1;
     inputs.setpoint = setpoint;
+
+    // Push feeder faults to NetworkTables
+    feederFaultEntry.setBoolean(motor.getFault_DeviceTemp().getValue());
+    feederUndervoltageFaultEntry.setBoolean(motor.getFault_Undervoltage().getValue());
+    feederBootDuringEnableFaultEntry.setBoolean(motor.getFault_BootDuringEnable().getValue());
+    feederBridgeBrownoutFaultEntry.setBoolean(motor.getFault_BridgeBrownout().getValue());
+    feederDeviceTempFaultEntry.setBoolean(motor.getFault_DeviceTemp().getValue());
+    feederForwardHardLimitFaultEntry.setBoolean(motor.getFault_ForwardHardLimit().getValue());
+    feederForwardSoftLimitFaultEntry.setBoolean(motor.getFault_ForwardSoftLimit().getValue());
+    feederHardwareFaultEntry.setBoolean(motor.getFault_Hardware().getValue());
+    feederMissingDifferentialFXFaultEntry.setBoolean(
+        motor.getFault_MissingDifferentialFX().getValue());
+    feederOverSupplyVFaultEntry.setBoolean(motor.getFault_OverSupplyV().getValue());
+    feederProcTempFaultEntry.setBoolean(motor.getFault_ProcTemp().getValue());
+    feederReverseHardLimitFaultEntry.setBoolean(motor.getFault_ReverseHardLimit().getValue());
+    feederReverseSoftLimitFaultEntry.setBoolean(motor.getFault_ReverseSoftLimit().getValue());
+    feederStatorCurrLimitFaultEntry.setBoolean(motor.getFault_StatorCurrLimit().getValue());
+    feederSupplyCurrLimitFaultEntry.setBoolean(motor.getFault_SupplyCurrLimit().getValue());
+    feederUnlicensedFeatureInUseFaultEntry.setBoolean(
+        motor.getFault_UnlicensedFeatureInUse().getValue());
+    feederUnstableSupplyVFaultEntry.setBoolean(motor.getFault_UnstableSupplyV().getValue());
   }
 
   @Override

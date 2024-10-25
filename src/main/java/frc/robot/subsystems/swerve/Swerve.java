@@ -10,6 +10,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -35,6 +37,8 @@ public class Swerve extends SubsystemBase {
   private Timer lastMovementTimer = new Timer();
 
   private SwerveState systemState = SwerveState.PERCENT;
+
+  private final NetworkTable swerveTable = NetworkTableInstance.getDefault().getTable("Swerve");
 
   public Swerve(
       SwerveDrivetrainConstants drivetrainConstants, SwerveModuleConstants... moduleConstants) {
@@ -69,6 +73,15 @@ public class Swerve extends SubsystemBase {
     Logger.recordOutput("Swerve/Achieved", states);
     Logger.recordOutput("Swerve/OmegaRadsPerSec", getRobotRelativeSpeeds().omegaRadiansPerSecond);
     drivetrain.logCurrents();
+
+    // Log module faults and speeds
+    for (int i = 0; i < 4; i++) {
+      BreadSwerveModule module = drivetrain.getModule(i);
+      swerveTable.getEntry("module" + i + "/faults").setString(module.getFaults());
+      swerveTable
+          .getEntry("module" + i + "/speedAt12V")
+          .setDouble(module.getCurrentState().speedMetersPerSecond);
+    }
   }
 
   /* Handles statemachine logic */

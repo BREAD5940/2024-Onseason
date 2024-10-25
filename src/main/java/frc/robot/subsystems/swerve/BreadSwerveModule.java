@@ -101,6 +101,38 @@ public class BreadSwerveModule {
   private SwerveModuleState m_targetState = new SwerveModuleState();
 
   /**
+   * Gets all faults from the swerve module devices.
+   *
+   * @return String containing all faults from drive motor, steer motor and CANcoder
+   */
+  public String getFaults() {
+    StringBuilder faults = new StringBuilder();
+
+    // Get drive motor faults
+    if (m_driveMotor.getFault_Hardware().getValue()) {
+      faults.append("Drive Motor Hardware Fault\n");
+    }
+    if (m_driveMotor.getFault_OverSupplyV().getValue()) {
+      faults.append("Drive Motor Over Supply Voltage Fault\n");
+    }
+
+    // Get steer motor faults
+    if (m_steerMotor.getFault_Hardware().getValue()) {
+      faults.append("Steer Motor Hardware Fault\n");
+    }
+    if (m_steerMotor.getFault_OverSupplyV().getValue()) {
+      faults.append("Steer Motor Over Supply Voltage Fault\n");
+    }
+
+    // Get CANcoder faults
+    if (m_cancoder.getFault_Hardware().getValue()) {
+      faults.append("CANcoder Hardware Fault\n");
+    }
+
+    return faults.toString();
+  }
+
+  /**
    * Construct a SwerveModule with the specified constants.
    *
    * @param constants Constants used to construct the module
