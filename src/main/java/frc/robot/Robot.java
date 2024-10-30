@@ -176,8 +176,13 @@ public class Robot extends LoggedRobot {
       leds.setLEDs(255, 0, 0, 0, 0, 60);
       RobotContainer.driver.setRumble(RumbleType.kBothRumble, 0);
     } else if (RobotContainer.superstructure.hasPiece()) {
-      leds.setLEDs(0, 0, 255, 0, 0, 60);
-      RobotContainer.driver.setRumble(RumbleType.kBothRumble, 0.25);
+      if (DriverStation.isEnabled()) {
+        leds.setLEDs(0, 0, 255, 0, 0, 60);
+        RobotContainer.driver.setRumble(RumbleType.kBothRumble, 0.25);
+      } else {
+        RobotContainer.driver.setRumble(RumbleType.kBothRumble, 0);
+        leds.setLEDs(0, 0, 0, 0, 0, 60);
+      }
     } else if (RobotContainer.intake.hasPiece()) {
       leds.setLEDs(0, 255, 0, 0, 0, 60);
       RobotContainer.driver.setRumble(RumbleType.kBothRumble, 0);
